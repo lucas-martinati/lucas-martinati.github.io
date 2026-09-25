@@ -128,10 +128,10 @@
         {
             "emoji": "🔄",
             "imageUrl": "img/rclonedash.png",
-            "year": "2025",
+            "year": "2026",
             "status": {
-                "label": "Terminé",
-                "className": "status-completed"
+                "label": "En cours",
+                "className": "status-in-progress"
             },
             "title": "rcloneDash",
             "description": "Interface web locale puissante pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (Google Drive), avec analyse journalctl, explorateur de fichiers et gestion des filtres.",
@@ -155,7 +155,7 @@
         {
             "emoji": "🔥",
             "imageUrl": "img/oneup.png",
-            "year": "2025",
+            "year": "2026",
             "status": {
                 "label": "En cours",
                 "className": "status-in-progress"
@@ -176,32 +176,6 @@
             "featured": true,
             "highlights": "Application hybride web/mobile de défi fitness 365 jours avec Capacitor & React, intégrant un système de persistance temps réel Firebase.",
             "challenges": "Conception de l'algorithme de progression quotidienne, synchronisation des données multi-devices et ergonomie mobile tactile réactive."
-        },
-        {
-            "emoji": "💎",
-            "imageUrl": "img/stones-collection.png",
-            "year": "2025",
-            "status": {
-                "label": "Terminé",
-                "className": "status-completed"
-            },
-            "title": "Stones Collection",
-            "description": "Site pour stocker la liste des pierres que ma copine possède.",
-            "tags": [
-                "html",
-                "css",
-                "js",
-                "base de données",
-                "API"
-            ],
-            "link": {
-                "href": "https://stones-collection.web.app/",
-                "text": "Voir le site"
-            },
-            "category": "web",
-            "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
         },
         {
             "emoji": "🃏",
