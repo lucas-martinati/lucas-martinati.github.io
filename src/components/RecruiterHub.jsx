@@ -1,12 +1,10 @@
-import { BriefcaseIcon, MailIcon, LinkedinIcon, CheckIcon, CopyIcon, SparklesIcon, TerminalIcon } from './Icons';
-import { playSound } from '../utils/audio';
+import { BriefcaseIcon, MailIcon, LinkedinIcon, CopyIcon, SparklesIcon } from './Icons';
 
-export default function RecruiterHub({ developer = {}, onOpenTerminal, onShowToast }) {
+export default function RecruiterHub({ developer = {}, onShowToast }) {
     const recruitment = developer.recruitment || {};
     const strengths = recruitment.strengths || [];
 
     const handleCopyEmail = async () => {
-        playSound('success');
         const email = developer.email || 'lucasm54800@gmail.com';
         try {
             await navigator.clipboard.writeText(email);
@@ -103,7 +101,6 @@ export default function RecruiterHub({ developer = {}, onOpenTerminal, onShowToa
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn-primary panel-btn"
-                                        onClick={() => playSound('click')}
                                     >
                                         <MailIcon size={18} />
                                         <span>Me proposer une opportunité</span>
@@ -125,26 +122,11 @@ export default function RecruiterHub({ developer = {}, onOpenTerminal, onShowToa
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn-secondary panel-btn-half"
-                                            onClick={() => playSound('click')}
                                         >
                                             <LinkedinIcon size={16} />
                                             <span>LinkedIn</span>
                                         </a>
                                     </div>
-
-                                    {onOpenTerminal && (
-                                        <button
-                                            type="button"
-                                            className="panel-terminal-btn"
-                                            onClick={() => {
-                                                playSound('click');
-                                                onOpenTerminal();
-                                            }}
-                                        >
-                                            <TerminalIcon size={16} />
-                                            <span>Tester le Terminal Interactif (Cmd+K)</span>
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         </div>

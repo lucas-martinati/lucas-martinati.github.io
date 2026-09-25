@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { GithubIcon, LinkedinIcon, MailIcon, ArrowRightIcon, BriefcaseIcon, CommandIcon, TerminalIcon } from './Icons';
-import { playSound } from '../utils/audio';
+import { GithubIcon, LinkedinIcon, MailIcon, ArrowRightIcon, BriefcaseIcon } from './Icons';
 import { getComputedMetrics } from '../utils/metrics';
 
-export default function Hero({ developer = {}, projects = [], education = [], onOpenPalette }) {
+export default function Hero({ developer = {}, projects = [], education = [] }) {
     const [roleIndex, setRoleIndex] = useState(0);
     const [fadeState, setFadeState] = useState('fade-in');
 
@@ -35,7 +34,6 @@ export default function Hero({ developer = {}, projects = [], education = [], on
 
     const handleScrollTo = (e, id) => {
         e.preventDefault();
-        playSound('click');
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
@@ -108,22 +106,6 @@ export default function Hero({ developer = {}, projects = [], education = [], on
                             <span>Me Contacter</span>
                         </a>
                     )}
-
-                    {onOpenPalette && (
-                        <button
-                            type="button"
-                            className="hero-palette-btn"
-                            onClick={() => {
-                                playSound('click');
-                                onOpenPalette();
-                            }}
-                            title="Ouvrir la palette de commandes rapide ou le terminal (Cmd+K)"
-                        >
-                            <TerminalIcon size={16} />
-                            <span>Terminal &amp; Actions</span>
-                            <span className="kbd-pill">Cmd+K</span>
-                        </button>
-                    )}
                 </div>
 
                 {/* Social Quick Circles */}
@@ -136,7 +118,6 @@ export default function Hero({ developer = {}, projects = [], education = [], on
                             className="hero-social-circle github-circle"
                             aria-label={`GitHub de ${developer.name || 'Lucas Martinati'}`}
                             title="GitHub"
-                            onClick={() => playSound('hover')}
                         >
                             <GithubIcon size={18} />
                         </a>
@@ -150,7 +131,6 @@ export default function Hero({ developer = {}, projects = [], education = [], on
                             className="hero-social-circle linkedin-circle"
                             aria-label={`LinkedIn de ${developer.name || 'Lucas Martinati'}`}
                             title="LinkedIn"
-                            onClick={() => playSound('hover')}
                         >
                             <LinkedinIcon size={18} />
                         </a>
@@ -164,7 +144,6 @@ export default function Hero({ developer = {}, projects = [], education = [], on
                             className="hero-social-circle email-circle"
                             aria-label={`Envoyer un email à ${developer.name || 'Lucas Martinati'}`}
                             title="Email"
-                            onClick={() => playSound('hover')}
                         >
                             <MailIcon size={18} />
                         </a>

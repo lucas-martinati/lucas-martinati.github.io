@@ -1,6 +1,5 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon } from './Icons';
-import { playSound } from '../utils/audio';
 
 const CATEGORY_LABELS = {
     extension: 'Extension',
@@ -9,8 +8,6 @@ const CATEGORY_LABELS = {
 };
 
 export default function ProjectModal({ project, allProjects = [], onSelectProject, onClose }) {
-    const wasOpenRef = useRef(false);
-
     const currentIndex = project
         ? allProjects.findIndex((p) => p.title === project.title)
         : -1;
@@ -19,27 +16,15 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
     const goToPrev = useCallback(() => {
         if (hasPrev) {
-            playSound('click');
             onSelectProject(allProjects[currentIndex - 1]);
         }
     }, [hasPrev, currentIndex, allProjects, onSelectProject]);
 
     const goToNext = useCallback(() => {
         if (hasNext) {
-            playSound('click');
             onSelectProject(allProjects[currentIndex + 1]);
         }
     }, [hasNext, currentIndex, allProjects, onSelectProject]);
-
-    // Play 'open' sound only when modal first opens
-    useEffect(() => {
-        if (project && !wasOpenRef.current) {
-            playSound('open');
-            wasOpenRef.current = true;
-        } else if (!project) {
-            wasOpenRef.current = false;
-        }
-    }, [project]);
 
     // Keyboard navigation (Escape, Left, Right)
     useEffect(() => {
@@ -47,7 +32,6 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
-                playSound('close');
                 onClose();
             } else if (e.key === 'ArrowRight') {
                 goToNext();
@@ -64,7 +48,6 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
-            playSound('close');
             onClose();
         }
     };
@@ -79,10 +62,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                 <button
                     type="button"
                     className="modal-close-btn"
-                    onClick={() => {
-                        playSound('close');
-                        onClose();
-                    }}
+                    onClick={onClose}
                     aria-label="Fermer la fenêtre de détails"
                 >
                     <CloseIcon size={20} />
@@ -160,7 +140,6 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-primary modal-action-btn"
-                                    onClick={() => playSound('click')}
                                 >
                                     {project.link.href.includes('github.com') ? (
                                         <GithubIcon size={18} />

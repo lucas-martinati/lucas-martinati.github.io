@@ -126,7 +126,7 @@
     ],
     "projects": [
         {
-            "emoji": "🔄",
+            "emoji": "🦀",
             "imageUrl": "img/rclonedash.png",
             "year": "2026",
             "status": {
@@ -134,14 +134,15 @@
                 "className": "status-in-progress"
             },
             "title": "rcloneDash",
-            "description": "Interface web locale puissante pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (Google Drive), avec analyse journalctl, explorateur de fichiers et gestion des filtres.",
+            "description": "Interface TUI ultra-rapide en Rust (Ratatui) pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (rclone bisync), avec tableau de bord KPI, logs journalctl en direct, explorateur de fichiers et éditeur de filtres d'exclusion.",
             "tags": [
-                "Python",
-                "JavaScript",
-                "Linux",
+                "Rust",
+                "Ratatui",
+                "Tokio",
+                "TUI",
+                "Rclone",
                 "Systemd",
-                "Bash",
-                "Rclone"
+                "Linux"
             ],
             "link": {
                 "href": "https://github.com/lucas-martinati/rcloneDash",
@@ -149,8 +150,8 @@
             },
             "category": "system",
             "featured": true,
-            "highlights": "Serveur HTTP natif en Python sans dépendance externe analysant les logs journalctl en direct, avec timer Systemd intelligent et interface web moderne.",
-            "challenges": "Parsing asynchrone des flux de journaux Rclone en temps réel, synchronisation économe en ressources avec garde d'inactivité et intégration des services Systemd sous Linux."
+            "highlights": "TUI Rust autonome (< 3 Mo, < 10 Mo RAM) à 60 FPS avec Ratatui + Tokio : dashboard 7 KPI, mini-graphe d'historique, streaming journalctl colorisé, explorateur avec xdg-open, 6 thèmes et simulation dry-run.",
+            "challenges": "Rendu terminal sans scintillement, monitoring asynchrone non-bloquant avec Tokio, hitboxes souris pixel-perfect et packaging .deb + install.sh sans root via timer systemd utilisateur."
         },
         {
             "emoji": "🔥",

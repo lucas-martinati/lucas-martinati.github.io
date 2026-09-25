@@ -1,35 +1,6 @@
-import { useRef, useCallback } from 'react';
 import { SparklesIcon, ExternalLinkIcon, GithubIcon } from './Icons';
-import { playSound } from '../utils/audio';
 
 export default function ProjectCard({ project, index, onOpenModal }) {
-    const cardRef = useRef(null);
-
-    const handleMouseMove = useCallback((e) => {
-        const card = cardRef.current;
-        if (!card) return;
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-        let percentX = clamp((x - centerX) / centerX, -1, 1);
-        let percentY = clamp((y - centerY) / centerY, -1, 1);
-        const maxTilt = 5;
-        const rotateX = -(percentY * maxTilt);
-        const rotateY = percentX * maxTilt;
-        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        card.style.setProperty('--card-glow-x', `${(x / rect.width) * 100}%`);
-        card.style.setProperty('--card-glow-y', `${(y / rect.height) * 100}%`);
-    }, []);
-
-    const handleMouseLeave = useCallback(() => {
-        const card = cardRef.current;
-        if (!card) return;
-        card.style.transform = 'perspective(1200px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-    }, []);
-
     const hasImage = !!project.imageUrl;
 
     // Vibrant gradients cycle
@@ -50,21 +21,14 @@ export default function ProjectCard({ project, index, onOpenModal }) {
     const handleCardClick = (e) => {
         // If clicking on interactive elements directly, let them handle it
         if (e.target.closest('a') || e.target.closest('button')) return;
-        playSound('click');
         if (onOpenModal) onOpenModal(project);
     };
 
     return (
         <article
             className={`project-card ${project.featured ? 'is-featured' : ''}`}
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
             onClick={handleCardClick}
         >
-            {/* Glow overlay */}
-            <div className="project-card-glow"></div>
-
             {/* Featured Badge */}
             {project.featured && (
                 <div className="card-featured-pill">
@@ -113,7 +77,6 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                             className="card-quick-btn"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                playSound('click');
                                 if (onOpenModal) onOpenModal(project);
                             }}
                         >
@@ -128,7 +91,6 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                                 rel="noopener noreferrer"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    playSound('click');
                                 }}
                             >
                                 <span>{project.link.text}</span>

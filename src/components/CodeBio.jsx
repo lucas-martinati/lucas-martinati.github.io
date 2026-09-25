@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { CopyIcon, CheckIcon, TerminalIcon } from './Icons';
-import { playSound } from '../utils/audio';
+import { CopyIcon, CheckIcon } from './Icons';
 import { getComputedMetrics } from '../utils/metrics';
 
 export default function CodeBio({ developer = {}, projects = [], education = [] }) {
@@ -86,7 +85,6 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
     };
 
     const handleCopy = async () => {
-        playSound('success');
         try {
             await navigator.clipboard.writeText(getRawContent());
             setCopied(true);
@@ -115,7 +113,6 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                         type="button"
                         className={`code-tab ${activeTab === 'js' ? 'active' : ''}`}
                         onClick={() => {
-                            playSound('click');
                             setActiveTab('js');
                         }}
                     >
@@ -127,7 +124,6 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                         type="button"
                         className={`code-tab ${activeTab === 'json' ? 'active' : ''}`}
                         onClick={() => {
-                            playSound('click');
                             setActiveTab('json');
                         }}
                     >
@@ -140,7 +136,6 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                             type="button"
                             className={`code-tab ${activeTab === 'sh' ? 'active' : ''}`}
                             onClick={() => {
-                                playSound('click');
                                 setActiveTab('sh');
                             }}
                         >

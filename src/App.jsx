@@ -7,7 +7,6 @@ import CodeBio from './components/CodeBio';
 import SkillCard from './components/SkillCard';
 import ProjectCard from './components/ProjectCard';
 import ProjectModal from './components/ProjectModal';
-import CommandPalette from './components/CommandPalette';
 import RecruiterHub from './components/RecruiterHub';
 import EducationCard from './components/EducationCard';
 import LanguageCard from './components/LanguageCard';
@@ -15,7 +14,6 @@ import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
 import Toast from './components/Toast';
 import { SearchIcon, SparklesIcon } from './components/Icons';
-import { playSound } from './utils/audio';
 
 function getProjectCategory(project) {
     if (project.category) return project.category;
@@ -23,7 +21,7 @@ function getProjectCategory(project) {
     if (tagsLower.some((t) => t.includes('extension') || t.includes('chrome') || t.includes('vscode'))) {
         return 'extension';
     }
-    if (tagsLower.some((t) => t.includes('linux') || t.includes('systemd') || t.includes('bash') || t.includes('pyqt5'))) {
+    if (tagsLower.some((t) => t.includes('linux') || t.includes('systemd') || t.includes('bash') || t.includes('pyqt5') || t.includes('rust') || t.includes('tui'))) {
         return 'system';
     }
     return 'web';
@@ -33,7 +31,6 @@ export default function App() {
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedProject, setSelectedProject] = useState(null);
-    const [paletteOpen, setPaletteOpen] = useState(false);
     const [toast, setToast] = useState(null);
 
     const toastTimerRef = useRef(null);
@@ -57,47 +54,14 @@ export default function App() {
         };
     }, []);
 
-    // Global keyboard shortcuts (Cmd+K / Ctrl+K)
+    // Background Scroll Lock when Modal is active
     useEffect(() => {
-        const handleKeyDown = (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                setPaletteOpen((prev) => !prev);
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
-
-    // Background Scroll Lock when Modal or Palette is active
-    useEffect(() => {
-        const isModalActive = selectedProject !== null || paletteOpen;
+        const isModalActive = selectedProject !== null;
         document.body.style.overflow = isModalActive ? 'hidden' : '';
         return () => {
             document.body.style.overflow = '';
         };
-    }, [selectedProject, paletteOpen]);
-
-    // Throttled mouse glow effect via requestAnimationFrame (Web Vitals / High Refresh Rate 144Hz+)
-    useEffect(() => {
-        let rafId = null;
-
-        const handler = (e) => {
-            if (rafId) return;
-            rafId = requestAnimationFrame(() => {
-                document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-                document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
-                rafId = null;
-            });
-        };
-
-        window.addEventListener('mousemove', handler, { passive: true });
-        return () => {
-            window.removeEventListener('mousemove', handler);
-            if (rafId) cancelAnimationFrame(rafId);
-        };
-    }, []);
+    }, [selectedProject]);
 
     // Category counts calculation
     const counts = useMemo(() => {
@@ -127,7 +91,6 @@ export default function App() {
     }, [activeCategory, searchQuery]);
 
     const handleCategoryClick = (cat) => {
-        playSound('click');
         setActiveCategory(cat);
     };
 
@@ -138,8 +101,6 @@ export default function App() {
             {/* Navbar */}
             <Navbar
                 developer={data.developer}
-                onOpenPalette={() => setPaletteOpen(true)}
-                onShowToast={showToast}
             />
 
             {/* Hero Section */}
@@ -147,7 +108,6 @@ export default function App() {
                 developer={data.developer}
                 projects={data.projects}
                 education={data.education}
-                onOpenPalette={() => setPaletteOpen(true)}
             />
 
             {/* Section À propos */}
@@ -180,7 +140,6 @@ export default function App() {
                 <ScrollReveal>
                     <RecruiterHub
                         developer={data.developer}
-                        onOpenTerminal={() => setPaletteOpen(true)}
                         onShowToast={showToast}
                     />
                 </ScrollReveal>
@@ -214,7 +173,6 @@ export default function App() {
                                 type="button"
                                 className="search-clear-btn"
                                 onClick={() => {
-                                    playSound('click');
                                     setSearchQuery('');
                                 }}
                                 aria-label="Effacer la recherche"
@@ -283,7 +241,6 @@ export default function App() {
                             type="button"
                             className="btn-secondary"
                             onClick={() => {
-                                playSound('click');
                                 setActiveCategory('all');
                                 setSearchQuery('');
                             }}
@@ -329,37 +286,12 @@ export default function App() {
                 <Footer developer={data.developer} />
             </ScrollReveal>
 
-            {/* Floating Terminal Quick Trigger */}
-            <button
-                type="button"
-                className="floating-terminal-trigger"
-                onClick={() => {
-                    playSound('click');
-                    setPaletteOpen(true);
-                }}
-                title="Ouvrir le terminal / Command Palette (Cmd+K)"
-                aria-label="Terminal interactif"
-            >
-                <span className="floating-prompt">&gt;_</span>
-                <span className="floating-kbd">Cmd+K</span>
-            </button>
-
             {/* Project Details Modal */}
             <ProjectModal
                 project={selectedProject}
                 allProjects={data.projects}
                 onSelectProject={(proj) => setSelectedProject(proj)}
                 onClose={() => setSelectedProject(null)}
-            />
-
-            {/* Universal Command Palette / Terminal */}
-            <CommandPalette
-                isOpen={paletteOpen}
-                onClose={() => setPaletteOpen(false)}
-                developer={data.developer}
-                projects={data.projects}
-                onSelectProject={(proj) => setSelectedProject(proj)}
-                onShowToast={showToast}
             />
 
             {/* Notification Toast */}

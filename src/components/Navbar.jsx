@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { GithubIcon, LinkedinIcon, MailIcon, TerminalIcon, VolumeUpIcon, VolumeOffIcon, CommandIcon } from './Icons';
-import { playSound, isSoundEnabled, toggleSound } from '../utils/audio';
+import { GithubIcon, LinkedinIcon, MailIcon } from './Icons';
 
 const NAV_ITEMS = [
     { id: 'about', label: 'À propos' },
@@ -10,9 +9,8 @@ const NAV_ITEMS = [
     { id: 'contact', label: 'Contact', mobileLabel: 'Contact & Réseaux' }
 ];
 
-export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
+export default function Navbar({ developer = {} }) {
     const [activeSection, setActiveSection] = useState('');
-    const [soundActive, setSoundActive] = useState(isSoundEnabled());
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking ?? true;
@@ -56,7 +54,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
 
     const handleClick = (e, targetId) => {
         e.preventDefault();
-        playSound('click');
         setMobileMenuOpen(false);
         const el = document.getElementById(targetId);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -76,14 +73,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
         };
     }, [mobileMenuOpen]);
 
-    const handleSoundToggle = () => {
-        const nextState = toggleSound();
-        setSoundActive(nextState);
-        if (onShowToast) {
-            onShowToast(nextState ? 'Effets sonores activés !' : 'Effets sonores désactivés.', 'info');
-        }
-    };
-
     const githubUrl = developer.github || 'https://github.com/lucas-martinati';
     const linkedinUrl = developer.linkedin || 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/';
     const emailUrl = developer.email ? `mailto:${developer.email}` : 'mailto:lucasm54800@gmail.com';
@@ -97,7 +86,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                     className="logo"
                     onClick={(e) => {
                         e.preventDefault();
-                        playSound('click');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                 >
@@ -122,34 +110,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
 
                 {/* Desktop Nav Controls (hidden on mobile) */}
                 <div className="nav-desktop-actions">
-                    {onOpenPalette && (
-                        <button
-                            type="button"
-                            className="nav-cmd-btn"
-                            onClick={() => {
-                                playSound('click');
-                                onOpenPalette();
-                            }}
-                            title="Ouvrir le terminal ou la palette d'actions (Cmd+K)"
-                            aria-label="Palette de commandes"
-                        >
-                            <TerminalIcon size={16} />
-                            <span className="nav-cmd-text">Terminal</span>
-                            <span className="nav-cmd-kbd">⌘K</span>
-                        </button>
-                    )}
-
-                    {/* Sound Toggle */}
-                    <button
-                        type="button"
-                        className={`nav-icon-link nav-sound-btn ${soundActive ? 'sound-on' : ''}`}
-                        onClick={handleSoundToggle}
-                        title={soundActive ? 'Désactiver les effets sonores' : 'Activer les effets sonores'}
-                        aria-label="Effets sonores"
-                    >
-                        {soundActive ? <VolumeUpIcon size={17} /> : <VolumeOffIcon size={17} />}
-                    </button>
-
                     {githubUrl && (
                         <a
                             href={githubUrl}
@@ -158,7 +118,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                             className="nav-icon-link"
                             aria-label={`GitHub de ${developer.name || 'Lucas Martinati'}`}
                             title="GitHub"
-                            onClick={() => playSound('hover')}
                         >
                             <GithubIcon size={18} />
                         </a>
@@ -171,7 +130,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                             className="nav-icon-link"
                             aria-label={`LinkedIn de ${developer.name || 'Lucas Martinati'}`}
                             title="LinkedIn"
-                            onClick={() => playSound('hover')}
                         >
                             <LinkedinIcon size={18} />
                         </a>
@@ -184,7 +142,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                             className="nav-icon-link"
                             aria-label={`Envoyer un email à ${developer.name || 'Lucas Martinati'}`}
                             title="Email"
-                            onClick={() => playSound('hover')}
                         >
                             <MailIcon size={18} />
                         </a>
@@ -197,7 +154,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                         type="button"
                         className="mobile-nav-toggle"
                         onClick={() => {
-                            playSound('click');
                             setMobileMenuOpen(!mobileMenuOpen);
                         }}
                         aria-label="Menu de navigation"
@@ -236,18 +192,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
 
                     <div className="mobile-nav-divider" />
 
-                    {/* Sound Action */}
-                    <div className="mobile-actions-panel">
-                        <button
-                            type="button"
-                            className={`mobile-action-card-btn mobile-sound-card-btn ${soundActive ? 'active' : ''}`}
-                            onClick={handleSoundToggle}
-                        >
-                            {soundActive ? <VolumeUpIcon size={18} /> : <VolumeOffIcon size={18} />}
-                            <span>{soundActive ? 'Effets sonores : Activés' : 'Effets sonores : Désactivés'}</span>
-                        </button>
-                    </div>
-
                     {/* Social Icons row */}
                     <div className="mobile-socials-grid">
                         {githubUrl && (
@@ -256,7 +200,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="mobile-social-tile"
-                                onClick={() => playSound('click')}
                             >
                                 <GithubIcon size={20} />
                                 <span>GitHub</span>
@@ -268,7 +211,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="mobile-social-tile"
-                                onClick={() => playSound('click')}
                             >
                                 <LinkedinIcon size={20} />
                                 <span>LinkedIn</span>
@@ -280,7 +222,6 @@ export default function Navbar({ developer = {}, onOpenPalette, onShowToast }) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="mobile-social-tile"
-                                onClick={() => playSound('click')}
                             >
                                 <MailIcon size={20} />
                                 <span>Email</span>
