@@ -18,6 +18,3 @@ public/cv.pdf
 # OS
 .DS_Store
 Thumbs.db
-
-# Scripts temporaires
-copy-screenshots.sh
