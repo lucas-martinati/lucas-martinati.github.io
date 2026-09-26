@@ -13,7 +13,7 @@ export default function Navbar({ developer = {} }) {
     const [activeSection, setActiveSection] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking ?? true;
+    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking;
 
     const navItems = useMemo(() => {
         return NAV_ITEMS.filter((item) => !item.requireSeeking || isSeeking);
@@ -73,9 +73,9 @@ export default function Navbar({ developer = {} }) {
         };
     }, [mobileMenuOpen]);
 
-    const githubUrl = developer.github || 'https://github.com/lucas-martinati';
-    const linkedinUrl = developer.linkedin || 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/';
-    const emailUrl = developer.email ? `mailto:${developer.email}` : 'mailto:lucasm54800@gmail.com';
+    const githubUrl = developer.github;
+    const linkedinUrl = developer.linkedin;
+    const emailUrl = `mailto:${developer.email}`;
 
     return (
         <>
@@ -89,7 +89,7 @@ export default function Navbar({ developer = {} }) {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                 >
-                    <span className="logo-accent">LM</span>_DEV
+                    <span className="logo-accent">{developer.initials}</span>{developer.brandSuffix}
                 </a>
 
                 {/* Desktop Nav Links */}
@@ -116,7 +116,7 @@ export default function Navbar({ developer = {} }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="nav-icon-link"
-                            aria-label={`GitHub de ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`GitHub de ${developer.name}`}
                             title="GitHub"
                         >
                             <GithubIcon size={18} />
@@ -128,7 +128,7 @@ export default function Navbar({ developer = {} }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="nav-icon-link"
-                            aria-label={`LinkedIn de ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`LinkedIn de ${developer.name}`}
                             title="LinkedIn"
                         >
                             <LinkedinIcon size={18} />
@@ -140,7 +140,7 @@ export default function Navbar({ developer = {} }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="nav-icon-link"
-                            aria-label={`Envoyer un email à ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`Envoyer un email à ${developer.name}`}
                             title="Email"
                         >
                             <MailIcon size={18} />

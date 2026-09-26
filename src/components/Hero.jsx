@@ -6,15 +6,10 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
     const [roleIndex, setRoleIndex] = useState(0);
     const [fadeState, setFadeState] = useState('fade-in');
 
-    const roles = developer.roles || [
-        "Développeur Full-Stack",
-        "Concepteur d'Outils & Extensions",
-        "Passionné Linux & Open Source",
-        "Étudiant en BUT Informatique"
-    ];
+    const roles = developer.roles;
 
     const recruitment = developer.recruitment || {};
-    const isSeeking = recruitment.enabled ?? recruitment.seeking ?? true;
+    const isSeeking = recruitment.enabled ?? recruitment.seeking;
 
     const metrics = useMemo(() => {
         return getComputedMetrics({ developer, projects, education });
@@ -38,9 +33,9 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
         if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const githubUrl = developer.github || 'https://github.com/lucas-martinati';
-    const linkedinUrl = developer.linkedin || 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/';
-    const emailUrl = developer.email ? `mailto:${developer.email}` : 'mailto:lucasm54800@gmail.com';
+    const githubUrl = developer.github;
+    const linkedinUrl = developer.linkedin;
+    const emailUrl = `mailto:${developer.email}`;
 
     return (
         <section className="hero">
@@ -55,13 +50,13 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                     <span className={`status-indicator ${!isSeeking ? 'status-passive' : ''}`}></span>
                     <span>
                         {isSeeking
-                            ? (recruitment.badge || "Alternance ciblée 2027-2028 (BUT 3) & Cycle Ingénieur")
-                            : (recruitment.passiveBadge || "Actuellement en poste • Projets & Collaborations")}
+                            ? recruitment.badge
+                            : recruitment.passiveBadge}
                     </span>
                 </a>
 
                 {/* Hero Title */}
-                <h1 className="hero-title">{developer.name || 'Lucas Martinati'}</h1>
+                <h1 className="hero-title">{developer.name}</h1>
 
                 {/* Dynamic Role Switcher */}
                 <div className="hero-role-wrapper">
@@ -116,7 +111,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hero-social-circle github-circle"
-                            aria-label={`GitHub de ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`GitHub de ${developer.name}`}
                             title="GitHub"
                         >
                             <GithubIcon size={18} />
@@ -129,7 +124,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hero-social-circle linkedin-circle"
-                            aria-label={`LinkedIn de ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`LinkedIn de ${developer.name}`}
                             title="LinkedIn"
                         >
                             <LinkedinIcon size={18} />
@@ -142,7 +137,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hero-social-circle email-circle"
-                            aria-label={`Envoyer un email à ${developer.name || 'Lucas Martinati'}`}
+                            aria-label={`Envoyer un email à ${developer.name}`}
                             title="Email"
                         >
                             <MailIcon size={18} />

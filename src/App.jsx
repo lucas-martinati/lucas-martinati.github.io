@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import data from './data/data.json';
+import data from './data/portfolio.js';
 import AnimatedBackground from './components/AnimatedBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -73,7 +73,7 @@ export default function App() {
         return res;
     }, []);
 
-    const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking ?? true;
+    const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking;
 
     // Filter projects based on activeCategory AND searchQuery
     const filteredProjects = useMemo(() => {

@@ -53,7 +53,8 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
     };
 
     const hasImage = Boolean(project.imageUrl);
-    const categoryLabel = CATEGORY_LABELS[project.category] || 'Web & Full-Stack';
+    const categoryLabel = CATEGORY_LABELS[project.category];
+    const linkHref = project.link?.href;
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick} role="dialog" aria-modal="true">
@@ -73,7 +74,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     {hasImage ? (
                         <img src={project.imageUrl} alt={project.title} className="modal-cover-img" />
                     ) : (
-                        <span className="modal-emoji">{project.emoji || '🚀'}</span>
+                        <span className="modal-emoji">{project.emoji}</span>
                     )}
 
                     {project.featured && (
@@ -89,8 +90,8 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     <div className="modal-header">
                         <div className="modal-meta">
                             <span className="modal-year">{project.year}</span>
-                            <span className={`project-status ${project.status?.className || 'status-completed'}`}>
-                                {project.status?.label || 'Terminé'}
+                            <span className={`project-status ${project.status?.className}`}>
+                                {project.status?.label}
                             </span>
                             <span className="modal-category-tag">{categoryLabel}</span>
                         </div>
@@ -134,19 +135,19 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     {/* Actions & Navigation */}
                     <div className="modal-footer">
                         <div className="modal-links">
-                            {project.link?.href && (
+                            {linkHref && (
                                 <a
-                                    href={project.link.href}
+                                    href={linkHref}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-primary modal-action-btn"
                                 >
-                                    {project.link.href.includes('github.com') ? (
+                                    {linkHref.includes('github.com') ? (
                                         <GithubIcon size={18} />
                                     ) : (
                                         <ExternalLinkIcon size={18} />
                                     )}
-                                    <span>{project.link.text || 'Accéder au projet'}</span>
+                                    <span>{project.link.text}</span>
                                 </a>
                             )}
                         </div>

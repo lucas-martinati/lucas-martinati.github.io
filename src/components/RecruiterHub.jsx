@@ -5,7 +5,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
     const strengths = recruitment.strengths || [];
 
     const handleCopyEmail = async () => {
-        const email = developer.email || 'lucasm54800@gmail.com';
+        const email = developer.email;
         try {
             await navigator.clipboard.writeText(email);
             if (onShowToast) onShowToast('Email copié dans le presse-papier !', 'success');
@@ -14,7 +14,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
         }
     };
 
-    const linkedinUrl = developer.linkedin || 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/';
+    const linkedinUrl = developer.linkedin;
 
     return (
         <section className="recruiter-hub" id="recruiter">
@@ -23,7 +23,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                 <div className="recruiter-header">
                     <div className="recruiter-badge">
                         <BriefcaseIcon size={15} />
-                        <span>{recruitment.badge || "Espace Recrutement & Alternance"}</span>
+                        <span>{recruitment.badge}</span>
                     </div>
                     <h2 className="section-title">Pourquoi me recruter ?</h2>
                     <p className="recruiter-subtitle">
@@ -58,27 +58,27 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                             <div className="specs-table">
                                 <div className="spec-row">
                                     <span className="spec-label">Diplôme visé :</span>
-                                    <span className="spec-value">{recruitment.degree || "BUT Informatique (Bac+3) ➔ Diplôme d'Ingénieur (Bac+5)"}</span>
+                                    <span className="spec-value">{recruitment.degree}</span>
                                 </div>
                                 <div className="spec-row">
                                     <span className="spec-label">Établissement :</span>
-                                    <span className="spec-value">{recruitment.school || "IUT Nancy-Charlemagne (Université de Lorraine) ➔ Télécom Nancy"}</span>
+                                    <span className="spec-value">{recruitment.school}</span>
                                 </div>
                                 <div className="spec-row">
                                     <span className="spec-label">Type de contrat :</span>
-                                    <span className="spec-value highlight-green">{recruitment.contract || "Apprentissage / Professionnalisation"}</span>
+                                    <span className="spec-value highlight-green">{recruitment.contract}</span>
                                 </div>
                                 <div className="spec-row">
                                     <span className="spec-label">Période cible :</span>
-                                    <span className="spec-value">{recruitment.period || "2027 - 2028 (1 an en BUT 3) • Poursuite visée en école d'ingénieurs (Télécom Nancy)"}</span>
+                                    <span className="spec-value">{recruitment.period}</span>
                                 </div>
                                 <div className="spec-row">
                                     <span className="spec-label">Localisation :</span>
-                                    <span className="spec-value">{recruitment.location || "Nancy / Grand Est / Télétravail"}</span>
+                                    <span className="spec-value">{recruitment.location}</span>
                                 </div>
                                 <div className="spec-row">
                                     <span className="spec-label">Stack de prédilection :</span>
-                                    <span className="spec-value">{recruitment.stack || "React, Next.js, TypeScript, Python, Linux, Bash"}</span>
+                                    <span className="spec-value">{recruitment.stack}</span>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
 
                                 <div className="panel-cta-stack">
                                     <a
-                                        href={`mailto:${developer.email || 'lucasm54800@gmail.com'}?subject=Opportunit%C3%A9%20Alternance%20BUT%20Informatique%20-%20Lucas%20Martinati`}
+                                        href={`mailto:${developer.email}?subject=${encodeURIComponent(`Opportunité Alternance BUT Informatique - ${developer.name}`)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn-primary panel-btn"

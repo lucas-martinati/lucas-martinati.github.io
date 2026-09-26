@@ -10,21 +10,21 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
         return getComputedMetrics({ developer, projects, education });
     }, [developer, projects, education]);
 
-    const projectsCount = metrics[0]?.value || (projects.length ? String(projects.length) : '16');
-    const extensionsCount = metrics[1]?.value || '3';
-    const pixScore = metrics[2]?.value || '583';
-    const bacMention = metrics[3]?.value || 'Mention Bien';
+    const projectsCount = metrics[0]?.value;
+    const extensionsCount = metrics[1]?.value;
+    const pixScore = metrics[2]?.value;
+    const bacMention = metrics[3]?.value;
 
-    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking ?? true;
+    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking;
     const targetText = isSeeking
-        ? (developer.recruitment?.badge || "Alternance ciblée 2027-2028 (BUT 3) & Cycle Ingénieur")
-        : (developer.recruitment?.passiveBadge || "Actuellement en poste • Projets & Collaborations");
+        ? developer.recruitment?.badge
+        : developer.recruitment?.passiveBadge;
     const statusText = isSeeking
-        ? (developer.availability ? 'Disponible pour Alternance' : 'En poste')
+        ? developer.availability
         : 'En poste';
 
-    const githubSlug = developer.github ? developer.github.replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '') : 'lucas-martinati';
-    const linkedinSlug = developer.linkedin ? developer.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '') : 'lucas-martinati';
+    const githubSlug = developer.github.replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '');
+    const linkedinSlug = developer.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '');
 
     useEffect(() => {
         if (!isSeeking && activeTab === 'sh') {
@@ -35,19 +35,19 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
     const getRawContent = () => {
         if (activeTab === 'js' || (!isSeeking && activeTab === 'sh')) {
             return `const developer = {
-  name: '${developer.name || 'Lucas Martinati'}',
-  status: '${developer.status || 'Étudiant en BUT Informatique'}',
-  passion: '${developer.passion || "Évoluer dans le domaine de l'informatique"}',
+  name: '${developer.name}',
+  status: '${developer.status}',
+  passion: '${developer.passion}',
   skills: [${(developer.skills || []).map((s) => `'${s}'`).join(', ')}],
-  mindset: '${developer.mindset || 'Organisé, rigoureux et proactif'}',
-  currentFocus: '${developer.currentFocus || 'BUT Informatique — IUT Nancy-Charlemagne'}',
-  availability: ${developer.availability ?? true},
-  email: '${developer.email || 'lucasm54800@gmail.com'}',
+  mindset: '${developer.mindset}',
+  currentFocus: '${developer.currentFocus}',
+  availability: ${developer.availability},
+  email: '${developer.email}',
   github: '${githubSlug}',
   linkedin: '${linkedinSlug}'
 };
 
-// ${developer.comment || 'Prêt à collaborer sur des projets innovants !'}`;
+// ${developer.comment}`;
         }
 
         if (activeTab === 'json') {
@@ -66,11 +66,11 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
         }
 
         return `#!/usr/bin/env bash
-# Script d'embauche de ${developer.name || 'Lucas Martinati'}
+# Script d'embauche de ${developer.name}
 set -e
 
 echo "Initialisation du profil candidat..."
-CANDIDATE="${developer.name || 'Lucas Martinati'}"
+CANDIDATE="${developer.name}"
 TARGET="${targetText}"
 STATUS="${developer.availability ? 'Disponible pour Alternance' : 'En poste'}"
 
@@ -80,7 +80,7 @@ echo "Vérification des atouts..."
 # [✓] ${bacMention} & ${pixScore} Score PIX
 
 echo "Contact direct :"
-echo "mailto:${developer.email || 'lucasm54800@gmail.com'}"
+echo "mailto:${developer.email}"
 echo "Statut : Prêt à intégrer votre équipe !"`;
     };
 
@@ -163,19 +163,19 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 {activeTab === 'js' && (
                     <div className="code-lines">
                         <div className="code-line"><span className="line-number">{pad(1)}</span><span className="keyword">const</span>{' '}<span className="property">developer</span>{' '}= &#123;</div>
-                        <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">name</span>: <span className="string">'{developer.name || 'Lucas Martinati'}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">status</span>: <span className="string">'{developer.status || 'Étudiant en BUT Informatique'}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">passion</span>: <span className="string">'{developer.passion || "Évoluer dans le domaine de l'informatique"}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">name</span>: <span className="string">'{developer.name}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">status</span>: <span className="string">'{developer.status}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">passion</span>: <span className="string">'{developer.passion}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(5)}</span>&nbsp;&nbsp;<span className="property">skills</span>: [<span className="string">'React'</span>, <span className="string">'Next.js'</span>, <span className="string">'TypeScript'</span>, <span className="string">'Python'</span>, <span className="string">'Bash'</span>, <span className="string">'Linux'</span>],</div>
-                        <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">'{developer.mindset || 'Organisé, rigoureux et proactif'}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">'{developer.currentFocus || 'BUT Informatique — IUT Nancy'}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">'{developer.mindset}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">'{developer.currentFocus}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(8)}</span>&nbsp;&nbsp;<span className="property">availability</span>: <span className="value">true</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(9)}</span>&nbsp;&nbsp;<span className="property">email</span>: <span className="string">'{developer.email || 'lucasm54800@gmail.com'}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(9)}</span>&nbsp;&nbsp;<span className="property">email</span>: <span className="string">'{developer.email}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(10)}</span>&nbsp;&nbsp;<span className="property">github</span>: <span className="string">'{githubSlug}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(11)}</span>&nbsp;&nbsp;<span className="property">linkedin</span>: <span className="string">'{linkedinSlug}'</span></div>
                         <div className="code-line"><span className="line-number">{pad(12)}</span>&#125;;</div>
                         <div className="code-line"><span className="line-number">{pad(13)}</span></div>
-                        <div className="code-line"><span className="line-number">{pad(14)}</span><span className="comment">// {developer.comment || 'Prêt à collaborer sur des projets innovants !'}</span></div>
+                        <div className="code-line"><span className="line-number">{pad(14)}</span><span className="comment">// {developer.comment}</span></div>
                     </div>
                 )}
 
@@ -195,7 +195,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                     <div className="code-lines">
                         <div className="code-line"><span className="line-number">{pad(1)}</span><span className="comment">#!/usr/bin/env bash</span></div>
                         <div className="code-line"><span className="line-number">{pad(2)}</span><span className="keyword">echo</span> <span className="string">"Initialisation du recrutement..."</span></div>
-                        <div className="code-line"><span className="line-number">{pad(3)}</span><span className="property">CANDIDAT</span>=<span className="string">"{developer.name || 'Lucas Martinati'}"</span></div>
+                        <div className="code-line"><span className="line-number">{pad(3)}</span><span className="property">CANDIDAT</span>=<span className="string">"{developer.name}"</span></div>
                         <div className="code-line"><span className="line-number">{pad(4)}</span><span className="property">STATUT</span>=<span className="string">"{statusText}"</span></div>
                         <div className="code-line"><span className="line-number">{pad(5)}</span><span className="property">CIBLE</span>=<span className="string">"{targetText}"</span></div>
                         <div className="code-line"><span className="line-number">{pad(6)}</span><span className="keyword">echo</span> <span className="string">"Vérification des atouts..."</span></div>

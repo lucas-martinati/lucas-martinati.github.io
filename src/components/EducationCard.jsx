@@ -5,14 +5,14 @@ export default function EducationCard({ item }) {
         certification: { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.25)', text: '#10b981', label: 'Certification' },
     };
 
-    const typeStyle = typeColors[item.type] || typeColors.education;
+    const typeStyle = typeColors[item.type];
 
     return (
-        <div className={`education-item education-type-${item.type || 'education'}`}>
+        <div className={`education-item education-type-${item.type}`}>
             <div className="education-card">
                 <div className="education-card-header">
                     <div className="education-icon" style={{ background: typeStyle.bg, borderColor: typeStyle.border }}>
-                        {item.icon || '🎓'}
+                        {item.icon}
                     </div>
                     <div className="education-header-text">
                         <div className="education-meta">

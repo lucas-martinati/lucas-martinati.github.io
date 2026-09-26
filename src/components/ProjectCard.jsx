@@ -2,6 +2,7 @@ import { SparklesIcon, ExternalLinkIcon, GithubIcon } from './Icons';
 
 export default function ProjectCard({ project, index, onOpenModal }) {
     const hasImage = !!project.imageUrl;
+    const linkHref = project.link?.href;
 
     // Vibrant gradients cycle
     const gradients = [
@@ -53,8 +54,8 @@ export default function ProjectCard({ project, index, onOpenModal }) {
             <div className="project-body">
                 <div className="project-meta">
                     <span className="project-year">{project.year}</span>
-                    <span className={`project-status ${project.status?.className || 'status-completed'}`}>
-                        {project.status?.label || 'Terminé'}
+                    <span className={`project-status ${project.status?.className}`}>
+                        {project.status?.label}
                     </span>
                 </div>
 
@@ -83,9 +84,9 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                             Fiche détaillée
                         </button>
 
-                        {project.link && (
+                        {linkHref && (
                             <a
-                                href={project.link.href}
+                                href={linkHref}
                                 className="project-link"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -94,7 +95,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                                 }}
                             >
                                 <span>{project.link.text}</span>
-                                {project.link.href.includes('github.com') ? (
+                                {linkHref.includes('github.com') ? (
                                     <GithubIcon size={14} />
                                 ) : (
                                     <ExternalLinkIcon size={14} />

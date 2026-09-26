@@ -21,13 +21,13 @@ export function getComputedMetrics({ developer = {}, projects = [], education = 
         (e.title && e.title.toLowerCase().includes('pix')) ||
         (e.highlight && e.highlight.toLowerCase().includes('pix'))
     );
-    const pixScore = pixItem?.highlight ? pixItem.highlight.replace(/[^\d]/g, '') : '583';
+    const pixScore = pixItem?.highlight?.replace(/[^\d]/g, '');
 
     // 4. Baccalauréat mention
     const bacItem = education.find((e) =>
         e.title && e.title.toLowerCase().includes('bac')
     );
-    let bacMention = 'Mention Bien';
+    let bacMention = 'Mention Bien';;
     if (bacItem?.title) {
         if (/très bien/i.test(bacItem.title)) {
             bacMention = 'Mention TB';
@@ -40,7 +40,7 @@ export function getComputedMetrics({ developer = {}, projects = [], education = 
 
     return [
         {
-            value: totalProjects > 0 ? `${totalProjects}` : '16',
+            value: `${totalProjects}`,
             label: 'Projets Conçus',
             sub: 'Web, Mobile & CLI'
         },

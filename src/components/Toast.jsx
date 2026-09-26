@@ -4,7 +4,7 @@ export default function Toast({ toast, onClose }) {
     if (!toast) return null;
 
     return (
-        <div className={`toast-notification ${toast.type || 'info'}`} role="status">
+        <div className={`toast-notification ${toast.type}`} role="status">
             <div className="toast-icon">
                 {toast.type === 'success' ? (
                     <CheckIcon size={16} />

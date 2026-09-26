@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { GithubIcon, LinkedinIcon, MailIcon, ExternalLinkIcon, CopyIcon, CheckIcon, ArrowUpIcon } from './Icons';
 
-export default function Footer({ developer }) {
+export default function Footer({ developer = {} }) {
     const [copied, setCopied] = useState(false);
-    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking ?? true;
+    const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking;
 
     const handleCopyEmail = async () => {
         try {
-            await navigator.clipboard.writeText(developer.email || 'lucasm54800@gmail.com');
+            await navigator.clipboard.writeText(developer.email);
             setCopied(true);
             setTimeout(() => setCopied(false), 2500);
         } catch {
             // fallback
             const input = document.createElement('input');
-            input.value = developer.email || 'lucasm54800@gmail.com';
+            input.value = developer.email;
             document.body.appendChild(input);
             input.select();
             document.execCommand('copy');
@@ -46,7 +46,7 @@ export default function Footer({ developer }) {
                 <div className="contact-grid">
                     {/* GitHub Card */}
                     <a
-                        href={developer.github || 'https://github.com/lucas-martinati'}
+                        href={developer.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="contact-card github-card"
@@ -66,14 +66,14 @@ export default function Footer({ developer }) {
                                 Explorez mes dépôts, mes outils open-source et l'historique de mes commits.
                             </p>
                             <span className="card-link-text">
-                                {developer.github ? developer.github.replace(/^https?:\/\//, '') : 'github.com/lucas-martinati'}
+                                {developer.github.replace(/^https?:\/\//, '')}
                             </span>
                         </div>
                     </a>
 
                     {/* LinkedIn Card */}
                     <a
-                        href={developer.linkedin || 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/'}
+                        href={developer.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="contact-card linkedin-card"
@@ -92,7 +92,7 @@ export default function Footer({ developer }) {
                             <p className="card-desc">
                                 Retrouvez mon parcours, mes recommandations et échangeons sur mes disponibilités.
                             </p>
-                            <span className="card-link-text">{developer.name || 'Lucas Martinati'}</span>
+                            <span className="card-link-text">{developer.name}</span>
                         </div>
                     </a>
 
@@ -120,12 +120,12 @@ export default function Footer({ developer }) {
                                 Disponible pour répondre rapidement à vos questions et opportunités d'emploi.
                             </p>
                             <a
-                                href={`mailto:${developer.email || 'lucasm54800@gmail.com'}`}
+                                href={`mailto:${developer.email}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="card-link-text email-action-link"
                             >
-                                {developer.email || 'lucasm54800@gmail.com'}
+                                {developer.email}
                             </a>
                         </div>
                     </div>
@@ -133,10 +133,10 @@ export default function Footer({ developer }) {
 
                 <div className="footer-bottom">
                     <div className="footer-left">
-                        <span className="footer-logo">LM_DEV</span>
+                        <span className="footer-logo">{developer.initials}{developer.brandSuffix}</span>
                         <span className="footer-divider">•</span>
                         <span className="footer-copy">
-                            Conçu &amp; développé par <strong>{developer.name || 'Lucas Martinati'}</strong>
+                            Conçu &amp; développé par <strong>{developer.name}</strong>
                         </span>
                     </div>
 
