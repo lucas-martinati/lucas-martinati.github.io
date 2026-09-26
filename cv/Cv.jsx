@@ -54,6 +54,11 @@ export default function Cv({ developer = {}, education = [], skills = [], cv = {
                             <a href={developer.site} target="_blank" rel="noopener noreferrer" className="cv-chip">
                                 <span aria-hidden="true">🌐</span> {developer.site?.replace(/^https?:\/\//, '')}
                             </a>
+                            {cv.location && (
+                                <span className="cv-chip">
+                                    <span aria-hidden="true">📍</span> {cv.location}
+                                </span>
+                            )}
                             {cv.permit && (
                                 <span className="cv-chip">
                                     <span aria-hidden="true">🚗</span> {cv.permit}

@@ -4,6 +4,9 @@ node_modules/
 # Build output
 dist/
 
+# Artefact généré (npm run cv:pdf le recrée à chaque fois)
+public/cv.pdf
+
 # Environment
 .env
 .env.local
