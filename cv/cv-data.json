@@ -1,0 +1,57 @@
+{
+    "photo": "img/photo.png",
+    "headline": "Étudiant — Développement Informatique",
+    "age": "19 ans",
+    "phone": "06 32 10 52 16",
+    "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en gestion de bases de données, je mets mon sens de l'organisation et ma capacité d'adaptation au service de projets techniques concrets.",
+    "permit": "Permis B",
+    "skills": [
+        {
+            "title": "Logique & Algorithmique",
+            "desc": "Bon raisonnement mathématique et algorithmique."
+        },
+        {
+            "title": "Organisation",
+            "desc": "Gestion très structurée des tâches/priorités et des projets."
+        },
+        {
+            "title": "Efficacité",
+            "desc": "Capacité d'exécution rapide et respect des délais."
+        },
+        {
+            "title": "Rigueur",
+            "desc": "Grand sens du détail et exigence sur la qualité des rendus."
+        },
+        {
+            "title": "Engagement",
+            "desc": "Proactivité et forte implication dans les projets."
+        }
+    ],
+    "experiences": [
+        {
+            "role": "Ripeur",
+            "company": "SICOM, Piennes",
+            "period": "du 25 Juin au 22 Août 2026",
+                "details": [
+                    "Collecte de déchets (horaires décalés).",
+                    "Travail en équipe.",
+                    "Respect des normes de sécurité."
+                ]
+            }
+        ],
+    "languages": [
+        "Français — natif",
+        "Anglais — B2"
+    ],
+    "interests": [
+        "Technologie",
+        "Informatique",
+        "Sciences"
+    ],
+    "activities": [
+        {
+            "title": "Cours de Guitare et Solfège",
+            "period": "2016 – 2018"
+        }
+    ]
+}

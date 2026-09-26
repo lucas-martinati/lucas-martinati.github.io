@@ -951,6 +951,19 @@ nav {
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.skill-tag-discovering {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.skill-discovery-note {
+    margin: 0.6rem 0 0;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    opacity: 0.75;
+}
+
 /* ===================================================
    RECRUITER HUB (High-Conversion Zone)
    =================================================== */

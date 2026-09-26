@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION, DEVELOPER_NAME } from './src/config/site.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
     plugins: [
@@ -19,4 +23,13 @@ export default defineConfig({
         },
     ],
     base: './',
+    build: {
+        // Deux pages : portfolio (/) et CV (/cv/), même build, même données.
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'index.html'),
+                cv: resolve(__dirname, 'cv/index.html'),
+            },
+        },
+    },
 });

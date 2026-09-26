@@ -123,6 +123,7 @@ export default function App() {
                         developer={data.developer}
                         projects={data.projects}
                         education={data.education}
+                        skills={data.skills}
                     />
                 </ScrollReveal>
 

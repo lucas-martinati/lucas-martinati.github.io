@@ -76,10 +76,6 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                     <span className="spec-label">Localisation :</span>
                                     <span className="spec-value">{recruitment.location}</span>
                                 </div>
-                                <div className="spec-row">
-                                    <span className="spec-label">Stack de prédilection :</span>
-                                    <span className="spec-value">{recruitment.stack}</span>
-                                </div>
                             </div>
                         </div>
 
@@ -127,6 +123,17 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                             <span>LinkedIn</span>
                                         </a>
                                     </div>
+
+                                    <a
+                                        href="cv/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-secondary panel-btn"
+                                        aria-label="Voir mon CV (nouvel onglet)"
+                                    >
+                                        <span aria-hidden="true">📄</span>
+                                        <span>Voir mon CV</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { CopyIcon, CheckIcon } from './Icons';
 import { getComputedMetrics } from '../utils/metrics';
 
-export default function CodeBio({ developer = {}, projects = [], education = [] }) {
+export default function CodeBio({ developer = {}, projects = [], education = [], skills = [] }) {
     const [activeTab, setActiveTab] = useState('js'); // 'js' | 'json' | 'sh'
     const [copied, setCopied] = useState(false);
 
@@ -26,6 +26,53 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
     const githubSlug = developer.github.replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '');
     const linkedinSlug = developer.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '');
 
+    // Aperçu volontairement court : les 6 premières de data.json.
+    // (Réordonner developer.skills dans data.json pour choisir lesquelles.)
+    const topSkills = (developer.skills || []).slice(0, 6);
+
+    // Clé JSON dérivée du titre de catégorie : "Développement Web" → "developpementWeb".
+    const slugKey = (title) =>
+        String(title || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9]+/g, ' ')
+            .trim()
+            .split(' ')
+            .map((word, i) => (i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
+            .join('');
+
+    // Objet de l'onglet stack.json : stack technique uniquement, construit
+    // depuis data.skills (tags maîtrisés, catégories non masquées), avec la
+    // découverte regroupée — aucune techno en dur ici.
+    const stackJsonObj = useMemo(() => {
+        const obj = {};
+        (skills || []).forEach((cat) => {
+            if (cat.hideFromStack) return;
+            obj[slugKey(cat.title)] = [...(cat.tags || [])];
+        });
+        const discovering = [...new Set((skills || []).flatMap((cat) => cat.discovering || []))];
+        if (discovering.length > 0) obj.discovering = discovering;
+        return obj;
+    }, [skills]);
+
+    const renderJsonValue = (value) => {
+        if (Array.isArray(value)) {
+            return (
+                <>
+                    {'['}
+                    {value.map((v, j) => (
+                        <span key={`${v}-${j}`}>
+                            <span className="string">"{v}"</span>
+                            {j < value.length - 1 ? ', ' : ''}
+                        </span>
+                    ))}
+                    {']'}
+                </>
+            );
+        }
+        return <span className="string">"{value}"</span>;
+    };
+
     useEffect(() => {
         if (!isSeeking && activeTab === 'sh') {
             setActiveTab('js');
@@ -38,7 +85,7 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
   name: '${developer.name}',
   status: '${developer.status}',
   passion: '${developer.passion}',
-  skills: [${(developer.skills || []).map((s) => `'${s}'`).join(', ')}],
+  skills: [${topSkills.map((s) => `'${s}'`).join(', ')}],
   mindset: '${developer.mindset}',
   currentFocus: '${developer.currentFocus}',
   availability: ${developer.availability},
@@ -51,18 +98,7 @@ export default function CodeBio({ developer = {}, projects = [], education = [] 
         }
 
         if (activeTab === 'json') {
-            return JSON.stringify(
-                {
-                    frontend: ['React 19', 'Next.js 15', 'TypeScript', 'Tailwind CSS', 'Vite'],
-                    mobileAndExtensions: ['Capacitor', 'Chrome Extensions (MV3)', 'VSCode Extensions'],
-                    backendAndCloud: ['Firebase', 'RESTful APIs', 'Serverless Functions'],
-                    systemAndDevops: ['Linux (Ubuntu/GNOME)', 'Bash Scripts', 'Systemd Services', 'Git/GitHub'],
-                    target: targetText,
-                    strengths: ['Autonomie', 'Esprit produit', 'Rigueur mathématique', 'Proactivité']
-                },
-                null,
-                2
-            );
+            return JSON.stringify(stackJsonObj, null, 2);
         }
 
         return `#!/usr/bin/env bash
@@ -166,7 +202,9 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                         <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">name</span>: <span className="string">'{developer.name}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">status</span>: <span className="string">'{developer.status}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">passion</span>: <span className="string">'{developer.passion}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(5)}</span>&nbsp;&nbsp;<span className="property">skills</span>: [<span className="string">'React'</span>, <span className="string">'Next.js'</span>, <span className="string">'TypeScript'</span>, <span className="string">'Python'</span>, <span className="string">'Bash'</span>, <span className="string">'Linux'</span>],</div>
+                        <div className="code-line"><span className="line-number">{pad(5)}</span>&nbsp;&nbsp;<span className="property">skills</span>: [{topSkills.map((s, j) => (
+                            <span key={s}><span className="string">'{s}'</span>{j < topSkills.length - 1 ? ', ' : ''}</span>
+                        ))}],</div>
                         <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">'{developer.mindset}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">'{developer.currentFocus}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(8)}</span>&nbsp;&nbsp;<span className="property">availability</span>: <span className="value">true</span>,</div>
@@ -182,12 +220,12 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 {activeTab === 'json' && (
                     <div className="code-lines">
                         <div className="code-line"><span className="line-number">{pad(1)}</span>&#123;</div>
-                        <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">"frontend"</span>: [<span className="string">"React 19"</span>, <span className="string">"Next.js"</span>, <span className="string">"TypeScript"</span>, <span className="string">"Vite"</span>],</div>
-                        <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">"extensionsAndMobile"</span>: [<span className="string">"Capacitor"</span>, <span className="string">"Chrome Web Store"</span>, <span className="string">"VSCode Marketplace"</span>],</div>
-                        <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">"backendAndCloud"</span>: [<span className="string">"Firebase"</span>, <span className="string">"REST APIs"</span>, <span className="string">"Serverless"</span>],</div>
-                        <div className="code-line"><span className="line-number">{pad(5)}</span>&nbsp;&nbsp;<span className="property">"systemAndDevOps"</span>: [<span className="string">"Linux Ubuntu"</span>, <span className="string">"Bash"</span>, <span className="string">"Systemd"</span>, <span className="string">"Git"</span>],</div>
-                        <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">"target"</span>: <span className="string">"{targetText}"</span></div>
-                        <div className="code-line"><span className="line-number">{pad(7)}</span>&#125;</div>
+                        {Object.entries(stackJsonObj).map(([key, value], i, entries) => (
+                            <div key={key} className="code-line">
+                                <span className="line-number">{pad(i + 2)}</span>&nbsp;&nbsp;<span className="property">"{key}"</span>: {renderJsonValue(value)}{i < entries.length - 1 ? ',' : ''}
+                            </div>
+                        ))}
+                        <div className="code-line"><span className="line-number">{pad(Object.keys(stackJsonObj).length + 2)}</span>&#125;</div>
                     </div>
                 )}
 

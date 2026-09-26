@@ -4,13 +4,13 @@
         "passion": "Évoluer dans le domaine de l'informatique",
         "skills": [
             "JavaScript",
-            "Python",
-            "React",
-            "Next.js",
-            "TypeScript",
-            "HTML/CSS",
+            "CSS",
+            "PHP",
             "Bash",
-            "Firebase"
+            "SQL",
+            "PL/SQL",
+            "C",
+            "Java"
         ],
         "mindset": "Organisé, rigoureux et proactif",
         "currentFocus": "BUT Informatique — IUT Nancy-Charlemagne",
@@ -31,7 +31,6 @@
             "contract": "Apprentissage / Professionnalisation",
             "period": "2027 - 2028 (1 an en BUT 3) • Poursuite visée en école d'ingénieurs (Télécom Nancy)",
             "location": "Nancy / Grand Est / Télétravail",
-            "stack": "Linux, Bash, PHP, Java, C, SQL/PLSQL, css/js",
             "rhythm": "Rythme IUT Nancy-Charlemagne",
             "strengths": [
                 {
@@ -41,13 +40,13 @@
                 },
                 {
                     "icon": "🔄",
-                    "title": "Double Culture Web Moderne & Système",
-                    "desc": "Maîtrise de l'écosystème React / Next.js / TypeScript alliée à une passion pour Linux, Bash, Systemd et Python."
+                    "title": "Double Culture Web & Système",
+                    "desc": "Solides bases en développement web (PHP, JavaScript) et en administration Linux (Bash, Systemd), avec une pratique réelle et une ouverture aux frameworks modernes."
                 },
                 {
                     "icon": "📐",
                     "title": "Rigueur Scientifique & Algorithmique",
-                    "desc": "Bac Mention Bien avec spécialités Maths & Maths Expertes. Solide sens de la logique, conception UML/MCD et algorithmique."
+                    "desc": "Bac Mention Bien avec spécialités Maths & Maths Expertes. Solide sens de la logique, conception UML et algorithmique."
                 },
                 {
                     "icon": "🚀",
@@ -61,12 +60,25 @@
         {
             "icon": "🌐",
             "title": "Développement Web",
-            "description": "Création d'applications web modernes et performantes avec React, Next.js, HTML, CSS et JavaScript.",
+            "description": "Création de sites web : PHP côté serveur, interfaces HTML, CSS et JavaScript.",
             "tags": [
+                "HTML/CSS",
+                "PHP",
+                "JavaScript"
+            ],
+            "discovering": [
                 "React",
                 "Next.js",
-                "HTML/CSS",
                 "TypeScript"
+            ]
+        },
+        {
+            "icon": "💻",
+            "title": "Langages compilés",
+            "description": "Programmation objet et système enseignée en BUT Informatique.",
+            "tags": [
+                "Java",
+                "C"
             ]
         },
         {
@@ -80,33 +92,25 @@
             ]
         },
         {
-            "icon": "🐍",
-            "title": "Python & Scripts",
-            "description": "Automatisation, applications de bureau PyQt5 et langages de script.",
-            "tags": [
-                "Python",
-                "PyQt5",
-                "Bash"
-            ]
-        },
-        {
             "icon": "🗄️",
             "title": "Bases de Données & Cloud",
-            "description": "Conception de backend serverless, bases de données en temps réel et intégration d'API.",
+            "description": "Bases de données relationnelles (SQL/PLSQL), backend serverless et intégration d'API.",
             "tags": [
+                "SQL",
+                "PL/SQL",
                 "Firebase",
-                "API REST",
-                "JSON"
+                "API"
             ]
         },
         {
             "icon": "🧠",
             "title": "Logique & Algorithmes",
-            "description": "Bon raisonnement mathématique, conception UML/MCD et écriture de pseudo-code.",
+            "description": "Bon raisonnement mathématique, conception UML et écriture de pseudo-code.",
+            "hideFromStack": true,
             "tags": [
                 "Algorithmique",
-                "UML",
-                "MCD"
+                "Mathématique",
+                "UML"
             ]
         },
         {
@@ -117,6 +121,9 @@
                 "Linux",
                 "Systemd",
                 "Git"
+            ],
+            "discovering": [
+                "Rust"
             ]
         }
     ],
@@ -452,8 +459,7 @@
             "tags": [
                 "Python",
                 "PyQt5",
-                "requests",
-                "json"
+                "requests"
             ],
             "link": {
                 "github": "Applications_Automatical_Installer",
@@ -511,7 +517,8 @@
             "period": "2022",
             "title": "Brevet Mention Bien",
             "highlight": "566 points",
-            "school": "Collège Alfred Mézières, Jarny"
+            "school": "Collège Alfred Mézières, Jarny",
+            "hideOnCv": true
         },
         {
             "icon": "🏆",
@@ -520,14 +527,6 @@
             "title": "Certification PIX",
             "highlight": "583 PIX",
             "school": "Score de 583 PIX en Terminale"
-        },
-        {
-            "icon": "🏆",
-            "type": "certification",
-            "period": "02/04/2022",
-            "title": "Certification PIX",
-            "highlight": "321 PIX",
-            "school": "Score de 321 PIX en 3ème"
         }
     ],
     "languages": [

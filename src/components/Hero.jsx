@@ -101,6 +101,18 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                             <span>Me Contacter</span>
                         </a>
                     )}
+
+                    <a
+                        href="cv/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-secondary"
+                        aria-label={`CV de ${developer.name}`}
+                        title="Voir mon CV (nouvel onglet)"
+                    >
+                        <span aria-hidden="true">📄</span>
+                        <span>Mon CV</span>
+                    </a>
                 </div>
 
                 {/* Social Quick Circles */}

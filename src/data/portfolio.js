@@ -23,6 +23,7 @@ import {
     GITHUB_USERNAME,
     GITHUB_ORG_USERNAME,
     LINKEDIN_URL,
+    SITE_URL,
 } from '../config/site';
 
 /** Construit l'URL complète d'un lien projet depuis le compte centralisé (perso ou org). */
@@ -43,6 +44,7 @@ const developer = {
     email: CONTACT_EMAIL,
     github: GITHUB_URL,
     linkedin: LINKEDIN_URL,
+    site: SITE_URL,
 };
 
 const projects = rawData.projects.map((project) => ({

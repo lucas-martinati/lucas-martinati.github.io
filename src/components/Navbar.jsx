@@ -192,6 +192,19 @@ export default function Navbar({ developer = {} }) {
 
                     <div className="mobile-nav-divider" />
 
+                    <a
+                        href="cv/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mobile-nav-link recruiter"
+                        aria-label={`CV de ${developer.name}`}
+                    >
+                        <span>📄 Mon CV</span>
+                        <span className="mobile-link-arrow">→</span>
+                    </a>
+
+                    <div className="mobile-nav-divider" />
+
                     {/* Social Icons row */}
                     <div className="mobile-socials-grid">
                         {githubUrl && (
