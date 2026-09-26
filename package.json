@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "cv:pdf": "node scripts/generate-cv-pdf.mjs",
-    "deploy": "npm run build && gh-pages -d dist -b gh-pages --dotfiles"
+    "deploy": "npm run cv:pdf && gh-pages -d dist -b gh-pages --dotfiles"
   },
   "dependencies": {
     "react": "^19.0.0",
