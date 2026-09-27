@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { GithubIcon, LinkedinIcon, MailIcon } from './Icons';
+import { GithubIcon, LinkedinIcon, MailIcon, CvIcon } from './Icons';
 
 const NAV_ITEMS = [
     { id: 'about', label: 'À propos' },
@@ -146,6 +146,16 @@ export default function Navbar({ developer = {} }) {
                             <MailIcon size={18} />
                         </a>
                     )}
+                    <a
+                        href="cv/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="nav-icon-link nav-cv-link"
+                        aria-label={`CV de ${developer.name}`}
+                        title="Voir mon CV"
+                    >
+                        <CvIcon size={18} />
+                    </a>
                 </div>
 
                 {/* Mobile Header Controls (visible only on mobile) */}

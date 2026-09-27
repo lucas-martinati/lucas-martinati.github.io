@@ -25,6 +25,8 @@
     padding: 24px 16px 56px;
     font-family: "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: var(--cv-ink);
+    overflow-x: clip;
+    max-width: 100%;
 }
 
 /* Barre d'outils écran */
@@ -65,11 +67,15 @@
    (À l'impression : pleine largeur A4 via @page, voir plus bas.) */
 .cv-sheet {
     max-width: 900px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     margin: 0 auto;
     background: var(--cv-sheet);
     border-radius: 14px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
     padding: 22px 24px 16px;
+    overflow-x: clip;
 }
 
 /* En-tête */
@@ -182,8 +188,13 @@ a.cv-chip {
 /* Stack technique : visible dès le premier coup d'œil */
 .cv-tech-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px 12px;
+    min-width: 0;
+}
+
+.cv-tech-cat {
+    min-width: 0;
 }
 
 .cv-tech-label {
@@ -208,12 +219,14 @@ a.cv-chip {
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
+    max-width: 100%;
     background: var(--cv-card-deep);
     border-radius: 999px;
     padding: 2px 9px;
     font-size: 10px;
     font-weight: 700;
     white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .cv-pill-soft {
@@ -400,8 +413,50 @@ a.cv-chip {
 
 /* Petit écran : une colonne */
 @media screen and (max-width: 700px) {
+    .cv-page {
+        padding: 12px 8px 32px;
+    }
+
+    .cv-sheet {
+        padding: 14px 12px 12px;
+        border-radius: 12px;
+    }
+
+    .cv-header {
+        padding: 14px 12px;
+        gap: 12px;
+    }
+
+    .cv-name {
+        font-size: clamp(20px, 6vw, 24px);
+        overflow-wrap: anywhere;
+    }
+
+    .cv-chip {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .cv-contact {
+        width: 100%;
+    }
+
+    /* Stack : 2 colonnes, pastilles autorisées à passer à la ligne */
+    .cv-tech-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cv-pill {
+        white-space: normal;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
     .cv-columns {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .cv-header {
@@ -415,6 +470,25 @@ a.cv-chip {
 
     .cv-exp-head {
         flex-direction: column;
+    }
+
+    .cv-edu-head {
+        flex-wrap: wrap;
+    }
+}
+
+/* Très petits écrans : stack en 1 colonne pour éviter tout dépassement */
+@media screen and (max-width: 480px) {
+    .cv-page {
+        padding: 8px 6px 24px;
+    }
+
+    .cv-sheet {
+        padding: 12px 10px 10px;
+    }
+
+    .cv-tech-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
