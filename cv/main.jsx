@@ -6,8 +6,15 @@ import cvData from './cv-data.json';
 import Cv from './Cv.jsx';
 import './cv.css';
 
-ReactDOM.createRoot(document.getElementById('cv-root')).render(
+const app = (
     <React.StrictMode>
         <Cv developer={portfolio.developer} education={portfolio.education} skills={portfolio.skills} cv={cvData} />
     </React.StrictMode>
 );
+
+const container = document.getElementById('cv-root');
+if (container.hasChildNodes()) {
+    ReactDOM.hydrateRoot(container, app);
+} else {
+    ReactDOM.createRoot(container).render(app);
+}

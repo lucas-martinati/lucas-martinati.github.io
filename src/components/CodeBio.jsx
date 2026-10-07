@@ -1,10 +1,11 @@
+import useClipboard from '../utils/useClipboard';
 import { useState, useMemo, useEffect } from 'react';
 import { CopyIcon, CheckIcon } from './Icons';
 import { getComputedMetrics } from '../utils/metrics';
 
 export default function CodeBio({ developer = {}, projects = [], education = [], skills = [] }) {
     const [activeTab, setActiveTab] = useState('js'); // 'js' | 'json' | 'sh'
-    const [copied, setCopied] = useState(false);
+    const { copied, copyError, copy } = useClipboard();
 
     const metrics = useMemo(() => {
         return getComputedMetrics({ developer, projects, education });
@@ -120,17 +121,6 @@ echo "mailto:${developer.email}"
 echo "Statut : Prêt à intégrer votre équipe !"`;
     };
 
-    const handleCopy = async () => {
-        try {
-            await navigator.clipboard.writeText(getRawContent());
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
-
     const pad = (n) => String(n).padStart(2, '0');
 
     return (
@@ -144,10 +134,11 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 </div>
 
                 {/* File Tabs */}
-                <div className="code-tabs">
+                <div className="code-tabs js-only">
                     <button
                         type="button"
                         className={`code-tab ${activeTab === 'js' ? 'active' : ''}`}
+                        aria-pressed={activeTab === 'js'}
                         onClick={() => {
                             setActiveTab('js');
                         }}
@@ -159,6 +150,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                     <button
                         type="button"
                         className={`code-tab ${activeTab === 'json' ? 'active' : ''}`}
+                        aria-pressed={activeTab === 'json'}
                         onClick={() => {
                             setActiveTab('json');
                         }}
@@ -171,6 +163,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                         <button
                             type="button"
                             className={`code-tab ${activeTab === 'sh' ? 'active' : ''}`}
+                        aria-pressed={activeTab === 'sh'}
                             onClick={() => {
                                 setActiveTab('sh');
                             }}
@@ -184,13 +177,13 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 {/* Copy Button */}
                 <button
                     type="button"
-                    className={`code-copy-btn ${copied ? 'copied' : ''}`}
-                    onClick={handleCopy}
+                    className={`code-copy-btn js-only ${copied ? 'copied' : ''}`}
+                    onClick={() => copy(getRawContent())}
                     aria-label="Copier le code source de l'onglet"
                     title="Copier le code"
                 >
                     {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-                    <span>{copied ? 'Copié !' : 'Copier'}</span>
+                    <span aria-live="polite">{copied ? 'Copié !' : copyError ? 'Échec' : 'Copier'}</span>
                 </button>
             </div>
 

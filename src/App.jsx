@@ -15,17 +15,7 @@ import ScrollReveal from './components/ScrollReveal';
 import Toast from './components/Toast';
 import { SearchIcon, SparklesIcon } from './components/Icons';
 
-function getProjectCategory(project) {
-    if (project.category) return project.category;
-    const tagsLower = (project.tags || []).map((t) => t.toLowerCase());
-    if (tagsLower.some((t) => t.includes('extension') || t.includes('chrome') || t.includes('vscode'))) {
-        return 'extension';
-    }
-    if (tagsLower.some((t) => t.includes('linux') || t.includes('systemd') || t.includes('bash') || t.includes('pyqt5') || t.includes('rust') || t.includes('tui'))) {
-        return 'system';
-    }
-    return 'web';
-}
+import { getProjectCategory, matchesSearch } from './utils/projects';
 
 export default function App() {
     const [activeCategory, setActiveCategory] = useState('all');
@@ -54,41 +44,18 @@ export default function App() {
         };
     }, []);
 
-    // Background Scroll Lock when Modal is active
-    useEffect(() => {
-        const isModalActive = selectedProject !== null;
-        document.body.style.overflow = isModalActive ? 'hidden' : '';
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [selectedProject]);
-
-    // Category counts calculation
+    const searchResults = useMemo(() => data.projects.filter((project) => matchesSearch(project, searchQuery)), [searchQuery]);
     const counts = useMemo(() => {
-        const res = { all: data.projects.length, web: 0, extension: 0, system: 0 };
-        data.projects.forEach((p) => {
-            const cat = getProjectCategory(p);
-            if (res[cat] !== undefined) res[cat]++;
-        });
-        return res;
-    }, []);
+        const result = { all: searchResults.length, web: 0, extension: 0, system: 0 };
+        searchResults.forEach((project) => result[getProjectCategory(project)]++);
+        return result;
+    }, [searchResults]);
 
     const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking;
 
-    // Filter projects based on activeCategory AND searchQuery
-    const filteredProjects = useMemo(() => {
-        return data.projects.filter((p) => {
-            const matchesCategory = activeCategory === 'all' || getProjectCategory(p) === activeCategory;
-            if (!matchesCategory) return false;
-
-            if (!searchQuery.trim()) return true;
-            const query = searchQuery.toLowerCase();
-            const inTitle = p.title.toLowerCase().includes(query);
-            const inDesc = p.description && p.description.toLowerCase().includes(query);
-            const inTags = p.tags && p.tags.some((t) => t.toLowerCase().includes(query));
-            return inTitle || inDesc || inTags;
-        });
-    }, [activeCategory, searchQuery]);
+    const filteredProjects = useMemo(() => searchResults.filter((project) =>
+        activeCategory === 'all' || getProjectCategory(project) === activeCategory
+    ), [activeCategory, searchResults]);
 
     const handleCategoryClick = (cat) => {
         setActiveCategory(cat);
@@ -96,19 +63,146 @@ export default function App() {
 
     return (
         <>
+            <a className="skip-link" href="#main-content">Aller au contenu</a>
             <AnimatedBackground />
 
             {/* Navbar */}
             <Navbar
                 developer={data.developer}
+                projectCount={data.projects.length}
             />
 
+            <main id="main-content" tabIndex={-1}>
             {/* Hero Section */}
             <Hero
                 developer={data.developer}
                 projects={data.projects}
                 education={data.education}
             />
+
+            {/* Section Projets */}
+            <section className="projects" id="projects">
+                <div className="section-badge-center">
+                    <span>Portfolio Réalisations</span>
+                </div>
+                <h2 className="section-title">Mes Projets</h2>
+                <p className="projects-subtitle">
+                    Découvrez une sélection de {data.projects.length} projets concrets : applications web, extensions de navigateurs, outils système et défis algorithmiques.
+                </p>
+
+                {/* Search Bar & Category Filters Bar */}
+                <div className="projects-controls-wrap js-only">
+                    {/* Live Search Input */}
+                    <div className="project-search-bar">
+                        <SearchIcon size={18} className="search-icon-svg" />
+                        <input
+                            type="search"
+                            placeholder="Un projet, une technologie…"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="project-search-input"
+                            aria-label="Rechercher un projet"
+                            aria-controls="project-results"
+                        />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                className="search-clear-btn"
+                                onClick={() => {
+                                    setSearchQuery('');
+                                }}
+                                aria-label="Effacer la recherche"
+                            >
+                                &times;
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Filtres de catégories */}
+                    <div className="project-filters" role="group" aria-label="Filtrer les projets par catégorie">
+                        <button
+                            type="button"
+                            className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
+                            onClick={() => handleCategoryClick('all')}
+                            aria-pressed={activeCategory === 'all'}
+                        >
+                            <span>Tous</span>
+                            <span className="filter-count">{counts.all}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`filter-btn ${activeCategory === 'web' ? 'active' : ''}`}
+                            onClick={() => handleCategoryClick('web')}
+                            aria-pressed={activeCategory === 'web'}
+                        >
+                            <span>Web &amp; Full-Stack</span>
+                            <span className="filter-count">{counts.web}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`filter-btn ${activeCategory === 'extension' ? 'active' : ''}`}
+                            onClick={() => handleCategoryClick('extension')}
+                            aria-pressed={activeCategory === 'extension'}
+                        >
+                            <span>Extensions</span>
+                            <span className="filter-count">{counts.extension}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`filter-btn ${activeCategory === 'system' ? 'active' : ''}`}
+                            onClick={() => handleCategoryClick('system')}
+                            aria-pressed={activeCategory === 'system'}
+                        >
+                            <span>Système &amp; Scripts</span>
+                            <span className="filter-count">{counts.system}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="project-results-summary js-only">
+                    <p role="status" aria-live="polite" aria-atomic="true">
+                        {filteredProjects.length} projet{filteredProjects.length > 1 ? 's' : ''}
+                        {searchQuery.trim() || activeCategory !== 'all' ? ` sur ${data.projects.length}` : ' à explorer'}
+                    </p>
+                    {(searchQuery || activeCategory !== 'all') && (
+                        <button type="button" className="reset-filters" onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}>
+                            Tout afficher
+                        </button>
+                    )}
+                </div>
+                <div id="project-results">
+                {/* Projects Grid or Empty State */}
+                {filteredProjects.length > 0 ? (
+                    <div className="projects-grid">
+                        {filteredProjects.map((project, i) => (
+                            <ScrollReveal key={project.title} delay={(i % 3) * 0.08}>
+                                <ProjectCard
+                                    project={project}
+                                    index={i}
+                                    onOpenModal={(proj) => setSelectedProject(proj)}
+                                />
+                            </ScrollReveal>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="projects-empty-state">
+                        <div className="empty-emoji">🔍</div>
+                        <h3>Aucun projet ne correspond à votre recherche</h3>
+                        <p>Essayez avec d'autres termes comme "React", "Python", "Vite" ou réinitialisez les filtres.</p>
+                        <button
+                            type="button"
+                            className="btn-secondary"
+                            onClick={() => {
+                                setActiveCategory('all');
+                                setSearchQuery('');
+                            }}
+                        >
+                            Réinitialiser la recherche
+                        </button>
+                    </div>
+                )}
+                </div>
+            </section>
 
             {/* Section À propos */}
             <section className="about" id="about">
@@ -146,112 +240,6 @@ export default function App() {
                 </ScrollReveal>
             )}
 
-            {/* Section Projets */}
-            <section className="projects" id="projects">
-                <div className="section-badge-center">
-                    <span>Portfolio Réalisations</span>
-                </div>
-                <h2 className="section-title">Mes Projets</h2>
-                <p className="projects-subtitle">
-                    Découvrez une sélection de {data.projects.length} projets concrets : applications web, extensions de navigateurs, outils système et défis algorithmiques.
-                </p>
-
-                {/* Search Bar & Category Filters Bar */}
-                <div className="projects-controls-wrap">
-                    {/* Live Search Input */}
-                    <div className="project-search-bar">
-                        <SearchIcon size={18} className="search-icon-svg" />
-                        <input
-                            type="text"
-                            placeholder="Rechercher par mot-clé, techno (ex: React, Python, Extension)..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="project-search-input"
-                            aria-label="Rechercher un projet"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                className="search-clear-btn"
-                                onClick={() => {
-                                    setSearchQuery('');
-                                }}
-                                aria-label="Effacer la recherche"
-                            >
-                                &times;
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Filtres de catégories */}
-                    <div className="project-filters">
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('all')}
-                        >
-                            <span>Tous</span>
-                            <span className="filter-count">{counts.all}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'web' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('web')}
-                        >
-                            <span>Web &amp; Full-Stack</span>
-                            <span className="filter-count">{counts.web}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'extension' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('extension')}
-                        >
-                            <span>Extensions</span>
-                            <span className="filter-count">{counts.extension}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'system' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('system')}
-                        >
-                            <span>Système &amp; Scripts</span>
-                            <span className="filter-count">{counts.system}</span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Projects Grid or Empty State */}
-                {filteredProjects.length > 0 ? (
-                    <div className="projects-grid">
-                        {filteredProjects.map((project, i) => (
-                            <ScrollReveal key={project.title} delay={(i % 3) * 0.08}>
-                                <ProjectCard
-                                    project={project}
-                                    index={i}
-                                    onOpenModal={(proj) => setSelectedProject(proj)}
-                                />
-                            </ScrollReveal>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="projects-empty-state">
-                        <div className="empty-emoji">🔍</div>
-                        <h3>Aucun projet ne correspond à votre recherche</h3>
-                        <p>Essayez avec d'autres termes comme "React", "Python", "Vite" ou réinitialisez les filtres.</p>
-                        <button
-                            type="button"
-                            className="btn-secondary"
-                            onClick={() => {
-                                setActiveCategory('all');
-                                setSearchQuery('');
-                            }}
-                        >
-                            Réinitialiser la recherche
-                        </button>
-                    </div>
-                )}
-            </section>
-
             {/* Parcours */}
             <section className="education" id="education">
                 <div className="section-badge-center">
@@ -282,6 +270,8 @@ export default function App() {
                 </div>
             </section>
 
+            </main>
+
             {/* Contact & Réseaux */}
             <ScrollReveal>
                 <Footer developer={data.developer} />
@@ -290,7 +280,7 @@ export default function App() {
             {/* Project Details Modal */}
             <ProjectModal
                 project={selectedProject}
-                allProjects={data.projects}
+                allProjects={filteredProjects}
                 onSelectProject={(proj) => setSelectedProject(proj)}
                 onClose={() => setSelectedProject(null)}
             />

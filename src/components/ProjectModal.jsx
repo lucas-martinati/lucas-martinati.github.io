@@ -1,5 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon } from './Icons';
+import useDialog from '../utils/useDialog';
+import { getProjectCategory } from '../utils/projects';
+import ResponsiveImage from './ResponsiveImage';
 
 const CATEGORY_LABELS = {
     extension: 'Extension',
@@ -8,6 +11,11 @@ const CATEGORY_LABELS = {
 };
 
 export default function ProjectModal({ project, allProjects = [], onSelectProject, onClose }) {
+    const dialogRef = useDialog(Boolean(project));
+    useEffect(() => {
+        const card = dialogRef.current?.querySelector('.modal-card');
+        if (card) card.scrollTop = 0;
+    }, [project, dialogRef]);
     const currentIndex = project
         ? allProjects.findIndex((p) => p.title === project.title)
         : -1;
@@ -31,11 +39,12 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
         if (!project) return;
 
         const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
-                onClose();
-            } else if (e.key === 'ArrowRight') {
+            if (e.altKey || e.ctrlKey || e.metaKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
                 goToNext();
             } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
                 goToPrev();
             }
         };
@@ -53,16 +62,18 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
     };
 
     const hasImage = Boolean(project.imageUrl);
-    const categoryLabel = CATEGORY_LABELS[project.category];
+    const categoryLabel = CATEGORY_LABELS[getProjectCategory(project)];
     const linkHref = project.link?.href;
 
     return (
-        <div className="modal-overlay" onClick={handleOverlayClick} role="dialog" aria-modal="true">
+        <dialog ref={dialogRef} className="modal-overlay" onClick={handleOverlayClick} aria-labelledby="project-modal-title"
+            onCancel={(event) => { event.preventDefault(); onClose(); }}>
             <div className="modal-card">
                 {/* Close Button */}
                 <button
                     type="button"
                     className="modal-close-btn"
+                    autoFocus
                     onClick={onClose}
                     aria-label="Fermer la fenêtre de détails"
                 >
@@ -72,7 +83,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                 {/* Banner / Cover */}
                 <div className={`modal-banner ${hasImage ? 'has-cover' : 'gradient-banner'}`}>
                     {hasImage ? (
-                        <img src={project.imageUrl} alt={project.title} className="modal-cover-img" />
+                        <ResponsiveImage src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="modal-cover-img" sizes="(max-width: 760px) 100vw, 760px" />
                     ) : (
                         <span className="modal-emoji">{project.emoji}</span>
                     )}
@@ -95,7 +106,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                             </span>
                             <span className="modal-category-tag">{categoryLabel}</span>
                         </div>
-                        <h2 className="modal-title">{project.title}</h2>
+                        <h2 className="modal-title" id="project-modal-title" aria-live="polite">{project.title}</h2>
                     </div>
 
                     <p className="modal-description">{project.description}</p>
@@ -181,6 +192,6 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     </div>
                 </div>
             </div>
-        </div>
+        </dialog>
     );
 }

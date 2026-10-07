@@ -1,15 +1,23 @@
+@font-face {
+    font-family: 'Lexend Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2') format('woff2');
+}
+
 /* ─────────────────────────────────────────────
    Page CV — écran + impression A4.
    Écran : feuille centrée sur fond sombre + barre d'outils.
    Impression : rendu fidèle à l'écran (cartes, arrondis,
    couleurs conservées), 1 page A4.
-   Police système volontairement (fiabilité d'impression).
+   Police Lexend hébergée localement pour une impression hors ligne.
    ───────────────────────────────────────────── */
 
 :root {
     --cv-ink: #1f2937;
-    --cv-muted: #6b7280;
-    --cv-accent: #0e7490;
+    --cv-muted: #545c69;
+    --cv-accent: #0b657d;
     --cv-accent-strong: #0b5a70;
     --cv-accent-soft: #cde7ee;
     --cv-sheet: #faf8f4;
@@ -23,7 +31,7 @@
     background: #111827;
     min-height: 100vh;
     padding: 24px 16px 56px;
-    font-family: "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: "Lexend Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: var(--cv-ink);
     overflow-x: clip;
     max-width: 100%;

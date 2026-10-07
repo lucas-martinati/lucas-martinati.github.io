@@ -10,7 +10,8 @@
             "SQL",
             "PL/SQL",
             "C",
-            "Java"
+            "Java",
+            "IA générative"
         ],
         "mindset": "Organisé, rigoureux et proactif",
         "currentFocus": "BUT Informatique — IUT Nancy-Charlemagne",
@@ -124,6 +125,16 @@
             ],
             "discovering": [
                 "Rust"
+            ]
+        },
+        {
+            "icon": "🤖",
+            "title": "Intelligence artificielle",
+            "description": "Maîtrise des outils d'IA générative pour assister le développement, structurer les prompts et automatiser les tâches.",
+            "tags": [
+                "IA générative",
+                "Prompting",
+                "Développement assisté par IA"
             ]
         }
     ],

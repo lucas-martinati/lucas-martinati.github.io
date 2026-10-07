@@ -26,6 +26,8 @@ const MIME = {
     '.css': 'text/css',
     '.json': 'application/json',
     '.png': 'image/png',
+    '.webp': 'image/webp',
+    '.woff2': 'font/woff2',
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.svg': 'image/svg+xml',
@@ -54,7 +56,10 @@ function serve(dir) {
 }
 
 console.log('→ build…');
-spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit', shell: true });
+const build = spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit' });
+if (build.error || build.status !== 0) {
+    throw build.error ?? new Error(`Échec du build (code ${build.status})`);
+}
 
 const server = await serve(path.join(root, 'dist'));
 const port = server.address().port;

@@ -1,3 +1,4 @@
+import ResponsiveImage from '../src/components/ResponsiveImage';
 // Page CV — imprimable (voir cv/cv.css pour les règles @media print).
 // Le bouton télécharge public/cv.pdf, généré par `npm run cv:pdf`
 // (impression headless Chrome : rendu identique au Ctrl+P).
@@ -67,7 +68,7 @@ export default function Cv({ developer = {}, education = [], skills = [], cv = {
                         </div>
                     </div>
                     {photoSrc && (
-                        <img src={photoSrc} alt={`Photo de ${developer.name}`} className="cv-photo" />
+                        <ResponsiveImage src={cv.photo} prefix={cv.photo.startsWith('http') ? '' : '../'} alt={`Photo de ${developer.name}`} className="cv-photo" sizes="160px" />
                     )}
                 </header>
 

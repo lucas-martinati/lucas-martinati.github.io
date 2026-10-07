@@ -1,17 +1,20 @@
 import { useState, useEffect, useMemo } from 'react';
+import useDialog from '../utils/useDialog';
 import { GithubIcon, LinkedinIcon, MailIcon, CvIcon } from './Icons';
 
 const NAV_ITEMS = [
+    { id: 'projects', label: 'Projets' },
     { id: 'about', label: 'À propos' },
-    { id: 'projects', label: 'Projets', mobileBadge: '16+' },
     { id: 'recruiter', label: 'Recrutement', mobileLabel: '🎯 Espace Recruteur', isRecruiter: true, requireSeeking: true },
     { id: 'education', label: 'Parcours', mobileLabel: 'Parcours & Diplômes' },
     { id: 'contact', label: 'Contact', mobileLabel: 'Contact & Réseaux' }
 ];
 
-export default function Navbar({ developer = {} }) {
+export default function Navbar({ developer = {}, projectCount = 0 }) {
     const [activeSection, setActiveSection] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const dialogRef = useDialog(mobileMenuOpen);
 
     const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking;
 
@@ -47,31 +50,26 @@ export default function Navbar({ developer = {} }) {
             setActiveSection(current);
         };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        let frame = 0;
+        const scheduleScroll = () => {
+            if (!frame) frame = requestAnimationFrame(() => { frame = 0; handleScroll(); });
+        };
+        window.addEventListener('scroll', scheduleScroll, { passive: true });
         handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', scheduleScroll);
+            cancelAnimationFrame(frame);
+        };
     }, [navItems]);
 
-    const handleClick = (e, targetId) => {
-        e.preventDefault();
-        setMobileMenuOpen(false);
-        const el = document.getElementById(targetId);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-    };
+    const handleClick = () => setMobileMenuOpen(false);
 
-    // Lock body scroll when mobile menu is open
     useEffect(() => {
-        if (!mobileMenuOpen) return;
-        document.body.style.overflow = 'hidden';
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') setMobileMenuOpen(false);
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => {
-            document.body.style.overflow = '';
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [mobileMenuOpen]);
+        const breakpoint = window.matchMedia('(min-width: 861px)');
+        const closeOnDesktop = () => { if (breakpoint.matches) setMobileMenuOpen(false); };
+        breakpoint.addEventListener('change', closeOnDesktop);
+        return () => breakpoint.removeEventListener('change', closeOnDesktop);
+    }, []);
 
     const githubUrl = developer.github;
     const linkedinUrl = developer.linkedin;
@@ -80,14 +78,11 @@ export default function Navbar({ developer = {} }) {
     return (
         <>
             <header>
-                <nav>
+                <nav aria-label="Navigation principale">
                 <a
-                    href="#"
+                    href="#top"
                     className="logo"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
+
                 >
                     <span className="logo-accent">{developer.initials}</span>{developer.brandSuffix}
                 </a>
@@ -99,7 +94,8 @@ export default function Navbar({ developer = {} }) {
                             <a
                                 href={`#${item.id}`}
                                 className={`${item.isRecruiter ? 'nav-recruiter-link' : ''} ${activeSection === item.id ? 'active' : ''}`}
-                                onClick={(e) => handleClick(e, item.id)}
+                                onClick={handleClick}
+                                aria-current={activeSection === item.id ? 'location' : undefined}
                             >
                                 {item.isRecruiter && <span className="nav-pulse-dot"></span>}
                                 {item.label}
@@ -168,6 +164,8 @@ export default function Navbar({ developer = {} }) {
                         }}
                         aria-label="Menu de navigation"
                         aria-expanded={mobileMenuOpen}
+                        aria-controls="mobile-navigation"
+                        aria-haspopup="dialog"
                     >
                         <span className={`bar ${mobileMenuOpen ? 'open' : ''}`}></span>
                         <span className={`bar ${mobileMenuOpen ? 'open' : ''}`}></span>
@@ -179,20 +177,23 @@ export default function Navbar({ developer = {} }) {
 
         {/* Mobile Nav Overlay & Drawer (rendered outside header so containing block is true viewport) */}
         {mobileMenuOpen && (
-            <div className="mobile-nav-container">
+            <dialog ref={dialogRef} id="mobile-navigation" className="mobile-nav-container" aria-label="Navigation mobile"
+                onCancel={(event) => { event.preventDefault(); setMobileMenuOpen(false); }}>
                 <div className="mobile-nav-backdrop" onClick={() => setMobileMenuOpen(false)} />
-                <div className="mobile-nav-menu" role="dialog" aria-modal="true" aria-label="Menu de navigation mobile">
+                <div className="mobile-nav-menu">
+                    <button type="button" className="mobile-menu-close" autoFocus onClick={() => setMobileMenuOpen(false)} aria-label="Fermer le menu">Fermer <span aria-hidden="true">×</span></button>
                     <div className="mobile-nav-links">
                         {navItems.map((item) => (
                             <a
                                 key={item.id}
                                 href={`#${item.id}`}
                                 className={`mobile-nav-link ${item.isRecruiter ? 'recruiter' : ''} ${activeSection === item.id ? 'active' : ''}`}
-                                onClick={(e) => handleClick(e, item.id)}
+                                onClick={handleClick}
+                                aria-current={activeSection === item.id ? 'location' : undefined}
                             >
                                 <span>{item.mobileLabel || item.label}</span>
-                                {item.mobileBadge ? (
-                                    <span className="mobile-link-pill">{item.mobileBadge}</span>
+                                {item.id === 'projects' ? (
+                                    <span className="mobile-link-pill">{projectCount}</span>
                                 ) : (
                                     <span className="mobile-link-arrow">→</span>
                                 )}
@@ -252,7 +253,7 @@ export default function Navbar({ developer = {} }) {
                         )}
                     </div>
                 </div>
-            </div>
+            </dialog>
         )}
     </>
     );

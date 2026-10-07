@@ -1,3 +1,19 @@
+@font-face {
+    font-family: 'Inter Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Fira Code Variable';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2') format('woff2');
+}
+
 /* ===================================================
    DESIGN SYSTEM — Lucas Martinati Portfolio
    Neo-Futuristic Glassmorphism 2.0 & High Performance
@@ -58,7 +74,7 @@ html {
 body {
     background: var(--bg-dark);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter Variable', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: clip;
@@ -809,7 +825,7 @@ nav {
     border: 1px solid transparent;
     color: var(--text-secondary);
     font-size: 0.82rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code Variable', monospace;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -843,7 +859,7 @@ nav {
     border-radius: 8px;
     font-size: 0.78rem;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter Variable', sans-serif;
     color: var(--text-secondary);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -864,7 +880,7 @@ nav {
 }
 
 .code-content {
-    font-family: 'Fira Code', 'Menlo', monospace;
+    font-family: 'Fira Code Variable', 'Menlo', monospace;
     font-size: 0.94rem;
     line-height: 1.7;
     padding: 1.5rem 1.8rem;
@@ -1630,8 +1646,8 @@ nav {
 }
 
 .tag-more {
-    color: var(--accent-purple) !important;
-    background: rgba(139, 92, 246, 0.08) !important;
+    color: #c4b5fd;
+    background: rgba(139, 92, 246, 0.08);
 }
 
 .project-actions-row {
@@ -1937,7 +1953,7 @@ nav {
 .modal-counter {
     font-size: 0.82rem;
     color: var(--text-muted);
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code Variable', monospace;
 }
 
 /* ===================================================
@@ -2394,7 +2410,7 @@ nav {
 
 .card-link-text {
     font-size: 0.88rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code Variable', monospace;
     color: var(--accent-blue);
     display: inline-flex;
     align-items: center;
@@ -3173,4 +3189,118 @@ nav {
         animation: none !important;
         transition: none !important;
     }
+}
+/* Faster first paint, consistent keyboard navigation and touch targets. */
+:root { --text-muted: #94a3b8; }
+html { scroll-padding-top: 6rem; scrollbar-gutter: stable; }
+:where(a, button, input, [tabindex]):focus-visible {
+    outline: 3px solid #a5b4fc;
+    outline-offset: 4px;
+}
+main:focus { outline: none; }
+button, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3000;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    color: #0b1120;
+    border-radius: 8px;
+    transform: translateY(-200%);
+}
+.skip-link:focus { transform: translateY(0); }
+.hero { min-height: min(900px, 100svh); }
+.hero-badge, .hero-title, .hero-role-wrapper, .hero-tagline,
+.hero-cta-group, .hero-social-minimal, .hero-metrics-row { animation: none; }
+.hero-role-wrapper { flex-wrap: wrap; gap: 0 0.25rem; }
+.hero-title, .section-title { text-wrap: balance; }
+.hero-tagline, .projects-subtitle, .contact-subtitle { text-wrap: pretty; }
+.project-card, .skill-card, .education-card, .language-card, .contact-card,
+.hero-metric-item, .code-bio, .recruiter-container {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.projects-grid > div { display: flex; }
+.project-card { width: 100%; }
+.project-card:focus-within { border-color: #a5b4fc; }
+.project-cover, .modal-cover-img { display: block; }
+.project-banner.has-cover { aspect-ratio: 16 / 10; height: auto; max-height: none; }
+.project-cover { position: absolute; inset: 0; height: 100%; max-height: none; }
+.search-icon-svg, .search-clear-btn { z-index: 1; }
+.projects-controls-wrap { margin-bottom: 1.25rem; }
+.project-results-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    min-height: 44px;
+}
+.reset-filters {
+    background: none;
+    color: #c4b5fd;
+    border: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    min-height: 44px;
+}
+.filter-btn, .card-quick-btn, .project-link, .copy-btn,
+.nav-icon-link, .search-clear-btn, .code-tab, .code-copy-btn {
+    min-height: 44px;
+}
+.nav-icon-link, .search-clear-btn { min-width: 44px; }
+.search-clear-btn { right: 0.3rem; }
+.project-search-input { font-size: 1rem; }
+.project-search-input::-webkit-search-cancel-button { display: none; }
+.comment, .line-number { color: #94a3b8; }
+.back-to-top-btn { text-decoration: none; }
+
+/* Native dialogs provide focus trapping, Escape and an inert background. */
+dialog { color: inherit; font: inherit; }
+dialog.modal-overlay, dialog.mobile-nav-container {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    border: 0;
+}
+dialog:not([open]) { display: none; }
+dialog::backdrop { background: rgba(3, 7, 18, 0.7); }
+.modal-card { overscroll-behavior: contain; max-height: 90dvh; }
+.modal-close-btn { width: 44px; height: 44px; }
+.mobile-menu-close {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    padding: 0.5rem 0.85rem;
+    min-height: 44px;
+    color: var(--text-primary);
+    background: #111827;
+    border: 1px solid var(--border-hover);
+    border-radius: 10px;
+    cursor: pointer;
+}
+.mobile-menu-close span { font-size: 1.4rem; line-height: 1; }
+@media (max-width: 860px) {
+    .mobile-nav-container[open] { display: block; }
+    .mobile-nav-menu { overscroll-behavior: contain; }
+}
+@media (max-width: 520px) {
+    .hero { min-height: auto; padding-top: 7rem; }
+    .project-filters { justify-content: flex-start; width: 100%; flex-wrap: wrap; margin: 0; padding: 0; overflow: visible; }
+    .filter-btn { flex: 1 1 auto; justify-content: center; }
+    .modal-card { max-height: 92dvh; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
 }

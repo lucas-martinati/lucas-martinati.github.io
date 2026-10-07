@@ -1,3 +1,4 @@
+import ResponsiveImage from './ResponsiveImage';
 import { SparklesIcon, ExternalLinkIcon, GithubIcon } from './Icons';
 
 export default function ProjectCard({ project, index, onOpenModal }) {
@@ -22,6 +23,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
     const handleCardClick = (e) => {
         // If clicking on interactive elements directly, let them handle it
         if (e.target.closest('a') || e.target.closest('button')) return;
+        e.currentTarget.querySelector('.card-quick-btn')?.focus({ preventScroll: true });
         if (onOpenModal) onOpenModal(project);
     };
 
@@ -44,7 +46,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                 style={!hasImage ? { background: `linear-gradient(135deg, ${c1}, ${c2})` } : undefined}
             >
                 {hasImage ? (
-                    <img src={project.imageUrl} alt={project.title} className="project-cover" loading="lazy" />
+                    <ResponsiveImage src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="project-cover" loading="lazy" sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 420px" />
                 ) : (
                     <span className="project-emoji">{project.emoji}</span>
                 )}
@@ -75,7 +77,9 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                     <div className="project-actions-row">
                         <button
                             type="button"
-                            className="card-quick-btn"
+                            className="card-quick-btn js-only"
+                            aria-label={`Voir la fiche de ${project.title}`}
+                            aria-haspopup="dialog"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (onOpenModal) onOpenModal(project);

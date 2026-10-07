@@ -4,13 +4,9 @@
     "age": "19 ans",
     "phone": "06 32 10 52 16",
     "location": "Nancy / Piennes (Grand Est)",
-    "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en gestion de bases de données, je mets mon sens de l'organisation et ma capacité d'adaptation au service de projets techniques concrets.",
+    "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en bases de données, je maîtrise également les outils d'IA générative pour assister le développement. Organisé et adaptable, je m'investis dans des projets techniques concrets.",
     "permit": "Permis B",
     "skills": [
-        {
-            "title": "Logique & Algorithmique",
-            "desc": "Bon raisonnement mathématique et algorithmique."
-        },
         {
             "title": "Organisation",
             "desc": "Gestion très structurée des tâches/priorités et des projets."
@@ -47,7 +43,11 @@
     "interests": [
         "Technologie",
         "Informatique",
-        "Sciences"
+        "Sciences",
+        "Intelligence artificielle",
+        "Open source",
+        "Échecs",
+        "Musique (guitare)"
     ],
     "activities": [
         {

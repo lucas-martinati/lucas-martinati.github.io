@@ -1,31 +1,9 @@
-import { useState } from 'react';
+import useClipboard from '../utils/useClipboard';
 import { GithubIcon, LinkedinIcon, MailIcon, ExternalLinkIcon, CopyIcon, CheckIcon, ArrowUpIcon } from './Icons';
 
 export default function Footer({ developer = {} }) {
-    const [copied, setCopied] = useState(false);
+    const { copied, copyError, copy } = useClipboard();
     const isSeeking = developer.recruitment?.enabled ?? developer.recruitment?.seeking;
-
-    const handleCopyEmail = async () => {
-        try {
-            await navigator.clipboard.writeText(developer.email);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2500);
-        } catch {
-            // fallback
-            const input = document.createElement('input');
-            input.value = developer.email;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2500);
-        }
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
 
     return (
         <footer className="site-footer" id="contact">
@@ -104,13 +82,13 @@ export default function Footer({ developer = {} }) {
                             </div>
                             <button
                                 type="button"
-                                className={`copy-btn ${copied ? 'copied' : ''}`}
-                                onClick={handleCopyEmail}
+                                className={`copy-btn js-only ${copied ? 'copied' : ''}`}
+                                onClick={() => copy(developer.email)}
                                 title={copied ? 'Email copié dans le presse-papier !' : "Copier l'adresse email"}
                                 aria-label="Copier l'adresse email"
                             >
                                 {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
-                                <span>{copied ? 'Copié !' : 'Copier'}</span>
+                                <span aria-live="polite">{copied ? 'Copié !' : copyError ? 'Copie impossible' : 'Copier'}</span>
                             </button>
                         </div>
                         <div className="card-info">
@@ -141,15 +119,14 @@ export default function Footer({ developer = {} }) {
                     </div>
 
                     <div className="footer-right">
-                        <button
-                            type="button"
+                        <a
+                            href="#top"
                             className="back-to-top-btn"
-                            onClick={scrollToTop}
                             aria-label="Retourner en haut de la page"
                         >
                             <span>Haut de page</span>
                             <ArrowUpIcon size={16} />
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
