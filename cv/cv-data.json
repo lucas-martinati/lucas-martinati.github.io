@@ -6,6 +6,15 @@
     "location": "Nancy / Piennes (Grand Est)",
     "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en bases de données, je maîtrise également les outils d'IA générative pour assister le développement. Organisé et adaptable, je m'investis dans des projets techniques concrets.",
     "permit": "Permis B",
+    "technicalLevels": {
+        "Développement Web": 3,
+        "Langages compilés": 3,
+        "Applications": 4,
+        "Bases de Données & Cloud": 2,
+        "Logique & Algorithmes": 3,
+        "DevOps & Système": 2,
+        "Intelligence artificielle": 3
+    },
     "personalProjects": [
         {
             "projectTitle": "Pseudo-Code Language Support (VSCode)",

@@ -11,6 +11,22 @@ const TYPE_LABELS = {
     work: 'Expérience',
 };
 
+const SKILL_LEVELS = ['Notions', 'Pratique guidée', 'Autonome', 'Avancé'];
+
+function SkillLevel({ title, level }) {
+    if (!Number.isInteger(level) || level < 1 || level > SKILL_LEVELS.length) return null;
+    return (
+        <span className="cv-skill-level" role="img" aria-label={`${title} : ${level} sur ${SKILL_LEVELS.length} — ${SKILL_LEVELS[level - 1]}`}>
+            <span className="cv-level-value" aria-hidden="true"><strong>{level}</strong><span>/{SKILL_LEVELS.length}</span></span>
+            <span className="cv-level-marks" aria-hidden="true">
+                {SKILL_LEVELS.map((label, index) => (
+                    <span key={label} className={`cv-level-mark${index < level ? ' is-filled' : ''}`} />
+                ))}
+            </span>
+        </span>
+    );
+}
+
 // "Français — natif" → nom + pastille de niveau.
 function splitLevel(label) {
     const parts = String(label).split('—').map((s) => s.trim());
@@ -88,12 +104,11 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
                     <div className="cv-tech-grid">
                         {(skills || []).map((cat) => (
                             <div key={cat.title} className="cv-tech-cat">
-                                <p className="cv-tech-label">{cat.title}</p>
-                                <div className="cv-pills">
-                                    {(cat.tags || []).map((tag) => (
-                                        <span key={tag} className="cv-pill cv-pill-accent">{tag}</span>
-                                    ))}
+                                <div className="cv-tech-content">
+                                    <p className="cv-tech-label">{cat.title}</p>
+                                    <p className="cv-tech-tools">{(cat.tags || []).join(' · ')}</p>
                                 </div>
+                                <SkillLevel title={cat.title} level={cv.technicalLevels?.[cat.title]} />
                             </div>
                         ))}
                     </div>
