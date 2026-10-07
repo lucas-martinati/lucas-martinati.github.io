@@ -109,8 +109,8 @@
             "description": "Bon raisonnement mathématique, conception UML et écriture de pseudo-code.",
             "hideFromStack": true,
             "tags": [
-                "Algorithmique",
-                "Mathématique",
+                "Résolution de problèmes",
+                "Modélisation",
                 "UML"
             ]
         },
