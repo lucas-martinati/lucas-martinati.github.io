@@ -6,6 +6,23 @@
     "location": "Nancy / Piennes (Grand Est)",
     "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en bases de données, je maîtrise également les outils d'IA générative pour assister le développement. Organisé et adaptable, je m'investis dans des projets techniques concrets.",
     "permit": "Permis B",
+    "personalProjects": [
+        {
+            "projectTitle": "Pseudo-Code Language Support (VSCode)",
+            "displayTitle": "Extension Pseudo-Code (VS Code)",
+            "summary": "Extension publiée sur le Marketplace pour écrire et exécuter du pseudo-code en français."
+        },
+        {
+            "projectTitle": "OneUp",
+            "displayTitle": "OneUp — Application web et mobile",
+            "summary": "Défis sportifs quotidiens avec progression sur 365 jours et synchronisation des données."
+        },
+        {
+            "projectTitle": "rcloneDash",
+            "displayTitle": "rcloneDash — Outil système",
+            "summary": "Tableau de bord terminal pour piloter les synchronisations Rclone et suivre les logs en direct."
+        }
+    ],
     "skills": [
         {
             "title": "Organisation",

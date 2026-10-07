@@ -8,7 +8,7 @@ import './cv.css';
 
 const app = (
     <React.StrictMode>
-        <Cv developer={portfolio.developer} education={portfolio.education} skills={portfolio.skills} cv={cvData} />
+        <Cv developer={portfolio.developer} education={portfolio.education} skills={portfolio.skills} projects={portfolio.projects} cv={cvData} />
     </React.StrictMode>
 );
 

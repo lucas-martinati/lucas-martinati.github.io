@@ -8,6 +8,6 @@ import cvData from '../cv/cv-data.json';
 export function render() {
     return {
         main: renderToString(<App />),
-        cv: renderToString(<Cv developer={portfolio.developer} education={portfolio.education} skills={portfolio.skills} cv={cvData} />),
+        cv: renderToString(<Cv developer={portfolio.developer} education={portfolio.education} skills={portfolio.skills} projects={portfolio.projects} cv={cvData} />),
     };
 }

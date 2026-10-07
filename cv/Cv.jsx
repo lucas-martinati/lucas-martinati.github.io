@@ -18,10 +18,15 @@ function splitLevel(label) {
     return { name: label, level: null };
 }
 
-export default function Cv({ developer = {}, education = [], skills = [], cv = {} }) {
+export default function Cv({ developer = {}, education = [], skills = [], projects = [], cv = {} }) {
     const photoSrc = cv.photo && !cv.photo.startsWith('http') ? `../${cv.photo}` : cv.photo;
     const phoneHref = cv.phone ? `tel:+33${cv.phone.replace(/\D/g, '').replace(/^0/, '')}` : null;
     const pdfFile = `CV-${developer.name.replace(/\s+/g, '-')}.pdf`;
+    const personalProjects = (cv.personalProjects || []).map((entry) => {
+        const project = projects.find((item) => item.title === entry.projectTitle);
+        if (!project) throw new Error(`Projet du CV introuvable : ${entry.projectTitle}`);
+        return { ...project, ...entry };
+    });
 
     return (
         <div className="cv-page">
@@ -97,6 +102,25 @@ export default function Cv({ developer = {}, education = [], skills = [], cv = {
                 <div className="cv-columns">
                     {/* Colonne principale */}
                     <div className="cv-col cv-col-main">
+                        {personalProjects.length > 0 && (
+                            <section className="cv-section cv-projects-section" aria-labelledby="cv-projects-heading">
+                                <h2 className="cv-section-title" id="cv-projects-heading">Expérience informatique</h2>
+                                <p className="cv-section-note">Projets personnels — conception et développement</p>
+                                {personalProjects.map((project) => (
+                                    <article key={project.title} className="cv-project-item">
+                                        <h3 className="cv-project-title">
+                                            <a href={project.link.href} target="_blank" rel="noopener noreferrer">{project.displayTitle}</a>
+                                        </h3>
+                                        <p className="cv-project-meta">
+                                            {project.year}{project.status?.className === 'status-in-progress' ? ' · En cours' : ''}
+                                            {' · '}{project.tags.slice(0, 4).join(' · ')}
+                                        </p>
+                                        <p className="cv-project-summary">{project.summary}</p>
+                                    </article>
+                                ))}
+                            </section>
+                        )}
+
                         <section className="cv-section">
                             <h2 className="cv-section-title">Expérience professionnelle</h2>
                             {(cv.experiences || []).map((exp) => (
