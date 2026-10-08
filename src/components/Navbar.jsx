@@ -147,7 +147,7 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="nav-icon-link nav-cv-link"
-                        aria-label={`CV de ${developer.name}`}
+                        aria-label={`Mon CV — ${developer.name}`}
                         title="Voir mon CV"
                     >
                         <CvIcon size={18} />
@@ -208,7 +208,7 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mobile-nav-link recruiter"
-                        aria-label={`CV de ${developer.name}`}
+                        aria-label={`Mon CV — ${developer.name}`}
                     >
                         <span>📄 Mon CV</span>
                         <span className="mobile-link-arrow">→</span>

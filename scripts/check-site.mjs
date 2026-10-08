@@ -105,6 +105,7 @@ try {
 
     await page.goto(`${url}/cv/`, { waitUntil: 'networkidle0' });
     await audit('Accessibilité du CV');
+    assert.equal(await page.evaluate(() => performance.getEntriesByType('resource').some((entry) => entry.initiatorType === 'script')), false, 'Le CV statique charge du JavaScript');
     assert.equal(await page.$eval('.cv-photo', (image) => image.complete && image.naturalWidth > 0), true);
     await page.screenshot({ path: join(screenshots, 'cv.png'), fullPage: true });
     await page.setJavaScriptEnabled(false);

@@ -13,7 +13,8 @@
     "predev": "npm run images",
     "prebuild": "npm run images",
     "test": "node --test tests/*.test.mjs",
-    "test:browser": "node scripts/check-site.mjs"
+    "test:browser": "node scripts/check-site.mjs",
+    "audit:lighthouse": "node scripts/audit-lighthouse.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fira-code": "^5.3.0",
@@ -26,6 +27,7 @@
     "@axe-core/puppeteer": "^4.13.0",
     "@vitejs/plugin-react": "^4.3.0",
     "gh-pages": "^6.3.0",
+    "lighthouse": "^13.5.0",
     "puppeteer": "^25.12.0",
     "sharp": "^0.35.5",
     "vite": "^6.0.0"

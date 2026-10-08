@@ -80,7 +80,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-secondary"
-                        aria-label={`CV de ${developer.name}`}
+                        aria-label={`Mon CV — ${developer.name}`}
                         title="Voir mon CV (nouvel onglet)"
                     >
                         <span aria-hidden="true">📄</span>

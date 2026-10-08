@@ -122,7 +122,6 @@ export default function Footer({ developer = {} }) {
                         <a
                             href="#top"
                             className="back-to-top-btn"
-                            aria-label="Retourner en haut de la page"
                         >
                             <span>Haut de page</span>
                             <ArrowUpIcon size={16} />

@@ -46,7 +46,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                 style={!hasImage ? { background: `linear-gradient(135deg, ${c1}, ${c2})` } : undefined}
             >
                 {hasImage ? (
-                    <ResponsiveImage src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="project-cover" loading="lazy" sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 420px" />
+                    <ResponsiveImage variant="card" src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="project-cover" loading="lazy" sizes="(max-width: 574px) calc(100vw - 34px), (max-width: 860px) 538px, (max-width: 1100px) calc((100vw - 96px) / 2), (max-width: 1320px) calc((100vw - 126px) / 3), 398px" />
                 ) : (
                     <span className="project-emoji">{project.emoji}</span>
                 )}
@@ -78,7 +78,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                         <button
                             type="button"
                             className="card-quick-btn js-only"
-                            aria-label={`Voir la fiche de ${project.title}`}
+                            aria-label={`Fiche détaillée : ${project.title}`}
                             aria-haspopup="dialog"
                             onClick={(e) => {
                                 e.stopPropagation();
