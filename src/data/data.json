@@ -294,7 +294,7 @@
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "UML Generator",
+            "title": "UML Studio",
             "description": "Un outil simple et puissant pour créer des diagrammes MCD (Modèle Conceptuel de Données) directement dans le navigateur avec support d'exportation.",
             "tags": [
                 "React",
@@ -303,8 +303,8 @@
                 "Tailwind CSS"
             ],
             "link": {
-                "github": "UML-Generator",
-                "text": "Voir le Repository"
+                "pages": "uml-studio",
+                "text": "Voir le site"
             },
             "category": "web",
             "featured": false,
