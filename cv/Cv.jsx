@@ -12,6 +12,8 @@ const TYPE_LABELS = {
 };
 
 const SKILL_LEVELS = ['Notions', 'Pratique guidée', 'Autonome', 'Avancé'];
+// Nombre de projets "coup de cœur" affichés dans la section Expérience informatique du CV.
+const CV_PROJECT_COUNT = 3;
 
 function SkillLevel({ title, level }) {
     if (!Number.isInteger(level) || level < 1 || level > SKILL_LEVELS.length) return null;
@@ -38,11 +40,22 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
     const photoSrc = cv.photo && !cv.photo.startsWith('http') ? `../${cv.photo}` : cv.photo;
     const phoneHref = cv.phone ? `tel:+33${cv.phone.replace(/\D/g, '').replace(/^0/, '')}` : null;
     const pdfFile = `CV-${developer.name.replace(/\s+/g, '-')}.pdf`;
-    const personalProjects = (cv.personalProjects || []).map((entry) => {
-        const project = projects.find((item) => item.title === entry.projectTitle);
-        if (!project) throw new Error(`Projet du CV introuvable : ${entry.projectTitle}`);
-        return { ...project, ...entry };
-    });
+    // Les "coup de cœur" du CV : les 3 projets featured les plus récents, les plus récents d'abord.
+    // cv.personalProjects sert d'overrides (displayTitle / summary) si un projet en possède un.
+    const personalProjects = useMemo(() => {
+        const featured = [...(projects || [])]
+            .filter((project) => project.featured)
+            .sort((a, b) => Number(b.year || 0) - Number(a.year || 0));
+        return featured.slice(0, CV_PROJECT_COUNT).map((project) => {
+            const override = (cv.personalProjects || []).find((entry) => entry.projectTitle === project.title) || {};
+            return {
+                ...project,
+                projectTitle: project.title,
+                displayTitle: override.displayTitle || project.title,
+                summary: override.summary || project.highlights || project.description,
+            };
+        });
+    }, [projects, cv.personalProjects]);
 
     return (
         <div className="cv-page">
@@ -121,18 +134,25 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
                             <section className="cv-section cv-projects-section" aria-labelledby="cv-projects-heading">
                                 <h2 className="cv-section-title" id="cv-projects-heading">Expérience informatique</h2>
                                 <p className="cv-section-note">Projets personnels — conception et développement</p>
-                                {personalProjects.map((project) => (
-                                    <article key={project.title} className="cv-project-item">
-                                        <h3 className="cv-project-title">
-                                            <a href={project.link.href} target="_blank" rel="noopener noreferrer">{project.displayTitle}</a>
-                                        </h3>
-                                        <p className="cv-project-meta">
-                                            {project.year}{project.status?.className === 'status-in-progress' ? ' · En cours' : ''}
-                                            {' · '}{project.tags.slice(0, 4).join(' · ')}
-                                        </p>
-                                        <p className="cv-project-summary">{project.summary}</p>
-                                    </article>
-                                ))}
+                                {personalProjects.map((project) => {
+                                    const linkHref = project.link?.href || (project.link?.github ? `https://github.com/${project.link.github}` : null);
+                                    return (
+                                        <article key={project.title} className="cv-project-item">
+                                            <h3 className="cv-project-title">
+                                                {linkHref ? (
+                                                    <a href={linkHref} target="_blank" rel="noopener noreferrer">{project.displayTitle}</a>
+                                                ) : (
+                                                    project.displayTitle
+                                                )}
+                                            </h3>
+                                            <p className="cv-project-meta">
+                                                {project.year}{project.status?.className === 'status-in-progress' ? ' · En cours' : ''}
+                                                {' · '}{project.tags.slice(0, 4).join(' · ')}
+                                            </p>
+                                            <p className="cv-project-summary">{project.summary}</p>
+                                        </article>
+                                    );
+                                })}
                             </section>
                         )}
 
