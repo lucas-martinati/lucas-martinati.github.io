@@ -55,6 +55,8 @@ function serve(dir) {
     return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
 }
 
+// Le build exécute aussi l'optimisation des images (prebuild) et le prerender.
+// Il doit précéder l'impression afin que dist/ reflète les dernières sources.
 console.log('→ build…');
 const build = spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit' });
 if (build.error || build.status !== 0) {
@@ -69,28 +71,9 @@ try {
     await page.goto(`http://127.0.0.1:${port}/cv/`, { waitUntil: 'networkidle0', timeout: 60000 });
     await page.evaluate(() => document.fonts?.ready);
     await new Promise((r) => setTimeout(r, 800));
-    // Auto-fit : si le contenu dépasse la zone A4 imprimable, on scale automatiquement.
-    // (La feuille .cv-sheet est dimensionnée par le contenu ; si elle est plus haute que la
-    // zone A4 disponible (297 mm - paddings), on la scale pour garder le CV sur une seule page.)
-    const fit = await page.evaluate(() => {
-        const sheet = document.querySelector('.cv-sheet');
-        if (!sheet) return { needsFit: false, scale: 1 };
-        const style = getComputedStyle(sheet);
-        const padTop = parseFloat(style.paddingTop) || 0;
-        const padBottom = parseFloat(style.paddingBottom) || 0;
-        const contentHeight = sheet.scrollHeight - padTop - padBottom;
-        const availableHeight = 1122.5 - padTop - padBottom; // A4 (297 mm) à 96 dpi, @page margin: 0
-        const needsFit = contentHeight > availableHeight;
-        const scale = needsFit ? availableHeight / contentHeight : 1;
-        return { needsFit, scale };
-    });
-    if (fit.needsFit) {
-        await page.evaluate((s) => {
-            const sheet = document.querySelector('.cv-sheet');
-            sheet.style.transform = `scale(${s})`;
-            sheet.style.transformOrigin = 'top left';
-        }, fit.scale);
-    }
+    // Laisse les règles @media print déterminer dimensions et mise en page. Une
+    // mesure en mode écran suivie d'un transform scale réduit aussi la largeur
+    // imprimée et crée de grandes marges blanches sur la feuille A4.
     // preferCSSPageSize : respecte le `@page { size: A4; margin: 0 }` de cv/cv.css.
     await page.pdf({ path: OUT_PUBLIC, format: 'A4', printBackground: true, preferCSSPageSize: true });
     fs.copyFileSync(OUT_PUBLIC, OUT_DIST);
