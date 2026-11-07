@@ -140,12 +140,39 @@
     ],
     "projects": [
         {
+            "emoji": "🖱️",
+            "imageUrl": "img/g502-hub-rust.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "G502 Hub — édition Rust",
+            "description": "Fork natif de G502 Hub : un service Rust pilote la souris Logitech G502 HERO en arrière-plan, tandis qu’une interface dédiée permet de gérer profils, DPI, macros, boutons et éclairage. L’application Python d’origine reste disponible pour comparaison et retour arrière.",
+            "tags": [
+                "Rust",
+                "Linux",
+                "egui",
+                "HID++",
+                "Tokio",
+                "Daemon"
+            ],
+            "link": {
+                "github": "g502-hub",
+                "text": "Voir le fork"
+            },
+            "category": "system",
+            "featured": true,
+            "highlights": "Service matériel indépendant de l’interface, profils embarqués vérifiés par relecture, macros, règles contextuelles, réglages DPI et effets lumineux.",
+            "challenges": "Conserver les données inconnues des profils matériels, sécuriser les écritures HID++ et garder macros et éclairage actifs quand la fenêtre de réglages est fermée."
+        },
+        {
             "emoji": "🦀",
             "imageUrl": "img/rclonedash.png",
             "year": "2026",
             "status": {
-                "label": "En cours",
-                "className": "status-in-progress"
+                "label": "Terminé",
+                "className": "status-completed"
             },
             "title": "rcloneDash",
             "description": "Interface TUI ultra-rapide en Rust (Ratatui) pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (rclone bisync), avec tableau de bord KPI, logs journalctl en direct, explorateur de fichiers et éditeur de filtres d'exclusion.",
@@ -172,8 +199,8 @@
             "imageUrl": "img/oneup.png",
             "year": "2026",
             "status": {
-                "label": "En cours",
-                "className": "status-in-progress"
+                "label": "Terminé",
+                "className": "status-completed"
             },
             "title": "OneUp",
             "description": "OneUp est un défi fitness quotidien sur 365 jours. Chaque jour, le nombre de répétitions augmente progressivement sur 6 exercices. L'objectif ? Tenir toute l'année.",
@@ -235,7 +262,7 @@
                 "text": "Voir le Repository"
             },
             "category": "system",
-            "featured": false,
+            "featured": true,
             "highlights": "Extension native pour le gestionnaire de fichiers GNOME Nautilus intégrant Tailscale Taildrop dans le menu contextuel clic droit.",
             "challenges": "Interfaçage Python avec les API libnautilus-extension et exécution sécurisée des commandes réseau système."
         },
