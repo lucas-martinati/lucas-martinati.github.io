@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import ResponsiveImage from '../src/components/ResponsiveImage';
 // Page CV — imprimable (voir cv/cv.css pour les règles @media print).
 // Le bouton télécharge public/cv.pdf, généré par `npm run cv:pdf`
@@ -41,21 +42,17 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
     const phoneHref = cv.phone ? `tel:+33${cv.phone.replace(/\D/g, '').replace(/^0/, '')}` : null;
     const pdfFile = `CV-${developer.name.replace(/\s+/g, '-')}.pdf`;
     // Les "coup de cœur" du CV : les 3 projets featured les plus récents, les plus récents d'abord.
-    // cv.personalProjects sert d'overrides (displayTitle / summary) si un projet en possède un.
     const personalProjects = useMemo(() => {
         const featured = [...(projects || [])]
             .filter((project) => project.featured)
             .sort((a, b) => Number(b.year || 0) - Number(a.year || 0));
-        return featured.slice(0, CV_PROJECT_COUNT).map((project) => {
-            const override = (cv.personalProjects || []).find((entry) => entry.projectTitle === project.title) || {};
-            return {
-                ...project,
-                projectTitle: project.title,
-                displayTitle: override.displayTitle || project.title,
-                summary: override.summary || project.highlights || project.description,
-            };
-        });
-    }, [projects, cv.personalProjects]);
+        return featured.slice(0, CV_PROJECT_COUNT).map((project) => ({
+            ...project,
+            projectTitle: project.title,
+            displayTitle: project.title,
+            summary: project.highlights || project.description,
+        }));
+    }, [projects]);
 
     return (
         <div className="cv-page">
