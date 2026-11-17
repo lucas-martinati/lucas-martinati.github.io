@@ -37,7 +37,7 @@
                 {
                     "icon": "⚡",
                     "title": "Autonomie & Expédition de Produits",
-                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (2 extensions sur des stores officiels, 16+ applications en ligne)."
+                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (2 extensions sur des stores officiels, 17+ applications en ligne)."
                 },
                 {
                     "icon": "🔄",
@@ -140,6 +140,34 @@
     ],
     "projects": [
         {
+            "emoji": "🦀",
+            "imageUrl": "img/rclonedash.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "rcloneDash",
+            "description": "Interface TUI ultra-rapide en Rust (Ratatui) pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (rclone bisync), avec tableau de bord KPI, logs journalctl en direct, explorateur de fichiers et éditeur de filtres d'exclusion.",
+            "tags": [
+                "Rust",
+                "Ratatui",
+                "Tokio",
+                "TUI",
+                "Rclone",
+                "Systemd",
+                "Linux"
+            ],
+            "link": {
+                "github": "rcloneDash",
+                "text": "Voir le Repository"
+            },
+            "category": "system",
+            "featured": true,
+            "highlights": "TUI Rust autonome (< 3 Mo, < 10 Mo RAM) à 60 FPS avec Ratatui + Tokio : dashboard 7 KPI, mini-graphe d'historique, streaming journalctl colorisé, explorateur avec xdg-open, 6 thèmes et simulation dry-run.",
+            "challenges": "Rendu terminal sans scintillement, monitoring asynchrone non-bloquant avec Tokio, hitboxes souris pixel-perfect et packaging .deb + install.sh sans root via timer systemd utilisateur."
+        },
+        {
             "emoji": "🖱️",
             "imageUrl": "img/g502-hub-rust.png",
             "year": "2026",
@@ -167,32 +195,34 @@
             "challenges": "Conserver les données inconnues des profils matériels, sécuriser les écritures HID++ et garder macros et éclairage actifs quand la fenêtre de réglages est fermée."
         },
         {
-            "emoji": "🦀",
-            "imageUrl": "img/rclonedash.png",
+            "emoji": "🌐",
+            "imageUrl": "img/marionnet.png",
             "year": "2026",
             "status": {
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "rcloneDash",
-            "description": "Interface TUI ultra-rapide en Rust (Ratatui) pour surveiller et piloter en temps réel les synchronisations bidirectionnelles Rclone (rclone bisync), avec tableau de bord KPI, logs journalctl en direct, explorateur de fichiers et éditeur de filtres d'exclusion.",
+            "title": "Marionnet — Laboratoire Réseau Virtuel",
+            "description": "Modernisation majeure et fork de Marionnet, laboratoire réseau virtuel sous Linux : portage complet vers OCaml 5 & Dune, élimination du crash historique getty/SKAS0 via les noyaux UML 6.12, paquet Debian tout-en-un avec distributions Guignol et Debian Wheezy, autologin root, mise à jour automatique intégrée et refonte ergonomique de l'interface GTK.",
             "tags": [
-                "Rust",
-                "Ratatui",
-                "Tokio",
-                "TUI",
-                "Rclone",
-                "Systemd",
-                "Linux"
+                "OCaml",
+                "Linux",
+                "Réseau",
+                "Virtualisation",
+                "UML",
+                "GTK",
+                "Debian",
+                "Bash"
             ],
             "link": {
-                "github": "rcloneDash",
-                "text": "Voir le Repository"
+                "github": "marionnet",
+                "text": "Voir le dépôt",
+                "org": true
             },
             "category": "system",
-            "featured": true,
-            "highlights": "TUI Rust autonome (< 3 Mo, < 10 Mo RAM) à 60 FPS avec Ratatui + Tokio : dashboard 7 KPI, mini-graphe d'historique, streaming journalctl colorisé, explorateur avec xdg-open, 6 thèmes et simulation dry-run.",
-            "challenges": "Rendu terminal sans scintillement, monitoring asynchrone non-bloquant avec Tokio, hitboxes souris pixel-perfect et packaging .deb + install.sh sans root via timer systemd utilisateur."
+            "featured": false,
+            "highlights": "Portage d'un projet OCaml complexe vers la toolchain moderne (OCaml 5.4.1 & Dune), packaging Debian clé en main (marionnet-all-in-one) intégrant noyaux UML 6.12.95 avec Netfilter/NAT, autologin instantané en root, updater automatique (CLI & GUI) avec vérification d'intégrité SHA256 et support multilingue.",
+            "challenges": "Résolution de l'incompatibilité noyau historique (stub SKAS0 et crash I/O getty), automatisation sécurisée des droits réseau via sudoers/sudo-rs sans compromettre la sécurité hôte, synchronisation asynchrone des threads GTK/OCaml et conservation de la rétrocompatibilité des fichiers de topologie (.mar)."
         },
         {
             "emoji": "🔥",
