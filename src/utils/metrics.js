@@ -27,7 +27,7 @@ export function getComputedMetrics({ developer = {}, projects = [], education = 
     const bacItem = education.find((e) =>
         e.title && e.title.toLowerCase().includes('bac')
     );
-    let bacMention = 'Mention Bien';;
+    let bacMention = 'Mention Bien';
     if (bacItem?.title) {
         if (/très bien/i.test(bacItem.title)) {
             bacMention = 'Mention TB';

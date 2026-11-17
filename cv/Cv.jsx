@@ -59,6 +59,12 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
             {/* Barre d'actions — écran uniquement, masquée à l'impression */}
             <div className="cv-toolbar no-print">
                 <a
+                    href="../"
+                    className="cv-toolbar-btn cv-back"
+                >
+                    <span aria-hidden="true">←</span> Retour au portfolio
+                </a>
+                <a
                     href="../cv.pdf"
                     download={pdfFile}
                     className="cv-toolbar-btn cv-print"

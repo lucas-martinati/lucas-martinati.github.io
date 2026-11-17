@@ -37,7 +37,7 @@
                 {
                     "icon": "⚡",
                     "title": "Autonomie & Expédition de Produits",
-                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (2 extensions sur des stores officiels, 17+ applications en ligne)."
+                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (3 extensions sur des stores officiels, 17+ réalisations déployées)."
                 },
                 {
                     "icon": "🔄",
@@ -258,7 +258,7 @@
                 "className": "status-completed"
             },
             "title": "Mao",
-            "description": "Application web développée avec Next.js et TypeScript.",
+            "description": "Adaptation multijoueur en temps réel du jeu de cartes Mao : salons de jeu privés, chronomètre de tour, pénalités (« Forcer pioche ») et gestion secrète de sa main dans le navigateur.",
             "tags": [
                 "Next.js",
                 "TypeScript"
@@ -269,8 +269,8 @@
             },
             "category": "web",
             "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
+            "highlights": "Table de jeu multijoueur interactive avec code de salon, suivi en direct des mains adverses, pioche/défausse centrales, choix de couleur, annulation d'action et masquage individuel des cartes au clic droit.",
+            "challenges": "Synchronisation temps réel de l'état des parties entre plusieurs joueurs, gestion du chronomètre de tour et modélisation souple d'un jeu dont les règles évoluent librement entre participants."
         },
         {
             "emoji": "🗂️",
@@ -402,12 +402,12 @@
             "title": "Report with WintrChess",
             "description": "Transférez facilement vos parties d'échecs depuis Lichess et Chess.com vers WintrChess pour une analyse approfondie. Disponible sous forme d'extension Chrome.",
             "tags": [
-                "Chrome extension",
-                "js"
+                "Chrome Extension",
+                "JavaScript"
             ],
             "link": {
                 "href": "https://chromewebstore.google.com/detail/free-analyze-with-wintrch/ljjbgidgpkhjenpgpjfjidfflnelmpan",
-                "text": "Chrome web store"
+                "text": "Chrome Web Store"
             },
             "category": "extension",
             "featured": false,
@@ -473,11 +473,11 @@
                 "className": "status-completed"
             },
             "title": "Flashcards de Première & Terminale",
-            "description": "Site de vente de nos flashcards réalisés en premières et en terminales.",
+            "description": "Plateforme web de révision regroupant et commercialisant des paquets de flashcards couvrant le programme scientifique de Première et Terminale (démonstrations, théorèmes et rappels de cours).",
             "tags": [
-                "html",
-                "css",
-                "js",
+                "HTML",
+                "CSS",
+                "JavaScript",
                 "API",
                 "PayPal"
             ],
@@ -487,8 +487,8 @@
             },
             "category": "web",
             "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
+            "highlights": "Interface sombre orientée mémorisation active avec aperçu de fiches classées par chapitre et type (suites, logarithme népérien, récurrence, géométrie dans l'espace, dénombrement) et paiement intégré via PayPal.",
+            "challenges": "Mise en forme lisible des notations et démonstrations mathématiques dans les cartes, organisation modulaire d'un large corpus de fiches et intégration du tunnel d'achat PayPal côté client."
         },
         {
             "emoji": "🌍",
@@ -499,7 +499,7 @@
                 "className": "status-completed"
             },
             "title": "Can-Vert",
-            "description": "Site internet développé dans le cadre d'un projet.",
+            "description": "Site vitrine réalisé dans le cadre de la SAÉ S1.05 (Recueil de besoins) présentant Can'Vert, concept de marque de mode écoresponsable du Grand Est axée sur le recyclage textile et le circuit court.",
             "tags": [
                 "HTML",
                 "CSS"
@@ -511,8 +511,8 @@
             },
             "category": "web",
             "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
+            "highlights": "Conception d'une identité visuelle cohérente et d'un site multi-rubriques (Présentation, Synthèse, Nos Produits) valorisant la traçabilité des matières recyclées et l'accessibilité étudiante.",
+            "challenges": "Traduction d'un cahier des charges client en arborescence claire et mise en page responsive soignée uniquement en HTML5 et CSS3 natifs, sans framework externe."
         },
         {
             "emoji": "📥",
@@ -523,11 +523,11 @@
                 "className": "status-completed"
             },
             "title": "Applications Automatical Installer",
-            "description": "Permet l'installation automatique des applications sélectionnées.",
+            "description": "Utilitaire bureau en Python/PyQt5 automatisant le téléchargement et l'installation groupée de logiciels Windows, d'extensions Chrome et d'applications Microsoft Store après réinstallation d'un poste.",
             "tags": [
                 "Python",
                 "PyQt5",
-                "requests"
+                "Requests"
             ],
             "link": {
                 "github": "Applications_Automatical_Installer",
@@ -535,8 +535,8 @@
             },
             "category": "system",
             "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
+            "highlights": "Interface sombre en trois colonnes avec sélection rapide (Select All / Deselect All), icônes dédiées et barre de progression temps réel affichant volume téléchargé, débit (Mo/s), ETA et annulation.",
+            "challenges": "Téléchargement HTTP en arrière-plan sans figer l'interface graphique PyQt5, calcul en direct du débit et du temps restant, et enchaînement fiable des installations."
         },
         {
             "emoji": "🍐",
@@ -547,11 +547,11 @@
                 "className": "status-completed"
             },
             "title": "Pear Search",
-            "description": "Le meilleur moteur de recherche de tous les temps, il vous permettra de trouver ce que vous cherchez tout en vous laissant flâner sur le web. Vous pouvez oublier vos données personnelles, qui seront stockées directement sur nos serveurs pour vous simplifier la vie.",
+            "description": "Portail de recherche web parodique et personnalisable : agrégateur multi-moteurs (Google, Brave Search, DuckDuckGo, Bing) et lanceur d'applications revisité (« Ap-π-cations ») au ton décalé.",
             "tags": [
-                "html",
-                "css",
-                "js"
+                "HTML",
+                "CSS",
+                "JavaScript"
             ],
             "link": {
                 "pages": "Pear-Search",
@@ -559,8 +559,8 @@
             },
             "category": "web",
             "featured": false,
-            "highlights": "Projet conçu avec passion mettant en pratique des technologies modernes et une architecture propre.",
-            "challenges": "Optimisation des performances, modularité du code et expérience utilisateur intuitive."
+            "highlights": "Page d'accueil interactive combinant bascule instantanée entre quatre moteurs de recherche, tiroir de raccourcis illustrés (π-Hub, π-Tube, π-Docs…), mode clair/sombre et internationalisation FR/EN.",
+            "challenges": "Premier projet web complet en HTML, CSS et JavaScript vanilla : redirection dynamique des requêtes vers chaque moteur, gestion du thème visuel et adaptation multilingue de l'interface."
         }
     ],
     "education": [

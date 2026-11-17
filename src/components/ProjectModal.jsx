@@ -1,7 +1,8 @@
 import { useEffect, useCallback } from 'react';
-import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon } from './Icons';
+import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon, LinkIcon, CheckIcon } from './Icons';
 import useDialog from '../utils/useDialog';
-import { getProjectCategory } from '../utils/projects';
+import useClipboard from '../utils/useClipboard';
+import { getProjectCategory, getProjectSlug } from '../utils/projects';
 import ResponsiveImage from './ResponsiveImage';
 
 const CATEGORY_LABELS = {
@@ -10,8 +11,9 @@ const CATEGORY_LABELS = {
     web: 'Web & Full-Stack'
 };
 
-export default function ProjectModal({ project, allProjects = [], onSelectProject, onClose }) {
+export default function ProjectModal({ project, allProjects = [], onSelectProject, onTagSelect, onClose }) {
     const dialogRef = useDialog(Boolean(project));
+    const { copied, copyError, copy } = useClipboard();
     useEffect(() => {
         const card = dialogRef.current?.querySelector('.modal-card');
         if (card) card.scrollTop = 0;
@@ -135,10 +137,18 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
                     {/* Tech Tags */}
                     <div className="modal-tags-wrap">
-                        <span className="tags-label">Technologies utilisées :</span>
+                        <span className="tags-label">Technologies utilisées (cliquer pour filtrer) :</span>
                         <div className="modal-tags">
                             {project.tags?.map((tag) => (
-                                <span key={tag} className="tag tag-interactive">{tag}</span>
+                                <button
+                                    key={tag}
+                                    type="button"
+                                    className="tag tag-interactive"
+                                    onClick={() => onTagSelect?.(tag)}
+                                    title={`Filtrer les projets utilisant ${tag}`}
+                                >
+                                    {tag}
+                                </button>
                             ))}
                         </div>
                     </div>
@@ -161,6 +171,19 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                                     <span>{project.link.text}</span>
                                 </a>
                             )}
+                            <button
+                                type="button"
+                                className={`btn-secondary modal-share-btn ${copied ? 'copied' : ''}`}
+                                onClick={() => {
+                                    const shareUrl = `${window.location.origin}${window.location.pathname}?project=${getProjectSlug(project)}`;
+                                    copy(shareUrl);
+                                }}
+                                title="Copier le lien direct vers cette fiche"
+                                aria-label={`Copier le lien direct vers ${project.title}`}
+                            >
+                                {copied ? <CheckIcon size={16} /> : <LinkIcon size={16} />}
+                                <span aria-live="polite">{copied ? 'Lien copié !' : copyError ? 'Copie impossible' : 'Copier le lien'}</span>
+                            </button>
                         </div>
 
                         {/* Prev / Next controls */}

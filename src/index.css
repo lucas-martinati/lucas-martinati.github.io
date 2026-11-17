@@ -29,7 +29,7 @@
 
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-muted: #94a3b8;
 
     --accent-blue: #3b82f6;
     --accent-purple: #8b5cf6;
@@ -400,7 +400,6 @@ nav {
     box-shadow: 0 4px 24px rgba(16, 185, 129, 0.12);
     cursor: pointer;
     transition: all 0.25s ease;
-    animation: fadeInUp 0.8s ease-out;
 }
 
 .hero-badge:hover {
@@ -452,7 +451,6 @@ nav {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: fadeInUp 1s ease-out 0.1s both;
 }
 
 /* Dynamic Role Typewriter */
@@ -465,7 +463,6 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fadeInUp 1s ease-out 0.2s both;
 }
 
 .hero-role-prefix {
@@ -480,7 +477,7 @@ nav {
     color: transparent;
     font-weight: 700;
     display: inline-block;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.24s ease, transform 0.24s ease;
 }
 
 .hero-role-dynamic.fade-in {
@@ -490,7 +487,7 @@ nav {
 
 .hero-role-dynamic.fade-out {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
 }
 
 .hero-tagline {
@@ -500,7 +497,6 @@ nav {
     max-width: 650px;
     margin: 0 auto 2.5rem;
     line-height: 1.65;
-    animation: fadeInUp 1s ease-out 0.3s both;
 }
 
 /* CTA Group */
@@ -511,7 +507,6 @@ nav {
     gap: 1.1rem;
     margin-bottom: 2.5rem;
     flex-wrap: wrap;
-    animation: fadeInUp 1s ease-out 0.4s both;
 }
 
 .btn-primary {
@@ -598,7 +593,6 @@ nav {
     justify-content: center;
     gap: 0.85rem;
     margin-bottom: 2.8rem;
-    animation: fadeInUp 1s ease-out 0.45s both;
 }
 
 .hero-social-circle {
@@ -649,13 +643,10 @@ nav {
     gap: 1.25rem;
     max-width: 860px;
     margin: 0 auto;
-    animation: fadeInUp 1s ease-out 0.55s both;
 }
 
 .hero-metric-item {
     background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 16px;
     padding: 1.25rem 1rem;
@@ -773,8 +764,6 @@ nav {
     max-width: 100%;
     min-width: 0;
     background: rgba(11, 17, 32, 0.78);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.08);
     text-align: left;
@@ -933,8 +922,6 @@ nav {
 
 .skill-card {
     background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border-radius: 20px;
     padding: 2.2rem 1.8rem;
     border: 1px solid rgba(255, 255, 255, 0.07);
@@ -1039,8 +1026,6 @@ nav {
 .recruiter-container {
     background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.08), transparent 70%),
                 rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(139, 92, 246, 0.25);
     border-radius: 28px;
     padding: 4rem 3rem;
@@ -1359,6 +1344,44 @@ nav {
     color: #ffffff;
 }
 
+.search-shortcut-hint {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 0.45rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: var(--text-secondary);
+    font-family: 'Fira Code Variable', monospace;
+    font-size: 0.75rem;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 860px), (pointer: coarse) {
+    .search-shortcut-hint {
+        display: none;
+    }
+}
+
+.filter-btn-featured svg {
+    color: #c4b5fd;
+    flex-shrink: 0;
+}
+
+.filter-btn-featured.active svg {
+    color: #ffffff;
+}
+
 /* Filter Pills */
 .project-filters {
     display: flex;
@@ -1459,8 +1482,6 @@ nav {
 .project-card {
     position: relative;
     background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border-radius: 22px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1901,12 +1922,43 @@ nav {
 }
 
 .tag-interactive {
-    padding: 0.3rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0.3rem 0.85rem;
     background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 9999px;
     font-size: 0.8rem;
     color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.tag-interactive:hover {
+    background: rgba(139, 92, 246, 0.18);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.modal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.modal-share-btn {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.9rem;
+    min-height: 44px;
+}
+
+.modal-share-btn.copied {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.45);
+    color: #6ee7b7;
 }
 
 .modal-footer {
@@ -2068,8 +2120,6 @@ nav {
 
 .education-card {
     background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border-radius: 20px;
     padding: 1.85rem 2.2rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2180,8 +2230,6 @@ nav {
 
 .language-card {
     background: var(--bg-glass-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border-radius: 20px;
     padding: 2rem 2.5rem;
     display: flex;
@@ -2282,8 +2330,6 @@ nav {
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 22px;
     padding: 2.2rem;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2523,17 +2569,6 @@ nav {
 /* ===================================================
    ANIMATIONS & KEYFRAMES
    =================================================== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(28px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -2783,10 +2818,6 @@ nav {
     .recruiter-hub,
     .education,
     .languages {
-        padding: 3rem 1rem 2.5rem;
-    }
-
-    .recruiter-hub {
         padding: 3rem 1rem 2.5rem;
     }
 
@@ -3126,23 +3157,12 @@ nav {
         text-align: left;
     }
 
-    .dashboard-actions-buttons {
-        flex-direction: column;
-        gap: 0.65rem;
-        width: 100%;
-    }
-
     .panel-sub-buttons {
         flex-direction: column;
         width: 100%;
     }
 
     .panel-btn-half {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .dashboard-actions-buttons .action-quick-btn {
         width: 100%;
         justify-content: center;
     }
@@ -3191,7 +3211,6 @@ nav {
     }
 }
 /* Faster first paint, consistent keyboard navigation and touch targets. */
-:root { --text-muted: #94a3b8; }
 html { scroll-padding-top: 6rem; scrollbar-gutter: stable; }
 :where(a, button, input, [tabindex]):focus-visible {
     outline: 3px solid #a5b4fc;
@@ -3213,16 +3232,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .skip-link:focus { transform: translateY(0); }
 .hero { min-height: min(900px, 100svh); }
-.hero-badge, .hero-title, .hero-role-wrapper, .hero-tagline,
-.hero-cta-group, .hero-social-minimal, .hero-metrics-row { animation: none; }
 .hero-role-wrapper { flex-wrap: wrap; gap: 0 0.25rem; }
 .hero-title, .section-title { text-wrap: balance; }
 .hero-tagline, .projects-subtitle, .contact-subtitle { text-wrap: pretty; }
-.project-card, .skill-card, .education-card, .language-card, .contact-card,
-.hero-metric-item, .code-bio, .recruiter-container {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-}
 .projects-grid > div { display: flex; }
 .project-card { width: 100%; }
 .project-card:focus-within { border-color: #a5b4fc; }

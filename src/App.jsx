@@ -15,7 +15,7 @@ import ScrollReveal from './components/ScrollReveal';
 import Toast from './components/Toast';
 import { SearchIcon, SparklesIcon } from './components/Icons';
 
-import { getProjectCategory, matchesSearch } from './utils/projects';
+import { getProjectCategory, getProjectSlug, matchesSearch } from './utils/projects';
 
 export default function App() {
     const [activeCategory, setActiveCategory] = useState('all');
@@ -24,6 +24,8 @@ export default function App() {
     const [toast, setToast] = useState(null);
 
     const toastTimerRef = useRef(null);
+    const searchInputRef = useRef(null);
+    const hasHydratedUrlRef = useRef(false);
 
     // Toast helper with timer race-condition guard
     const showToast = useCallback((message, type = 'info') => {
@@ -44,22 +46,99 @@ export default function App() {
         };
     }, []);
 
+    // Open project modal from shareable URL (?project=slug) & sync history navigation
+    useEffect(() => {
+        const syncFromUrl = () => {
+            const slug = new URLSearchParams(window.location.search).get('project');
+            if (!slug) {
+                setSelectedProject(null);
+                return;
+            }
+            const found = data.projects.find((p) => getProjectSlug(p) === slug);
+            if (found) setSelectedProject(found);
+        };
+        syncFromUrl();
+        window.addEventListener('popstate', syncFromUrl);
+        return () => window.removeEventListener('popstate', syncFromUrl);
+    }, []);
+
+    // Reflect open project modal in URL query string without polluting history stack
+    useEffect(() => {
+        if (!hasHydratedUrlRef.current) {
+            hasHydratedUrlRef.current = true;
+            return;
+        }
+        const params = new URLSearchParams(window.location.search);
+        const currentSlug = params.get('project');
+        const nextSlug = selectedProject ? getProjectSlug(selectedProject) : null;
+        if (currentSlug === nextSlug || (!currentSlug && !nextSlug)) return;
+        if (nextSlug) {
+            params.set('project', nextSlug);
+        } else {
+            params.delete('project');
+        }
+        const query = params.toString();
+        const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
+        window.history.replaceState(null, '', nextUrl);
+    }, [selectedProject]);
+
+    // Quick keyboard shortcut ('/' or Ctrl/Cmd+K) to focus project search
+    useEffect(() => {
+        const handleGlobalKeyDown = (e) => {
+            if (document.querySelector('dialog[open]')) return;
+            const isInput = /INPUT|TEXTAREA|SELECT/.test(e.target?.tagName || '') || e.target?.isContentEditable;
+            const isSlash = e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey;
+            const isCmdK = (e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k';
+            if ((isSlash && !isInput) || isCmdK) {
+                e.preventDefault();
+                const input = searchInputRef.current;
+                if (input) {
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    input.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+                    input.focus({ preventScroll: true });
+                }
+            }
+        };
+        window.addEventListener('keydown', handleGlobalKeyDown);
+        return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+    }, []);
+
     const searchResults = useMemo(() => data.projects.filter((project) => matchesSearch(project, searchQuery)), [searchQuery]);
     const counts = useMemo(() => {
-        const result = { all: searchResults.length, web: 0, extension: 0, system: 0 };
-        searchResults.forEach((project) => result[getProjectCategory(project)]++);
+        const result = { all: searchResults.length, featured: 0, web: 0, extension: 0, system: 0 };
+        searchResults.forEach((project) => {
+            if (project.featured) result.featured++;
+            result[getProjectCategory(project)]++;
+        });
         return result;
     }, [searchResults]);
 
     const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking;
 
-    const filteredProjects = useMemo(() => searchResults.filter((project) =>
-        activeCategory === 'all' || getProjectCategory(project) === activeCategory
-    ), [activeCategory, searchResults]);
+    const filteredProjects = useMemo(() => searchResults.filter((project) => {
+        if (activeCategory === 'all') return true;
+        if (activeCategory === 'featured') return Boolean(project.featured);
+        return getProjectCategory(project) === activeCategory;
+    }), [activeCategory, searchResults]);
 
     const handleCategoryClick = (cat) => {
         setActiveCategory(cat);
     };
+
+    const handleTagSelect = useCallback((tag) => {
+        setSelectedProject(null);
+        setActiveCategory('all');
+        setSearchQuery(tag);
+        showToast(`Projets filtrés par « ${tag} »`, 'info');
+        requestAnimationFrame(() => {
+            const input = searchInputRef.current;
+            if (input) {
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                input.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+                input.focus({ preventScroll: true });
+            }
+        });
+    }, [showToast]);
 
     return (
         <>
@@ -96,6 +175,7 @@ export default function App() {
                     <div className="project-search-bar">
                         <SearchIcon size={18} className="search-icon-svg" />
                         <input
+                            ref={searchInputRef}
                             type="search"
                             placeholder="Un projet, une technologie…"
                             value={searchQuery}
@@ -104,7 +184,7 @@ export default function App() {
                             aria-label="Rechercher un projet"
                             aria-controls="project-results"
                         />
-                        {searchQuery && (
+                        {searchQuery ? (
                             <button
                                 type="button"
                                 className="search-clear-btn"
@@ -115,6 +195,8 @@ export default function App() {
                             >
                                 &times;
                             </button>
+                        ) : (
+                            <kbd className="search-shortcut-hint" aria-hidden="true" title="Appuyez sur / pour rechercher">/</kbd>
                         )}
                     </div>
 
@@ -128,6 +210,16 @@ export default function App() {
                         >
                             <span>Tous</span>
                             <span className="filter-count">{counts.all}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`filter-btn filter-btn-featured ${activeCategory === 'featured' ? 'active' : ''}`}
+                            onClick={() => handleCategoryClick('featured')}
+                            aria-pressed={activeCategory === 'featured'}
+                        >
+                            <SparklesIcon size={14} />
+                            <span>Coups de cœur</span>
+                            <span className="filter-count">{counts.featured}</span>
                         </button>
                         <button
                             type="button"
@@ -280,8 +372,9 @@ export default function App() {
             {/* Project Details Modal */}
             <ProjectModal
                 project={selectedProject}
-                allProjects={filteredProjects}
+                allProjects={filteredProjects.length > 0 ? filteredProjects : data.projects}
                 onSelectProject={(proj) => setSelectedProject(proj)}
+                onTagSelect={handleTagSelect}
                 onClose={() => setSelectedProject(null)}
             />
 

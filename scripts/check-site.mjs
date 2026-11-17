@@ -72,6 +72,40 @@ try {
     assert.equal(await page.evaluate(() => document.body.style.overflow), '');
     await page.click('.reset-filters');
 
+    // Filtre Coups de cœur
+    await page.click('.filter-btn-featured');
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), data.projects.filter((p) => p.featured).length);
+    await page.click('.reset-filters');
+
+    // Raccourci clavier '/' vers la recherche
+    await page.evaluate(() => document.body.focus());
+    await page.keyboard.press('/');
+    assert.equal(await page.evaluate(() => document.activeElement.matches('.project-search-input')), true);
+    await page.evaluate(() => document.activeElement.blur());
+
+    // Filtrage par clic sur un tag technologique dans la fiche projet
+    await page.click('.card-quick-btn');
+    await page.waitForSelector('dialog[open]');
+    const clickedTag = await page.$eval('.tag-interactive', (btn) => btn.textContent);
+    await page.click('.tag-interactive');
+    await page.waitForFunction(() => !document.querySelector('dialog[open]'));
+    assert.equal(await page.$eval('.project-search-input', (input) => input.value), clickedTag);
+    assert.ok(await page.$$eval('.project-card', (cards) => cards.length) > 0);
+    await page.click('.reset-filters');
+
+    // Lien direct vers une fiche projet (?project=rclonedash) et copie du lien
+    await page.goto(`${url}/?project=rclonedash`, { waitUntil: 'networkidle0' });
+    await page.waitForSelector('dialog[open]');
+    assert.equal(await page.$eval('.modal-title', (node) => node.textContent), 'rcloneDash');
+    await page.evaluate(() => {
+        navigator.clipboard.writeText = async (text) => { window.lastSharedUrl = text; };
+    });
+    await page.click('.modal-share-btn');
+    await page.waitForFunction(() => document.querySelector('.modal-share-btn').textContent.includes('Lien copié'));
+    assert.ok((await page.evaluate(() => window.lastSharedUrl)).endsWith('?project=rclonedash'));
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !location.search.includes('project='));
+
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewport({ width, height: 900 });
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `Débordement à ${width}px`);
@@ -107,6 +141,7 @@ try {
     await audit('Accessibilité du CV');
     assert.equal(await page.evaluate(() => performance.getEntriesByType('resource').some((entry) => entry.initiatorType === 'script')), false, 'Le CV statique charge du JavaScript');
     assert.equal(await page.$eval('.cv-photo', (image) => image.complete && image.naturalWidth > 0), true);
+    assert.equal(await page.$eval('.cv-back', (link) => link.getAttribute('href')), '../');
     await page.screenshot({ path: join(screenshots, 'cv.png'), fullPage: true });
     await page.setJavaScriptEnabled(false);
     await page.goto(url, { waitUntil: 'networkidle0' });

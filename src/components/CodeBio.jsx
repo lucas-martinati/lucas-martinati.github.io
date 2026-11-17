@@ -21,7 +21,7 @@ export default function CodeBio({ developer = {}, projects = [], education = [],
         ? developer.recruitment?.badge
         : developer.recruitment?.passiveBadge;
     const statusText = isSeeking
-        ? developer.availability
+        ? 'Disponible pour Alternance'
         : 'En poste';
 
     const githubSlug = developer.github.replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '');
@@ -200,7 +200,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                         ))}],</div>
                         <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">'{developer.mindset}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">'{developer.currentFocus}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(8)}</span>&nbsp;&nbsp;<span className="property">availability</span>: <span className="value">true</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(8)}</span>&nbsp;&nbsp;<span className="property">availability</span>: <span className="value">{String(Boolean(developer.availability))}</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(9)}</span>&nbsp;&nbsp;<span className="property">email</span>: <span className="string">'{developer.email}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(10)}</span>&nbsp;&nbsp;<span className="property">github</span>: <span className="string">'{githubSlug}'</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(11)}</span>&nbsp;&nbsp;<span className="property">linkedin</span>: <span className="string">'{linkedinSlug}'</span></div>
@@ -225,15 +225,16 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 {isSeeking && activeTab === 'sh' && (
                     <div className="code-lines">
                         <div className="code-line"><span className="line-number">{pad(1)}</span><span className="comment">#!/usr/bin/env bash</span></div>
-                        <div className="code-line"><span className="line-number">{pad(2)}</span><span className="keyword">echo</span> <span className="string">"Initialisation du recrutement..."</span></div>
-                        <div className="code-line"><span className="line-number">{pad(3)}</span><span className="property">CANDIDAT</span>=<span className="string">"{developer.name}"</span></div>
-                        <div className="code-line"><span className="line-number">{pad(4)}</span><span className="property">STATUT</span>=<span className="string">"{statusText}"</span></div>
-                        <div className="code-line"><span className="line-number">{pad(5)}</span><span className="property">CIBLE</span>=<span className="string">"{targetText}"</span></div>
-                        <div className="code-line"><span className="line-number">{pad(6)}</span><span className="keyword">echo</span> <span className="string">"Vérification des atouts..."</span></div>
-                        <div className="code-line"><span className="line-number">{pad(7)}</span><span className="comment"># [✓] {extensionsCount} extensions publiées sur stores</span></div>
-                        <div className="code-line"><span className="line-number">{pad(8)}</span><span className="comment"># [✓] {projectsCount} projets développés avec rigueur</span></div>
-                        <div className="code-line"><span className="line-number">{pad(9)}</span><span className="comment"># [✓] {bacMention} &amp; Score {pixScore} PIX</span></div>
-                        <div className="code-line"><span className="line-number">{pad(10)}</span><span className="keyword">echo</span> <span className="string">"Prêt à collaborer !"</span></div>
+                        <div className="code-line"><span className="line-number">{pad(2)}</span><span className="keyword">set</span> -e</div>
+                        <div className="code-line"><span className="line-number">{pad(3)}</span><span className="keyword">echo</span> <span className="string">"Initialisation du profil candidat..."</span></div>
+                        <div className="code-line"><span className="line-number">{pad(4)}</span><span className="property">CANDIDATE</span>=<span className="string">"{developer.name}"</span></div>
+                        <div className="code-line"><span className="line-number">{pad(5)}</span><span className="property">STATUS</span>=<span className="string">"{statusText}"</span></div>
+                        <div className="code-line"><span className="line-number">{pad(6)}</span><span className="property">TARGET</span>=<span className="string">"{targetText}"</span></div>
+                        <div className="code-line"><span className="line-number">{pad(7)}</span><span className="keyword">echo</span> <span className="string">"Vérification des atouts..."</span></div>
+                        <div className="code-line"><span className="line-number">{pad(8)}</span><span className="comment"># [✓] {extensionsCount} extensions publiées sur stores officiels (Chrome &amp; VS Code)</span></div>
+                        <div className="code-line"><span className="line-number">{pad(9)}</span><span className="comment"># [✓] {projectsCount} projets conçus et déployés</span></div>
+                        <div className="code-line"><span className="line-number">{pad(10)}</span><span className="comment"># [✓] {bacMention} &amp; {pixScore} Score PIX</span></div>
+                        <div className="code-line"><span className="line-number">{pad(11)}</span><span className="keyword">echo</span> <span className="string">"mailto:{developer.email} — Prêt à intégrer votre équipe !"</span></div>
                     </div>
                 )}
             </div>

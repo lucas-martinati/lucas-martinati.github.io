@@ -24,6 +24,9 @@ export default function ScrollReveal({ children, delay = 0 }) {
     useEffect(() => {
         const element = ref.current;
         if (!('IntersectionObserver' in window) || !element?.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        // Skip re-animating elements already painted in the initial viewport by static HTML.
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) return;
         delays.set(element, delay);
         const sharedObserver = getObserver();
         sharedObserver.observe(element);

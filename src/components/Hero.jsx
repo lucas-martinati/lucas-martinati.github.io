@@ -1,10 +1,37 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { GithubIcon, LinkedinIcon, MailIcon, ArrowRightIcon, BriefcaseIcon } from './Icons';
 import { getComputedMetrics } from '../utils/metrics';
 
 export default function Hero({ developer = {}, projects = [], education = [] }) {
     const recruitment = developer.recruitment || {};
     const isSeeking = recruitment.enabled ?? recruitment.seeking;
+    const roles = useMemo(
+        () => (developer.roles?.length ? developer.roles : [developer.status].filter(Boolean)),
+        [developer.roles, developer.status]
+    );
+    const [roleIndex, setRoleIndex] = useState(0);
+    const [fading, setFading] = useState(false);
+
+    useEffect(() => {
+        if (roles.length <= 1) return;
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (motionQuery.matches) return;
+
+        let swapTimer;
+        const interval = setInterval(() => {
+            if (document.hidden || motionQuery.matches) return;
+            setFading(true);
+            swapTimer = setTimeout(() => {
+                setRoleIndex((prev) => (prev + 1) % roles.length);
+                setFading(false);
+            }, 240);
+        }, 3400);
+
+        return () => {
+            clearInterval(interval);
+            clearTimeout(swapTimer);
+        };
+    }, [roles.length]);
 
     const metrics = useMemo(() => {
         return getComputedMetrics({ developer, projects, education });
@@ -37,8 +64,8 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                 {/* Dynamic Role Switcher */}
                 <div className="hero-role-wrapper">
                     <span className="hero-role-prefix">Je suis&nbsp;</span>
-                    <span className="hero-role-dynamic">
-                        {developer.roles?.[0] || developer.status}
+                    <span className={`hero-role-dynamic ${fading ? 'fade-out' : 'fade-in'}`}>
+                        {roles[roleIndex] || developer.status}
                     </span>
                 </div>
 
