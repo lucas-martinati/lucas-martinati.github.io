@@ -1,13 +1,13 @@
 import { useEffect, useCallback } from 'react';
-import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon, LinkIcon, CheckIcon } from './Icons';
+import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon, LinkIcon, CheckIcon, GraduationCapIcon } from './Icons';
 import useDialog from '../utils/useDialog';
 import useClipboard from '../utils/useClipboard';
-import { getProjectCategory, getProjectSlug } from '../utils/projects';
+import { getProjectCategory, getProjectOrigin, getProjectSlug } from '../utils/projects';
 import ResponsiveImage from './ResponsiveImage';
 
 const CATEGORY_LABELS = {
     extension: 'Extension',
-    system: 'Système & CLI',
+    system: 'Système & Logiciel',
     web: 'Web & Full-Stack'
 };
 
@@ -65,6 +65,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
     const hasImage = Boolean(project.imageUrl);
     const categoryLabel = CATEGORY_LABELS[getProjectCategory(project)];
+    const isIut = getProjectOrigin(project) === 'iut';
     const linkHref = project.link?.href;
 
     return (
@@ -107,6 +108,10 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                                 {project.status?.label}
                             </span>
                             <span className="modal-category-tag">{categoryLabel}</span>
+                            <span className={`modal-origin-tag ${isIut ? 'is-iut' : 'is-personal'}`}>
+                                {isIut && <GraduationCapIcon size={13} />}
+                                <span>{isIut ? 'IUT Nancy-Charlemagne' : 'Projet personnel'}</span>
+                            </span>
                         </div>
                         <h2 className="modal-title" id="project-modal-title" aria-live="polite">{project.title}</h2>
                     </div>

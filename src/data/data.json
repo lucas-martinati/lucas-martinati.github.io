@@ -37,7 +37,7 @@
                 {
                     "icon": "⚡",
                     "title": "Autonomie & Expédition de Produits",
-                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (3 extensions sur des stores officiels, 17+ réalisations déployées)."
+                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (3 extensions sur des stores officiels, 20+ réalisations déployées)."
                 },
                 {
                     "icon": "🔄",
@@ -140,6 +140,34 @@
     ],
     "projects": [
         {
+            "emoji": "🐦",
+            "imageUrl": "img/touiteur.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "Touiteur — SAÉ S3.01",
+            "description": "Réseau social de microblogging développé en équipe dans le cadre de la SAÉ S3.01 (BUT Informatique) : fil d'actualité « Pour vous » et abonnements, publication de « touites » avec médias, tags populaires, votes, recherche, back-office d'administration et chiffrement RSA.",
+            "tags": [
+                "PHP",
+                "MySQL",
+                "Bootstrap 5",
+                "JavaScript",
+                "SQL"
+            ],
+            "link": {
+                "github": "SAE-S3.01-Touiteur",
+                "org": true,
+                "text": "Voir le Repository"
+            },
+            "category": "web",
+            "origin": "iut",
+            "featured": true,
+            "highlights": "Architecture PHP orientée objet complète (Dispatcher, Actions, Repositories Reader/Writer, Authentification), double compatibilité MariaDB & Oracle, thème clair/sombre persistant et espace d'administration dédié aux tendances.",
+            "challenges": "Sécurisation des comptes et sessions (hachage de mots de passe et règles de robustesse), gestion de deux SGBD (MariaDB/Oracle), filtrage croisé des flux par abonnements ou hashtags et travail collaboratif en trinôme."
+        },
+        {
             "emoji": "🦀",
             "imageUrl": "img/rclonedash.png",
             "year": "2026",
@@ -163,6 +191,7 @@
                 "text": "Voir le Repository"
             },
             "category": "system",
+            "origin": "personal",
             "featured": true,
             "highlights": "TUI Rust autonome (< 3 Mo, < 10 Mo RAM) à 60 FPS avec Ratatui + Tokio : dashboard 7 KPI, mini-graphe d'historique, streaming journalctl colorisé, explorateur avec xdg-open, 6 thèmes et simulation dry-run.",
             "challenges": "Rendu terminal sans scintillement, monitoring asynchrone non-bloquant avec Tokio, hitboxes souris pixel-perfect et packaging .deb + install.sh sans root via timer systemd utilisateur."
@@ -190,9 +219,38 @@
                 "text": "Voir le fork"
             },
             "category": "system",
+            "origin": "personal",
             "featured": true,
             "highlights": "Service matériel indépendant de l’interface, profils embarqués vérifiés par relecture, macros, règles contextuelles, réglages DPI et effets lumineux.",
             "challenges": "Conserver les données inconnues des profils matériels, sécuriser les écritures HID++ et garder macros et éclairage actifs quand la fenêtre de réglages est fermée."
+        },
+        {
+            "emoji": "🎧",
+            "imageUrl": "img/deefy.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "Deefy — Streaming Audio",
+            "description": "Application web de streaming audio développée en PHP (BUT Informatique S3 — IUT Nancy-Charlemagne) : gestion de playlists, bibliothèque personnelle « Mes pistes », lecteur audio persistant et analyse automatique des métadonnées MP3.",
+            "tags": [
+                "PHP",
+                "MySQL",
+                "Bootstrap 5",
+                "JavaScript",
+                "getID3"
+            ],
+            "link": {
+                "github": "Deefy",
+                "org": true,
+                "text": "Voir le Repository"
+            },
+            "category": "web",
+            "origin": "iut",
+            "featured": false,
+            "highlights": "Lecteur audio continu durant la navigation, extraction automatique de la durée, du genre et des pochettes MP3 via getID3, thème clair/sombre sauvegardé par cookie et gestion granulaire des droits propriétaire/administrateur.",
+            "challenges": "Architecture PHP orientée objet avec PDO, Composer et Dispatcher, sécurisation de l'upload de fichiers audio et pochettes (validation de type et noms uniques) et ergonomie inspirée des plateformes de streaming modernes."
         },
         {
             "emoji": "🌐",
@@ -216,13 +274,70 @@
             ],
             "link": {
                 "github": "marionnet",
-                "text": "Voir le dépôt",
-                "org": true
+                "text": "Voir le dépôt"
             },
             "category": "system",
+            "origin": "personal",
             "featured": false,
             "highlights": "Portage d'un projet OCaml complexe vers la toolchain moderne (OCaml 5.4.1 & Dune), packaging Debian clé en main (marionnet-all-in-one) intégrant noyaux UML 6.12.95 avec Netfilter/NAT, autologin instantané en root, updater automatique (CLI & GUI) avec vérification d'intégrité SHA256 et support multilingue.",
             "challenges": "Résolution de l'incompatibilité noyau historique (stub SKAS0 et crash I/O getty), automatisation sécurisée des droits réseau via sudoers/sudo-rs sans compromettre la sécurité hôte, synchronisation asynchrone des threads GTK/OCaml et conservation de la rétrocompatibilité des fichiers de topologie (.mar)."
+        },
+        {
+            "emoji": "⚔️",
+            "imageUrl": "img/zeldiablo.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "Zeldiablo — SAÉ S2.01",
+            "description": "Jeu d'aventure et de labyrinthe 2D en Java réalisé en équipe (SAÉ S2.01 — IUT Nancy-Charlemagne) : 11 niveaux progressifs, héros combattant et poseur de bombes, bestiaire varié (araignées, gobelins, fantômes, artificiers, blobs multi-cases), portails, pièges et amulette à récupérer.",
+            "tags": [
+                "Java",
+                "Swing",
+                "POO",
+                "UML",
+                "JUnit"
+            ],
+            "link": {
+                "github": "SAE_S2.01_Zeldiablo-LucasM_JeanLM_PierreGSV",
+                "org": true,
+                "text": "Voir le Repository"
+            },
+            "category": "system",
+            "origin": "iut",
+            "featured": false,
+            "highlights": "Conception orientée objet itérative sur 4 versions documentées en PlantUML (classes et séquences), rendu Java Swing en pixel art avec mode classique et éclairage dynamique, monstres autonomes et suite de tests unitaires.",
+            "challenges": "Architecture modulaire des entités et cases à effets, gestion de monstres multi-cases destructibles par segment (Blob), synchronisation de la boucle de jeu et développement collaboratif en trinôme."
+        },
+        {
+            "emoji": "🗺️",
+            "imageUrl": "img/sae-s2-02-stan.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "SAÉ S2.02 — Réseau STAN (Graphes)",
+            "description": "Exploration algorithmique sur graphes (SAÉ S2.02 — IUT Nancy-Charlemagne) : implémentation et benchmark comparatif de Dijkstra et Bellman-Ford en Java sur le réseau réel de transports en commun STAN de Nancy (GTFS), avec visualisation cartographique interactive.",
+            "tags": [
+                "Java",
+                "Algorithmes",
+                "Graphes",
+                "Python",
+                "Folium",
+                "JUnit"
+            ],
+            "link": {
+                "github": "SAE_S2.02-MARTINATI_Lucas",
+                "org": true,
+                "text": "Voir le Repository"
+            },
+            "category": "system",
+            "origin": "iut",
+            "featured": false,
+            "highlights": "Modélisation objet complète par listes d'adjacence (GrapheListe, Arcs, Noeud), tests unitaires JUnit, benchmark CLI des temps d'exécution et affichage géographique des itinéraires optimaux sur carte Folium.",
+            "challenges": "Parsing du réseau GTFS STAN, optimisation des structures de données pour comparer empiriquement Dijkstra et Bellman-Ford, et couplage entre l'exécutable JAR Java et le visualiseur Python."
         },
         {
             "emoji": "🔥",
@@ -245,6 +360,7 @@
                 "text": "Voir le projet"
             },
             "category": "web",
+            "origin": "personal",
             "featured": true,
             "highlights": "Application hybride web/mobile de défi fitness 365 jours avec Capacitor & React, intégrant un système de persistance temps réel Firebase.",
             "challenges": "Conception de l'algorithme de progression quotidienne, synchronisation des données multi-devices et ergonomie mobile tactile réactive."
@@ -268,6 +384,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Table de jeu multijoueur interactive avec code de salon, suivi en direct des mains adverses, pioche/défausse centrales, choix de couleur, annulation d'action et masquage individuel des cartes au clic droit.",
             "challenges": "Synchronisation temps réel de l'état des parties entre plusieurs joueurs, gestion du chronomètre de tour et modélisation souple d'un jeu dont les règles évoluent librement entre participants."
@@ -292,6 +409,7 @@
                 "text": "Voir le Repository"
             },
             "category": "system",
+            "origin": "personal",
             "featured": true,
             "highlights": "Extension native pour le gestionnaire de fichiers GNOME Nautilus intégrant Tailscale Taildrop dans le menu contextuel clic droit.",
             "challenges": "Interfaçage Python avec les API libnautilus-extension et exécution sécurisée des commandes réseau système."
@@ -316,6 +434,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Application full-stack Next.js reproduisant l'interface et l'expérience utilisateur de ChatGPT avec authentification et persistance Firebase.",
             "challenges": "Gestion de l'affichage en streaming des tokens et architecture Next.js App Router."
@@ -339,6 +458,7 @@
                 "text": "VS Marketplace"
             },
             "category": "extension",
+            "origin": "personal",
             "featured": true,
             "highlights": "Extension officielle publiée sur le VS Code Marketplace offrant un environnement complet pour écrire et tester du pseudo-code en français.",
             "challenges": "Écriture de la grammaire syntaxique TextMate, intégration de l'interpréteur en TypeScript et gestion du cycle de vie VS Code."
@@ -364,6 +484,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Outil graphique en ligne pour concevoir des Modèles Conceptuels de Données (MCD) avec relations, entités et exportations graphiques.",
             "challenges": "Calculs vectoriels pour le tracé fluide des liens cardinaux et gestion dynamique du drag-and-drop."
@@ -387,6 +508,7 @@
                 "text": "Chrome Web Store"
             },
             "category": "extension",
+            "origin": "personal",
             "featured": true,
             "highlights": "Extension Chrome publiée sur le Chrome Web Store automatisant l'usage de Google Gemini avec raccourcis rapides de changement de modèle.",
             "challenges": "Manipulation dynamique du DOM de l'application Gemini et synchronisation d'état via les API Chrome Storage et Content Scripts."
@@ -410,6 +532,7 @@
                 "text": "Chrome Web Store"
             },
             "category": "extension",
+            "origin": "personal",
             "featured": false,
             "highlights": "Extension Chrome facilitant le transfert et l'analyse approfondie des parties d'échecs de Chess.com et Lichess vers WintrChess.",
             "challenges": "Extraction des métadonnées PGN et intégration non-intrusive dans les interfaces de jeu en temps réel."
@@ -432,16 +555,17 @@
             ],
             "link": {
                 "pages": "SysAdmin",
-                "org": true,
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Plateforme web interactive d'apprentissage Linux avec un terminal simulé complet et un moteur de validation dynamique des commandes.",
             "challenges": "Modélisation d'un système de fichiers virtuel en mémoire vive (RAM) et émulation des commandes Unix fondamentales."
         },
         {
             "emoji": "🖥️",
+            "imageUrl": "img/sae-s1-03.png",
             "year": "2025",
             "status": {
                 "label": "Terminé",
@@ -460,6 +584,7 @@
                 "text": "Voir le Repository"
             },
             "category": "system",
+            "origin": "iut",
             "featured": false,
             "highlights": "Suite complète de scripts Bash d'administration, unités Systemd, automatisation de sauvegardes et documentation technique pour Ubuntu 22.04.",
             "challenges": "Sécurisation des scripts bash, gestion des codes de retour et respect des standards d'administration système d'entreprise."
@@ -486,6 +611,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Interface sombre orientée mémorisation active avec aperçu de fiches classées par chapitre et type (suites, logarithme népérien, récurrence, géométrie dans l'espace, dénombrement) et paiement intégré via PayPal.",
             "challenges": "Mise en forme lisible des notations et démonstrations mathématiques dans les cartes, organisation modulaire d'un large corpus de fiches et intégration du tunnel d'achat PayPal côté client."
@@ -510,6 +636,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "iut",
             "featured": false,
             "highlights": "Conception d'une identité visuelle cohérente et d'un site multi-rubriques (Présentation, Synthèse, Nos Produits) valorisant la traçabilité des matières recyclées et l'accessibilité étudiante.",
             "challenges": "Traduction d'un cahier des charges client en arborescence claire et mise en page responsive soignée uniquement en HTML5 et CSS3 natifs, sans framework externe."
@@ -534,6 +661,7 @@
                 "text": "Voir le Repository"
             },
             "category": "system",
+            "origin": "personal",
             "featured": false,
             "highlights": "Interface sombre en trois colonnes avec sélection rapide (Select All / Deselect All), icônes dédiées et barre de progression temps réel affichant volume téléchargé, débit (Mo/s), ETA et annulation.",
             "challenges": "Téléchargement HTTP en arrière-plan sans figer l'interface graphique PyQt5, calcul en direct du débit et du temps restant, et enchaînement fiable des installations."
@@ -558,6 +686,7 @@
                 "text": "Voir le site"
             },
             "category": "web",
+            "origin": "personal",
             "featured": false,
             "highlights": "Page d'accueil interactive combinant bascule instantanée entre quatre moteurs de recherche, tiroir de raccourcis illustrés (π-Hub, π-Tube, π-Docs…), mode clair/sombre et internationalisation FR/EN.",
             "challenges": "Premier projet web complet en HTML, CSS et JavaScript vanilla : redirection dynamique des requêtes vers chaque moteur, gestion du thème visuel et adaptation multilingue de l'interface."

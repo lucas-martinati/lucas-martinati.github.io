@@ -77,6 +77,17 @@ try {
     assert.equal(await page.$$eval('.project-card', (cards) => cards.length), data.projects.filter((p) => p.featured).length);
     await page.click('.reset-filters');
 
+    // Filtres d'origine : IUT Nancy-Charlemagne vs Projets personnels
+    const expectedIut = data.projects.filter((p) => (p.origin || (p.link?.org ? 'iut' : 'personal')) === 'iut').length;
+    const expectedPersonal = data.projects.length - expectedIut;
+    await page.click('.origin-btn-iut');
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), expectedIut);
+    await page.waitForSelector('.iut-context-banner');
+    await audit('Accessibilité du filtre IUT Nancy-Charlemagne');
+    await page.click('.origin-btn-personal');
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), expectedPersonal);
+    await page.click('.reset-filters');
+
     // Raccourci clavier '/' vers la recherche
     await page.evaluate(() => document.body.focus());
     await page.keyboard.press('/');

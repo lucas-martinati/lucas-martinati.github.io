@@ -13,11 +13,13 @@ import LanguageCard from './components/LanguageCard';
 import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
 import Toast from './components/Toast';
-import { SearchIcon, SparklesIcon } from './components/Icons';
+import { SearchIcon, SparklesIcon, GraduationCapIcon, UserIcon, GithubIcon } from './components/Icons';
 
-import { getProjectCategory, getProjectSlug, matchesSearch } from './utils/projects';
+import { GITHUB_ORG_USERNAME } from './config/site';
+import { getProjectCategory, getProjectOrigin, getProjectSlug, matchesSearch } from './utils/projects';
 
 export default function App() {
+    const [activeOrigin, setActiveOrigin] = useState('all'); // 'all' | 'personal' | 'iut'
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedProject, setSelectedProject] = useState(null);
@@ -104,22 +106,41 @@ export default function App() {
     }, []);
 
     const searchResults = useMemo(() => data.projects.filter((project) => matchesSearch(project, searchQuery)), [searchQuery]);
-    const counts = useMemo(() => {
-        const result = { all: searchResults.length, featured: 0, web: 0, extension: 0, system: 0 };
+    const originCounts = useMemo(() => {
+        const result = { all: searchResults.length, personal: 0, iut: 0 };
         searchResults.forEach((project) => {
-            if (project.featured) result.featured++;
-            result[getProjectCategory(project)]++;
+            const origin = getProjectOrigin(project);
+            if (origin === 'iut') result.iut++;
+            else result.personal++;
         });
         return result;
     }, [searchResults]);
 
+    const originResults = useMemo(() => searchResults.filter((project) => {
+        if (activeOrigin === 'all') return true;
+        return getProjectOrigin(project) === activeOrigin;
+    }), [activeOrigin, searchResults]);
+
+    const counts = useMemo(() => {
+        const result = { all: originResults.length, featured: 0, web: 0, extension: 0, system: 0 };
+        originResults.forEach((project) => {
+            if (project.featured) result.featured++;
+            result[getProjectCategory(project)]++;
+        });
+        return result;
+    }, [originResults]);
+
     const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking;
 
-    const filteredProjects = useMemo(() => searchResults.filter((project) => {
+    const filteredProjects = useMemo(() => originResults.filter((project) => {
         if (activeCategory === 'all') return true;
         if (activeCategory === 'featured') return Boolean(project.featured);
         return getProjectCategory(project) === activeCategory;
-    }), [activeCategory, searchResults]);
+    }), [activeCategory, originResults]);
+
+    const handleOriginClick = (origin) => {
+        setActiveOrigin(origin);
+    };
 
     const handleCategoryClick = (cat) => {
         setActiveCategory(cat);
@@ -127,6 +148,7 @@ export default function App() {
 
     const handleTagSelect = useCallback((tag) => {
         setSelectedProject(null);
+        setActiveOrigin('all');
         setActiveCategory('all');
         setSearchQuery(tag);
         showToast(`Projets filtrés par « ${tag} »`, 'info');
@@ -139,6 +161,8 @@ export default function App() {
             }
         });
     }, [showToast]);
+
+    const hasActiveFilters = Boolean(searchQuery.trim() || activeCategory !== 'all' || activeOrigin !== 'all');
 
     return (
         <>
@@ -166,11 +190,44 @@ export default function App() {
                 </div>
                 <h2 className="section-title">Mes Projets</h2>
                 <p className="projects-subtitle">
-                    Découvrez une sélection de {data.projects.length} projets concrets : applications web, extensions de navigateurs, outils système et défis algorithmiques.
+                    Découvrez une sélection de {data.projects.length} réalisations — projets personnels et projets universitaires menés à l'IUT Nancy-Charlemagne (BUT Informatique).
                 </p>
 
-                {/* Search Bar & Category Filters Bar */}
+                {/* Search Bar, Origin Switcher & Category Filters Bar */}
                 <div className="projects-controls-wrap js-only">
+                    {/* Origin Switcher : Projets personnels vs Formation IUT Nancy-Charlemagne */}
+                    <div className="project-origin-tabs" role="group" aria-label="Filtrer par contexte de réalisation">
+                        <button
+                            type="button"
+                            className={`origin-btn ${activeOrigin === 'all' ? 'active' : ''}`}
+                            onClick={() => handleOriginClick('all')}
+                            aria-pressed={activeOrigin === 'all'}
+                        >
+                            <span>Tous les projets</span>
+                            <span className="origin-count">{originCounts.all}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`origin-btn origin-btn-personal ${activeOrigin === 'personal' ? 'active' : ''}`}
+                            onClick={() => handleOriginClick('personal')}
+                            aria-pressed={activeOrigin === 'personal'}
+                        >
+                            <UserIcon size={15} />
+                            <span>Projets personnels</span>
+                            <span className="origin-count">{originCounts.personal}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`origin-btn origin-btn-iut ${activeOrigin === 'iut' ? 'active' : ''}`}
+                            onClick={() => handleOriginClick('iut')}
+                            aria-pressed={activeOrigin === 'iut'}
+                        >
+                            <GraduationCapIcon size={16} />
+                            <span>IUT Nancy-Charlemagne</span>
+                            <span className="origin-count">{originCounts.iut}</span>
+                        </button>
+                    </div>
+
                     {/* Live Search Input */}
                     <div className="project-search-bar">
                         <SearchIcon size={18} className="search-icon-svg" />
@@ -245,19 +302,42 @@ export default function App() {
                             onClick={() => handleCategoryClick('system')}
                             aria-pressed={activeCategory === 'system'}
                         >
-                            <span>Système &amp; Scripts</span>
+                            <span>Système &amp; Logiciel</span>
                             <span className="filter-count">{counts.system}</span>
                         </button>
                     </div>
                 </div>
 
+                {activeOrigin === 'iut' && (
+                    <div className="iut-context-banner js-only">
+                        <div className="iut-context-text">
+                            <div className="iut-context-title">
+                                <GraduationCapIcon size={18} />
+                                <span>Formation universitaire — BUT Informatique (IUT Nancy-Charlemagne)</span>
+                            </div>
+                            <p>
+                                SAÉ et mini-projets académiques réalisés dans le cadre du BUT Informatique à l'Université de Lorraine.
+                            </p>
+                        </div>
+                        <a
+                            href={`https://github.com/${GITHUB_ORG_USERNAME}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="iut-org-link"
+                        >
+                            <GithubIcon size={16} />
+                            <span>Organisation GitHub</span>
+                        </a>
+                    </div>
+                )}
+
                 <div className="project-results-summary js-only">
                     <p role="status" aria-live="polite" aria-atomic="true">
                         {filteredProjects.length} projet{filteredProjects.length > 1 ? 's' : ''}
-                        {searchQuery.trim() || activeCategory !== 'all' ? ` sur ${data.projects.length}` : ' à explorer'}
+                        {hasActiveFilters ? ` sur ${data.projects.length}` : ' à explorer'}
                     </p>
-                    {(searchQuery || activeCategory !== 'all') && (
-                        <button type="button" className="reset-filters" onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}>
+                    {hasActiveFilters && (
+                        <button type="button" className="reset-filters" onClick={() => { setSearchQuery(''); setActiveOrigin('all'); setActiveCategory('all'); }}>
                             Tout afficher
                         </button>
                     )}
@@ -280,11 +360,12 @@ export default function App() {
                     <div className="projects-empty-state">
                         <div className="empty-emoji">🔍</div>
                         <h3>Aucun projet ne correspond à votre recherche</h3>
-                        <p>Essayez avec d'autres termes comme "React", "Python", "Vite" ou réinitialisez les filtres.</p>
+                        <p>Essayez avec d'autres termes comme "React", "Java", "PHP" ou réinitialisez les filtres.</p>
                         <button
                             type="button"
                             className="btn-secondary"
                             onClick={() => {
+                                setActiveOrigin('all');
                                 setActiveCategory('all');
                                 setSearchQuery('');
                             }}

@@ -1,9 +1,11 @@
 import ResponsiveImage from './ResponsiveImage';
-import { SparklesIcon, ExternalLinkIcon, GithubIcon } from './Icons';
+import { SparklesIcon, ExternalLinkIcon, GithubIcon, GraduationCapIcon } from './Icons';
+import { getProjectOrigin } from '../utils/projects';
 
 export default function ProjectCard({ project, index, onOpenModal }) {
     const hasImage = !!project.imageUrl;
     const linkHref = project.link?.href;
+    const isIut = getProjectOrigin(project) === 'iut';
 
     // Vibrant gradients cycle
     const gradients = [
@@ -56,6 +58,12 @@ export default function ProjectCard({ project, index, onOpenModal }) {
             <div className="project-body">
                 <div className="project-meta">
                     <span className="project-year">{project.year}</span>
+                    {isIut && (
+                        <span className="project-origin-badge">
+                            <GraduationCapIcon size={12} />
+                            <span>IUT Nancy-Charlemagne</span>
+                        </span>
+                    )}
                     <span className={`project-status ${project.status?.className}`}>
                         {project.status?.label}
                     </span>

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { getProjectCategory, getProjectSlug, matchesSearch } from '../src/utils/projects.js';
+import { getProjectCategory, getProjectOrigin, getProjectSlug, matchesSearch } from '../src/utils/projects.js';
 
 test('la recherche accepte accents, casse, espaces, année, points forts et plusieurs mots', () => {
     const project = {
@@ -49,5 +49,23 @@ test('les catégories explicites priment sur les tags et les anciennes données 
     assert.equal(getProjectCategory({ tags: ['Chrome Extension'] }), 'extension');
     assert.equal(getProjectCategory({ tags: ['Bash'] }), 'system');
     assert.equal(getProjectCategory({ tags: ['OCaml'] }), 'system');
+    assert.equal(getProjectCategory({ tags: ['Java'] }), 'system');
     assert.equal(getProjectCategory({}), 'web');
+});
+
+test('les origines projets (perso vs IUT Nancy-Charlemagne) sont détectées et recherchables', async () => {
+    assert.equal(getProjectOrigin({ origin: 'iut' }), 'iut');
+    assert.equal(getProjectOrigin({ origin: 'personal' }), 'personal');
+    assert.equal(getProjectOrigin({ link: { org: true, github: 'Deefy' } }), 'iut');
+    assert.equal(getProjectOrigin({ link: { github: 'rcloneDash' } }), 'personal');
+
+    assert.equal(matchesSearch({ title: 'Deefy', origin: 'iut' }, 'iut charlemagne'), true);
+    assert.equal(matchesSearch({ title: 'rcloneDash', origin: 'personal' }, 'iut charlemagne'), false);
+
+    const data = JSON.parse(await readFile(new URL('../src/data/data.json', import.meta.url), 'utf8'));
+    const iutProjects = data.projects.filter((p) => getProjectOrigin(p) === 'iut');
+    const personalProjects = data.projects.filter((p) => getProjectOrigin(p) === 'personal');
+    assert.equal(iutProjects.length, 6, 'Les 6 projets académiques IUT hors TDs doivent être présents');
+    assert.equal(personalProjects.length, 15, 'Les 15 projets personnels doivent être présents');
+    assert.equal(data.projects.every((p) => Boolean(p.imageUrl)), true, 'Tous les projets doivent avoir un aperçu');
 });
