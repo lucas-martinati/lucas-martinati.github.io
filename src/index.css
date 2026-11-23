@@ -1,26 +1,4 @@
-@font-face {
-    font-family: 'Inter Variable';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Lexend Variable';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url('@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Fira Code Variable';
-    font-style: normal;
-    font-weight: 300 700;
-    font-display: swap;
-    src: url('@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2') format('woff2');
-}
+@import './styles/tokens.css';
 
 /* ===================================================
    DESIGN SYSTEM — Lucas Martinati Portfolio
@@ -55,17 +33,7 @@
     --border-subtle: rgba(243, 239, 230, 0.14);
     --border-strong: rgba(243, 239, 230, 0.26);
 
-    --font-display: 'Lexend Variable', 'Inter Variable', system-ui, sans-serif;
-    --font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Fira Code Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 22px;
-
     --container: 1220px;
-    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* --- Reset & Base --- */
@@ -3294,38 +3262,36 @@ dialog::backdrop {
 }
 
 /* ===================================================
-   LIGHT THEME — Editorial Warm Paper (harmonisé CV)
+   LIGHT THEME — Editorial Warm Paper (tokens partagés)
    =================================================== */
 :root[data-theme="light"] {
     color-scheme: light;
-    --bg-canvas: #faf8f4;
-    --bg-surface: #ffffff;
-    --bg-elevated: #f1ede4;
-    --bg-code: #f5f2eb;
-    --bg-modal: #ffffff;
+    --bg-canvas: var(--paper-canvas);
+    --bg-surface: var(--paper-surface);
+    --bg-elevated: var(--paper-elevated);
+    --bg-code: var(--paper-tint);
+    --bg-modal: var(--paper-surface);
 
-    --ink-primary: #141920;
-    --ink-secondary: #495464;
-    --ink-muted: #5a6575;
+    --ink-primary: var(--paper-ink);
+    --ink-secondary: var(--paper-ink-secondary);
+    --ink-muted: var(--paper-ink-muted);
 
-    --accent-teal: #0b657d;
-    --accent-teal-dim: rgba(11, 101, 125, 0.09);
-    --accent-teal-border: rgba(11, 101, 125, 0.28);
+    --accent-teal: var(--paper-teal);
+    --accent-teal-dim: var(--paper-teal-dim);
+    --accent-teal-border: var(--paper-teal-border);
 
-    --accent-amber: #94520c;
-    --accent-amber-dim: rgba(148, 82, 12, 0.09);
-    --accent-amber-border: rgba(148, 82, 12, 0.28);
+    --accent-amber: var(--paper-amber);
+    --accent-amber-dim: var(--paper-amber-dim);
+    --accent-amber-border: var(--paper-amber-border);
 
-    --accent-sky: #0c5f9e;
-    --accent-sky-dim: rgba(12, 95, 158, 0.09);
-    --accent-sky-border: rgba(12, 95, 158, 0.28);
+    --accent-sky: var(--paper-sky);
+    --accent-sky-dim: var(--paper-sky-dim);
+    --accent-sky-border: var(--paper-sky-border);
 
-    --border-hairline: rgba(20, 25, 32, 0.1);
-    --border-subtle: rgba(20, 25, 32, 0.16);
-    --border-strong: rgba(20, 25, 32, 0.28);
-}
+    --border-hairline: var(--paper-border-hairline);
+    --border-subtle: var(--paper-border-subtle);
+    --border-strong: var(--paper-border-strong);
 
-:root[data-theme="light"] {
     scrollbar-color: rgba(20, 25, 32, 0.2) var(--bg-canvas);
 }
 
@@ -3340,15 +3306,15 @@ dialog::backdrop {
 
 [data-theme="light"] .animated-bg {
     background:
-        radial-gradient(ellipse 75% 42% at 18% -6%, rgba(11, 101, 125, 0.1), transparent 65%),
-        radial-gradient(ellipse 55% 36% at 88% 4%, rgba(148, 82, 12, 0.07), transparent 62%),
+        radial-gradient(ellipse 75% 42% at 18% -6%, var(--paper-glow-teal), transparent 65%),
+        radial-gradient(ellipse 55% 36% at 88% 4%, var(--paper-glow-amber), transparent 62%),
         var(--bg-canvas);
 }
 
 [data-theme="light"] .tech-grid-overlay {
     background-image:
-        linear-gradient(rgba(20, 25, 32, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20, 25, 32, 0.045) 1px, transparent 1px);
+        linear-gradient(var(--paper-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--paper-grid) 1px, transparent 1px);
 }
 
 [data-theme="light"] .bg-vignette {
@@ -3391,8 +3357,8 @@ dialog::backdrop {
 }
 
 [data-theme="light"] .btn-primary:hover {
-    background: #232c38;
-    border-color: #232c38;
+    background: var(--paper-ink-hover);
+    border-color: var(--paper-ink-hover);
     box-shadow: 0 10px 24px rgba(20, 25, 32, 0.18);
 }
 

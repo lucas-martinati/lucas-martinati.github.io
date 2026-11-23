@@ -1,0 +1,81 @@
+/* ─────────────────────────────────────────────────────────────
+   SOURCE UNIQUE — Polices & Tokens de Design (Portfolio + CV).
+   Importé par src/index.css et cv/cv.css (fusionné au build Vite).
+   ───────────────────────────────────────────────────────────── */
+
+@font-face {
+    font-family: 'Inter Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Lexend Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Fira Code Variable';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2') format('woff2');
+}
+
+:root {
+    /* Typographie partagée */
+    --font-display: 'Lexend Variable', 'Inter Variable', system-ui, sans-serif;
+    --font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Fira Code Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+    /* Géométrie & transitions */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 22px;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Palette claire éditoriale (utilisée par le thème clair de / et par /cv/) */
+    --paper-canvas: #faf8f4;
+    --paper-surface: #ffffff;
+    --paper-elevated: #f1ede4;
+    --paper-tint: #f5f2eb;
+    --paper-card: #f3efe7;
+    --paper-card-soft: #f8f6f1;
+    --paper-card-deep: #eae4d8;
+
+    --paper-ink: #141920;
+    --paper-ink-hover: #232c38;
+    --paper-ink-body: #343f4e;
+    --paper-ink-secondary: #495464;
+    --paper-ink-muted: #556070;
+
+    --paper-teal: #0b657d;
+    --paper-teal-strong: #095569;
+    --paper-teal-dim: rgba(11, 101, 125, 0.09);
+    --paper-teal-border: rgba(11, 101, 125, 0.28);
+    --paper-teal-soft: #e3f2f6;
+    --paper-teal-border-solid: #a7d1dc;
+
+    --paper-amber: #94520c;
+    --paper-amber-dim: rgba(148, 82, 12, 0.09);
+    --paper-amber-border: rgba(148, 82, 12, 0.28);
+    --paper-amber-soft: #f7ead7;
+    --paper-amber-border-solid: #e0c195;
+
+    --paper-sky: #0c5f9e;
+    --paper-sky-dim: rgba(12, 95, 158, 0.09);
+    --paper-sky-border: rgba(12, 95, 158, 0.28);
+
+    --paper-border-hairline: rgba(20, 25, 32, 0.1);
+    --paper-border-subtle: rgba(20, 25, 32, 0.16);
+    --paper-border-strong: rgba(20, 25, 32, 0.28);
+    --paper-grid: rgba(20, 25, 32, 0.04);
+    --paper-glow-teal: rgba(11, 101, 125, 0.1);
+    --paper-glow-amber: rgba(148, 82, 12, 0.07);
+}

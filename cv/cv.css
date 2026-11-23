@@ -1,62 +1,39 @@
-@font-face {
-    font-family: 'Inter Variable';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Lexend Variable';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url('@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Fira Code Variable';
-    font-style: normal;
-    font-weight: 300 700;
-    font-display: swap;
-    src: url('@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2') format('woff2');
-}
+@import '../src/styles/tokens.css';
 
 /* ─────────────────────────────────────────────────────────────
-   Page CV — Thème clair éditorial unifié avec le portfolio.
+   Page CV — Consomme les tokens partagés (src/styles/tokens.css).
    Écran & Impression / PDF partagent exactement la même identité
-   (papier ivoire chaud, pétrole #0b657d, cuivre #94520c,
-   Lexend + Inter + Fira Code).
+   éditoriale claire que le portfolio.
    ───────────────────────────────────────────────────────────── */
 
 :root {
-    --cv-canvas: #faf8f4;
-    --cv-sheet: #ffffff;
-    --cv-card: #f3efe7;
-    --cv-card-soft: #f8f6f1;
-    --cv-card-deep: #eae4d8;
-    --cv-surface: #faf8f4;
+    --cv-canvas: var(--paper-canvas);
+    --cv-sheet: var(--paper-surface);
+    --cv-card: var(--paper-card);
+    --cv-card-soft: var(--paper-card-soft);
+    --cv-card-deep: var(--paper-card-deep);
+    --cv-surface: var(--paper-canvas);
 
-    --cv-ink: #141920;
-    --cv-body: #343f4e;
-    --cv-muted: #556070;
+    --cv-ink: var(--paper-ink);
+    --cv-body: var(--paper-ink-body);
+    --cv-muted: var(--paper-ink-muted);
 
-    --cv-accent: #0b657d;
-    --cv-accent-strong: #095569;
-    --cv-accent-soft: #e3f2f6;
-    --cv-accent-border: #a7d1dc;
+    --cv-accent: var(--paper-teal);
+    --cv-accent-strong: var(--paper-teal-strong);
+    --cv-accent-soft: var(--paper-teal-soft);
+    --cv-accent-border: var(--paper-teal-border-solid);
 
-    --cv-amber: #94520c;
-    --cv-amber-soft: #f7ead7;
-    --cv-amber-border: #e0c195;
+    --cv-amber: var(--paper-amber);
+    --cv-amber-soft: var(--paper-amber-soft);
+    --cv-amber-border: var(--paper-amber-border-solid);
 
-    --cv-line: rgba(20, 25, 32, 0.11);
-    --cv-line-strong: rgba(20, 25, 32, 0.18);
+    --cv-line: var(--paper-border-hairline);
+    --cv-line-strong: var(--paper-border-subtle);
     --cv-mark-empty: #8d97a4;
 
-    --cv-font-display: 'Lexend Variable', 'Inter Variable', system-ui, sans-serif;
-    --cv-font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
-    --cv-font-mono: 'Fira Code Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --cv-font-display: var(--font-display);
+    --cv-font-body: var(--font-body);
+    --cv-font-mono: var(--font-mono);
 }
 
 *, *::before, *::after {
@@ -86,10 +63,10 @@ html, body {
     overflow-x: clip;
     max-width: 100%;
     background:
-        radial-gradient(ellipse 75% 42% at 18% -6%, rgba(11, 101, 125, 0.1), transparent 65%),
-        radial-gradient(ellipse 55% 36% at 88% 4%, rgba(148, 82, 12, 0.07), transparent 62%),
-        linear-gradient(rgba(20, 25, 32, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20, 25, 32, 0.04) 1px, transparent 1px),
+        radial-gradient(ellipse 75% 42% at 18% -6%, var(--paper-glow-teal), transparent 65%),
+        radial-gradient(ellipse 55% 36% at 88% 4%, var(--paper-glow-amber), transparent 62%),
+        linear-gradient(var(--paper-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--paper-grid) 1px, transparent 1px),
         var(--cv-canvas);
     background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px, 100% 100%;
 }
@@ -124,12 +101,12 @@ html, body {
     min-height: 44px;
     gap: 8px;
     padding: 9px 18px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s var(--ease-out), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cv-toolbar-btn:hover {
@@ -150,7 +127,7 @@ a:focus-visible {
 
 .cv-back:hover {
     background: var(--cv-card);
-    border-color: rgba(20, 25, 32, 0.3);
+    border-color: var(--paper-border-strong);
 }
 
 .cv-print {
@@ -160,8 +137,8 @@ a:focus-visible {
 }
 
 .cv-print:hover {
-    background: #232c38;
-    border-color: #232c38;
+    background: var(--paper-ink-hover);
+    border-color: var(--paper-ink-hover);
     box-shadow: 0 10px 24px rgba(20, 25, 32, 0.18);
 }
 
