@@ -71,6 +71,9 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
                 >
                     <span aria-hidden="true">←</span> Retour au portfolio
                 </a>
+                <span className="cv-toolbar-brand" aria-hidden="true">
+                    <span className="cv-brand-accent">{developer.initials}</span>{developer.brandSuffix}
+                </span>
                 <a
                     href="../cv.pdf"
                     download={pdfFile}

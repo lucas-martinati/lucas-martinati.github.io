@@ -9,11 +9,13 @@ export default function Footer({ developer = {} }) {
         <footer className="site-footer" id="contact">
             <div className="contact-container">
                 <div className="contact-header">
-                    <div className="contact-badge">
-                        <span className="pulse-dot"></span>
-                        <span>Collaborons ensemble</span>
+                    <div className="contact-header-main">
+                        <div className="contact-badge">
+                            <span className="pulse-dot" aria-hidden="true"></span>
+                            <span>Collaborons ensemble</span>
+                        </div>
+                        <h2 className="section-title">Restons en contact</h2>
                     </div>
-                    <h2 className="section-title">Restons en contact</h2>
                     <p className="contact-subtitle">
                         {isSeeking
                             ? "À la recherche d'une alternance, d'un stage ou envie d'échanger autour d'un projet technologique ? N'hésitez pas à me joindre sur mes réseaux ou par email."

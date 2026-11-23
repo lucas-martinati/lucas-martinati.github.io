@@ -34,6 +34,14 @@ try {
     await audit('Accessibilité de la page');
     await page.screenshot({ path: join(screenshots, 'desktop.png') });
 
+    // Thème clair : bascule, persistance et audit accessibilité
+    await page.click('.nav-desktop-actions .theme-toggle-btn');
+    await page.waitForFunction(() => document.documentElement.dataset.theme === 'light');
+    await audit('Accessibilité de la page (thème clair)');
+    await page.screenshot({ path: join(screenshots, 'desktop-light.png') });
+    await page.click('.nav-desktop-actions .theme-toggle-btn');
+    await page.waitForFunction(() => !document.documentElement.dataset.theme);
+
     await page.evaluate(() => {
         navigator.clipboard.writeText = async (text) => { window.lastCopiedText = text; };
     });

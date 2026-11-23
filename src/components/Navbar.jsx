@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import useDialog from '../utils/useDialog';
-import { GithubIcon, LinkedinIcon, MailIcon, CvIcon } from './Icons';
+import { GithubIcon, LinkedinIcon, MailIcon, CvIcon, SunIcon, MoonIcon } from './Icons';
 
 const NAV_ITEMS = [
     { id: 'projects', label: 'Projets' },
@@ -10,9 +10,10 @@ const NAV_ITEMS = [
     { id: 'contact', label: 'Contact', mobileLabel: 'Contact & Réseaux' }
 ];
 
-export default function Navbar({ developer = {}, projectCount = 0 }) {
+export default function Navbar({ developer = {}, projectCount = 0, theme = 'dark', onToggleTheme }) {
     const [activeSection, setActiveSection] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const isLight = theme === 'light';
 
     const dialogRef = useDialog(mobileMenuOpen);
 
@@ -140,6 +141,16 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                             <MailIcon size={18} />
                         </a>
                     )}
+                    <button
+                        type="button"
+                        className="nav-icon-link theme-toggle-btn js-only"
+                        onClick={onToggleTheme}
+                        aria-label={isLight ? 'Activer le thème sombre' : 'Activer le thème clair'}
+                        aria-pressed={isLight}
+                        title={isLight ? 'Passer en thème sombre' : 'Passer en thème clair'}
+                    >
+                        {isLight ? <MoonIcon size={17} /> : <SunIcon size={17} />}
+                    </button>
                     <a
                         href="cv/"
                         target="_blank"
@@ -148,12 +159,23 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                         aria-label={`Mon CV — ${developer.name}`}
                         title="Voir mon CV"
                     >
-                        <CvIcon size={18} />
+                        <CvIcon size={16} />
+                        <span className="nav-cv-label">CV</span>
                     </a>
                 </div>
 
                 {/* Mobile Header Controls (visible only on mobile) */}
                 <div className="nav-mobile-controls">
+                    <button
+                        type="button"
+                        className="nav-icon-link theme-toggle-btn js-only"
+                        onClick={onToggleTheme}
+                        aria-label={isLight ? 'Activer le thème sombre' : 'Activer le thème clair'}
+                        aria-pressed={isLight}
+                        title={isLight ? 'Passer en thème sombre' : 'Passer en thème clair'}
+                    >
+                        {isLight ? <MoonIcon size={17} /> : <SunIcon size={17} />}
+                    </button>
                     <button
                         type="button"
                         className="mobile-nav-toggle"

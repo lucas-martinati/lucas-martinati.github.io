@@ -7,7 +7,7 @@
     <title>Page introuvable (404) — Lucas Martinati</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#030712">
+    <meta name="theme-color" content="#0c0f13">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -15,69 +15,67 @@
             display: grid;
             place-items: center;
             padding: 2rem;
-            background: #030712;
-            color: #f8fafc;
+            background: radial-gradient(ellipse 75% 45% at 20% 0%, rgba(16, 128, 124, 0.16), transparent 65%), #0c0f13;
+            color: #f3efe6;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
         }
         main {
             max-width: 520px;
             width: 100%;
-            text-align: center;
-            padding: 2.5rem 2rem;
-            border-radius: 22px;
-            background: rgba(17, 24, 39, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            padding: 2.5rem 2.25rem;
+            border-radius: 18px;
+            background: #131820;
+            border: 1px solid rgba(243, 239, 230, 0.12);
+            border-top: 2px solid #38cfc1;
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
         }
         .code {
             display: inline-block;
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-family: ui-monospace, Menlo, monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
             letter-spacing: 0.08em;
-            color: #c4b5fd;
-            background: rgba(139, 92, 246, 0.14);
-            border: 1px solid rgba(139, 92, 246, 0.35);
-            border-radius: 999px;
-            padding: 0.3rem 0.9rem;
-            margin-bottom: 1.25rem;
+            color: #38cfc1;
+            margin-bottom: 0.9rem;
         }
         h1 {
-            font-size: clamp(1.75rem, 5vw, 2.3rem);
-            font-weight: 800;
+            font-size: clamp(1.75rem, 5vw, 2.25rem);
+            font-weight: 700;
             margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
         }
         p {
-            color: #94a3b8;
+            color: #a4adb9;
             margin-bottom: 1.85rem;
         }
         .actions {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
-            justify-content: center;
         }
         a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-height: 44px;
-            padding: 0.75rem 1.4rem;
+            padding: 0.7rem 1.35rem;
             border-radius: 12px;
             font-weight: 600;
             text-decoration: none;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transition: transform 0.2s ease, background 0.2s ease;
         }
         a:hover { transform: translateY(-2px); }
-        a:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+        a:focus-visible { outline: 2.5px solid #38cfc1; outline-offset: 3px; }
         .primary {
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: #ffffff;
+            background: #f3efe6;
+            color: #0c0f13;
         }
         .secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            color: #f8fafc;
+            background: rgba(243, 239, 230, 0.05);
+            border: 1px solid rgba(243, 239, 230, 0.16);
+            color: #f3efe6;
         }
     </style>
 </head>

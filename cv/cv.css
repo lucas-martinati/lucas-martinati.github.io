@@ -1,4 +1,12 @@
 @font-face {
+    font-family: 'Inter Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+}
+
+@font-face {
     font-family: 'Lexend Variable';
     font-style: normal;
     font-weight: 100 900;
@@ -6,46 +14,107 @@
     src: url('@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2') format('woff2');
 }
 
-/* ─────────────────────────────────────────────
-   Page CV — écran + impression A4.
-   Écran : feuille centrée sur fond sombre + barre d'outils.
-   Impression : rendu fidèle à l'écran (cartes, arrondis,
-   couleurs conservées), 1 page A4.
-   Police Lexend hébergée localement pour une impression hors ligne.
-   ───────────────────────────────────────────── */
+@font-face {
+    font-family: 'Fira Code Variable';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2') format('woff2');
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Page CV — Thème clair éditorial unifié avec le portfolio.
+   Écran & Impression / PDF partagent exactement la même identité
+   (papier ivoire chaud, pétrole #0b657d, cuivre #94520c,
+   Lexend + Inter + Fira Code).
+   ───────────────────────────────────────────────────────────── */
 
 :root {
-    --cv-ink: #1f2937;
-    --cv-muted: #545c69;
+    --cv-canvas: #faf8f4;
+    --cv-sheet: #ffffff;
+    --cv-card: #f3efe7;
+    --cv-card-soft: #f8f6f1;
+    --cv-card-deep: #eae4d8;
+    --cv-surface: #faf8f4;
+
+    --cv-ink: #141920;
+    --cv-body: #343f4e;
+    --cv-muted: #556070;
+
     --cv-accent: #0b657d;
-    --cv-accent-strong: #0b5a70;
-    --cv-accent-soft: #cde7ee;
-    --cv-sheet: #faf8f4;
-    --cv-card: #e9e4d9;
-    --cv-card-deep: #e0d9cb;
-    --cv-line: #d8d2c4;
-    --cv-white: #ffffff;
+    --cv-accent-strong: #095569;
+    --cv-accent-soft: #e3f2f6;
+    --cv-accent-border: #a7d1dc;
+
+    --cv-amber: #94520c;
+    --cv-amber-soft: #f7ead7;
+    --cv-amber-border: #e0c195;
+
+    --cv-line: rgba(20, 25, 32, 0.11);
+    --cv-line-strong: rgba(20, 25, 32, 0.18);
+    --cv-mark-empty: #8d97a4;
+
+    --cv-font-display: 'Lexend Variable', 'Inter Variable', system-ui, sans-serif;
+    --cv-font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
+    --cv-font-mono: 'Fira Code Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cv-canvas);
+    color: var(--cv-ink);
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background: rgba(11, 101, 125, 0.18);
+    color: var(--cv-ink);
 }
 
 .cv-page {
-    background: #111827;
     min-height: 100vh;
-    padding: 24px 16px 56px;
-    font-family: "Lexend Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 24px 20px 64px;
+    font-family: var(--cv-font-body);
     color: var(--cv-ink);
     overflow-x: clip;
     max-width: 100%;
+    background:
+        radial-gradient(ellipse 75% 42% at 18% -6%, rgba(11, 101, 125, 0.1), transparent 65%),
+        radial-gradient(ellipse 55% 36% at 88% 4%, rgba(148, 82, 12, 0.07), transparent 62%),
+        linear-gradient(rgba(20, 25, 32, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 25, 32, 0.04) 1px, transparent 1px),
+        var(--cv-canvas);
+    background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px, 100% 100%;
 }
 
-/* Barre d'outils écran */
+/* Barre d'outils écran (identique au thème clair du portfolio) */
 .cv-toolbar {
-    max-width: 900px;
-    margin: 0 auto 16px;
+    max-width: 960px;
+    margin: 0 auto 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px 12px;
+    gap: 10px 14px;
+}
+
+.cv-toolbar-brand {
+    font-family: var(--cv-font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--cv-ink);
+}
+
+.cv-brand-accent {
+    color: var(--cv-accent);
 }
 
 .cv-toolbar-btn {
@@ -54,54 +123,60 @@
     justify-content: center;
     min-height: 44px;
     gap: 8px;
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-size: 14px;
+    padding: 9px 18px;
+    border-radius: 12px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cv-toolbar-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
-.cv-toolbar-btn:focus-visible {
-    outline: 3px solid #93c5fd;
+.cv-toolbar-btn:focus-visible,
+a:focus-visible {
+    outline: 2.5px solid var(--cv-accent);
     outline-offset: 3px;
 }
 
 .cv-back {
-    background: rgba(255, 255, 255, 0.08);
-    color: #f8fafc;
-    border-color: rgba(255, 255, 255, 0.24);
+    background: var(--cv-sheet);
+    color: var(--cv-ink);
+    border: 1px solid var(--cv-line-strong);
 }
 
 .cv-back:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.38);
+    background: var(--cv-card);
+    border-color: rgba(20, 25, 32, 0.3);
 }
 
 .cv-print {
-    background: #f4f1ec;
-    color: #111827;
-    border-color: #f4f1ec;
+    background: var(--cv-ink);
+    color: var(--cv-canvas);
+    border: 1px solid var(--cv-ink);
 }
 
-/* Feuille — fond beige uniforme, large à l'écran.
-   (À l'impression : pleine largeur A4 via @page, voir plus bas.) */
+.cv-print:hover {
+    background: #232c38;
+    border-color: #232c38;
+    box-shadow: 0 10px 24px rgba(20, 25, 32, 0.18);
+}
+
+/* Feuille CV — carte papier éditoriale blanche sur fond ivoire */
 .cv-sheet {
-    max-width: 900px;
+    max-width: 960px;
     width: 100%;
     min-width: 0;
-    box-sizing: border-box;
     margin: 0 auto;
     background: var(--cv-sheet);
-    border-radius: 14px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-    padding: 22px 24px 16px;
+    border: 1px solid var(--cv-line-strong);
+    border-top: 2px solid var(--cv-accent);
+    border-radius: 20px;
+    box-shadow: 0 22px 54px rgba(20, 25, 32, 0.08);
+    padding: 28px 30px 26px;
     overflow-x: clip;
 }
 
@@ -110,77 +185,92 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
     background: var(--cv-card);
-    border-radius: 12px;
-    padding: 16px 20px;
+    border: 1px solid var(--cv-line);
+    border-radius: 14px;
+    padding: 20px 22px;
 }
 
 .cv-kicker {
-    margin: 0 0 4px;
+    margin: 0 0 6px;
+    font-family: var(--cv-font-mono);
     font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1.6px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--cv-accent);
 }
 
 .cv-name {
     margin: 0;
-    font-size: 29px;
-    font-weight: 800;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-    line-height: 1.1;
+    font-family: var(--cv-font-display);
+    font-size: 31px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    color: var(--cv-ink);
 }
 
 .cv-age {
-    margin: 3px 0 0;
-    font-size: 12.5px;
+    margin: 5px 0 0;
+    font-family: var(--cv-font-mono);
+    font-size: 12px;
     color: var(--cv-muted);
 }
 
 .cv-contact {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
+    gap: 7px;
+    margin-top: 14px;
 }
 
 .cv-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--cv-white);
+    background: var(--cv-sheet);
     border: 1px solid var(--cv-line);
-    border-radius: 999px;
-    padding: 4px 10px;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-family: var(--cv-font-mono);
     font-size: 11px;
-    font-weight: 600;
-    color: var(--cv-ink);
+    font-weight: 500;
+    color: var(--cv-body);
     text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 a.cv-chip {
     color: var(--cv-accent-strong);
+    border-color: var(--cv-accent-border);
+    background: var(--cv-sheet);
+}
+
+a.cv-chip:hover {
+    color: var(--cv-ink);
+    background: var(--cv-accent-soft);
+    border-color: var(--cv-accent);
 }
 
 .cv-photo {
-    width: 104px;
-    height: 104px;
+    width: 108px;
+    height: 108px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
-    border: 4px solid var(--cv-white);
+    border: 3px solid var(--cv-sheet);
+    box-shadow: 0 8px 22px rgba(20, 25, 32, 0.14);
 }
 
 /* Sections */
 .cv-profile-section {
-    margin-top: 12px;
+    margin-top: 18px;
 }
 
 .cv-section {
-    margin-bottom: 12px;
+    margin-bottom: 18px;
 }
 
 .cv-section:last-child {
@@ -191,10 +281,11 @@ a.cv-chip {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 0 0 10px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 1.6px;
+    margin: 0 0 11px;
+    font-family: var(--cv-font-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--cv-accent);
 }
@@ -208,15 +299,16 @@ a.cv-chip {
 
 .cv-profile {
     margin: 0;
-    font-size: 12.5px;
-    line-height: 1.6;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--cv-body);
 }
 
-/* Stack technique : cartes compactes et notes alignées sur une échelle de 4. */
+/* Stack technique : cartes compactes et notes alignées sur une échelle de 4 */
 .cv-tech-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px 10px;
+    gap: 8px 12px;
     min-width: 0;
 }
 
@@ -225,27 +317,32 @@ a.cv-chip {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 12px;
+    padding: 10px 13px;
     min-width: 0;
     border: 1px solid var(--cv-line);
-    border-radius: 8px;
-    background: #f1eee7;
+    border-radius: 10px;
+    background: var(--cv-card-soft);
     break-inside: avoid;
 }
 
-.cv-tech-content { min-width: 0; }
+.cv-tech-content {
+    min-width: 0;
+}
+
 .cv-tech-label {
     margin: 0 0 3px;
-    font-size: 11px;
-    font-weight: 700;
+    font-family: var(--cv-font-display);
+    font-size: 12px;
+    font-weight: 600;
     line-height: 1.3;
     color: var(--cv-ink);
 }
 
 .cv-tech-tools {
     margin: 0;
-    font-size: 10px;
-    line-height: 1.4;
+    font-family: var(--cv-font-mono);
+    font-size: 10.5px;
+    line-height: 1.45;
     color: var(--cv-muted);
     overflow-wrap: anywhere;
 }
@@ -256,7 +353,7 @@ a.cv-chip {
     align-items: flex-end;
     gap: 5px;
     flex-shrink: 0;
-    width: 49px;
+    width: 52px;
     color: var(--cv-accent-strong);
 }
 
@@ -264,40 +361,75 @@ a.cv-chip {
     display: flex;
     align-items: baseline;
     gap: 2px;
+    font-family: var(--cv-font-mono);
     font-variant-numeric: tabular-nums;
     line-height: 1;
 }
-.cv-level-value strong { font-size: 15px; font-weight: 700; }
-.cv-level-value > span { font-size: 10px; color: var(--cv-muted); }
-.cv-level-marks { display: flex; gap: 3px; }
+
+.cv-level-value strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cv-level-value > span {
+    font-size: 10px;
+    color: var(--cv-muted);
+}
+
+.cv-level-marks {
+    display: flex;
+    gap: 3px;
+}
+
 .cv-level-mark {
     width: 10px;
     height: 4px;
-    border: 1px solid #8a9595;
+    border: 1px solid var(--cv-mark-empty);
     border-radius: 2px;
-    box-sizing: border-box;
     background: transparent;
 }
-.cv-level-mark.is-filled { background: currentColor; border-color: currentColor; }
+
+.cv-level-mark.is-filled {
+    background: currentColor;
+    border-color: currentColor;
+}
 
 .cv-level-legend {
     align-self: center;
-    padding: 4px 12px;
+    padding: 6px 12px;
     color: var(--cv-muted);
-    font-size: 9px;
-    line-height: 1.4;
+    font-size: 10.5px;
+    line-height: 1.45;
 }
-.cv-level-legend p { margin: 0 0 4px; font-weight: 600; }
-.cv-level-key { display: flex; flex-wrap: wrap; gap: 3px 10px; }
-.cv-level-key span { white-space: nowrap; }
-.cv-level-key b { color: var(--cv-accent-strong); }
+
+.cv-level-legend p {
+    margin: 0 0 4px;
+    font-family: var(--cv-font-mono);
+    font-weight: 600;
+    color: var(--cv-body);
+}
+
+.cv-level-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+}
+
+.cv-level-key span {
+    white-space: nowrap;
+}
+
+.cv-level-key b {
+    font-family: var(--cv-font-mono);
+    color: var(--cv-amber);
+}
 
 /* Colonnes */
 .cv-columns {
     display: grid;
     grid-template-columns: 7fr 5fr;
-    gap: 20px;
-    margin-top: 12px;
+    gap: 24px;
+    margin-top: 18px;
 }
 
 /* Pastilles */
@@ -307,10 +439,13 @@ a.cv-chip {
     flex-shrink: 0;
     max-width: 100%;
     background: var(--cv-card-deep);
-    border-radius: 999px;
+    border: 1px solid var(--cv-line);
+    color: var(--cv-ink);
+    border-radius: 7px;
     padding: 2px 9px;
-    font-size: 10px;
-    font-weight: 700;
+    font-family: var(--cv-font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
     white-space: nowrap;
     overflow-wrap: anywhere;
 }
@@ -322,6 +457,7 @@ a.cv-chip {
 
 .cv-pill-accent {
     background: var(--cv-accent-soft);
+    border-color: var(--cv-accent-border);
     color: var(--cv-accent-strong);
 }
 
@@ -333,15 +469,15 @@ a.cv-chip {
 
 /* Cartes (expériences, activités) */
 .cv-card {
-    background: var(--cv-white);
+    background: var(--cv-surface);
     border: 1px solid var(--cv-line);
     border-left: 3px solid var(--cv-accent);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 12px 14px;
 }
 
 .cv-exp-item {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .cv-exp-item:last-child {
@@ -357,73 +493,88 @@ a.cv-chip {
 
 .cv-exp-role {
     margin: 0;
-    font-size: 13px;
-    font-weight: 800;
+    font-family: var(--cv-font-display);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--cv-ink);
 }
 
 .cv-exp-company {
-    margin: 1px 0 0;
+    margin: 2px 0 0;
     font-size: 12px;
     color: var(--cv-muted);
 }
 
 .cv-exp-details {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     padding-left: 16px;
-    font-size: 11.5px;
+    font-size: 12px;
     line-height: 1.55;
-    color: #374151;
+    color: var(--cv-body);
 }
 
 .cv-exp-details li {
-    margin-bottom: 1px;
+    margin-bottom: 2px;
 }
 
-/* Projets personnels : liens et technologies issus du portfolio. */
+/* Projets informatiques */
 .cv-section-note {
-    margin: -4px 0 8px;
+    margin: -4px 0 10px;
     color: var(--cv-muted);
-    font-size: 10.5px;
+    font-size: 11.5px;
 }
 
 .cv-project-item {
     border-left: 2px solid var(--cv-accent);
-    padding-left: 10px;
-    margin-bottom: 10px;
+    padding-left: 12px;
+    margin-bottom: 12px;
     break-inside: avoid;
 }
 
-.cv-project-item:last-child { margin-bottom: 0; }
+.cv-project-item:last-child {
+    margin-bottom: 0;
+}
 
 .cv-project-title {
     margin: 0;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.4;
+    font-family: var(--cv-font-display);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--cv-ink);
 }
 
 .cv-project-title a {
     color: var(--cv-accent-strong);
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration-color: var(--cv-accent-border);
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.cv-project-title a:hover {
+    color: var(--cv-ink);
+    text-decoration-color: var(--cv-accent);
 }
 
 .cv-project-meta {
-    margin: 3px 0;
-    font-size: 10px;
-    color: var(--cv-muted);
+    margin: 3px 0 4px;
+    font-family: var(--cv-font-mono);
+    font-size: 10.5px;
+    color: var(--cv-amber);
     line-height: 1.45;
 }
 
 .cv-project-summary {
     margin: 0;
-    font-size: 11.5px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--cv-body);
 }
 
 /* Éducation */
 .cv-edu-item {
-    padding: 6px 0;
+    padding: 8px 0;
     border-bottom: 1px solid var(--cv-line);
 }
 
@@ -445,41 +596,46 @@ a.cv-chip {
 
 .cv-edu-title {
     margin: 0;
-    font-size: 12.5px;
-    font-weight: 700;
+    font-family: var(--cv-font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cv-ink);
 }
 
 .cv-edu-school {
-    margin: 2px 0;
-    font-size: 11.5px;
-    color: #374151;
+    margin: 3px 0;
+    font-size: 12px;
+    color: var(--cv-body);
 }
 
 .cv-edu-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 8px;
+    gap: 5px 8px;
     align-items: center;
     margin: 0;
 }
 
 .cv-period {
     margin: 0;
+    font-family: var(--cv-font-mono);
     font-size: 11px;
     color: var(--cv-muted);
 }
 
 .cv-highlight-pill {
     display: inline-flex;
-    background: var(--cv-accent-soft);
-    color: var(--cv-accent-strong);
-    border-radius: 999px;
-    padding: 1px 9px;
+    background: var(--cv-amber-soft);
+    border: 1px solid var(--cv-amber-border);
+    color: var(--cv-amber);
+    border-radius: 6px;
+    padding: 1px 8px;
+    font-family: var(--cv-font-mono);
     font-size: 10.5px;
-    font-weight: 800;
+    font-weight: 600;
 }
 
-/* Compétences */
+/* Savoir-être */
 .cv-skills {
     list-style: none;
     margin: 0;
@@ -487,7 +643,7 @@ a.cv-chip {
 }
 
 .cv-skill {
-    margin-bottom: 7px;
+    margin-bottom: 10px;
 }
 
 .cv-skill:last-child {
@@ -496,10 +652,10 @@ a.cv-chip {
 
 .cv-skill-desc {
     display: block;
-    margin-top: 3px;
-    font-size: 11.5px;
-    line-height: 1.5;
-    color: #374151;
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--cv-body);
 }
 
 /* Langues */
@@ -514,10 +670,9 @@ a.cv-chip {
     justify-content: space-between;
     align-items: center;
     gap: 8px;
-    padding: 5px 0;
+    padding: 7px 0;
     border-bottom: 1px solid var(--cv-line);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 12.5px;
 }
 
 .cv-lang:last-child {
@@ -525,39 +680,54 @@ a.cv-chip {
 }
 
 .cv-lang-name {
-    font-weight: 700;
+    font-family: var(--cv-font-display);
+    font-weight: 600;
+    color: var(--cv-ink);
 }
 
 /* Activités */
 .cv-activity {
-    border-left-color: var(--cv-card-deep);
+    border-left-color: var(--cv-amber);
 }
 
 .cv-activity-title {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 700;
+    margin: 0 0 3px;
+    font-family: var(--cv-font-display);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--cv-ink);
 }
 
 /* Petit écran : une colonne */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 720px) {
     .cv-page {
-        padding: 12px 8px 32px;
+        padding: 14px 10px 40px;
+    }
+
+    .cv-toolbar-brand {
+        display: none;
     }
 
     .cv-sheet {
-        padding: 14px 12px 12px;
-        border-radius: 12px;
+        padding: 16px 14px 16px;
+        border-radius: 16px;
     }
 
     .cv-header {
-        padding: 14px 12px;
-        gap: 12px;
+        padding: 16px 14px;
+        gap: 14px;
+        flex-direction: column-reverse;
+        text-align: center;
     }
 
     .cv-name {
-        font-size: clamp(20px, 6vw, 24px);
+        font-size: clamp(22px, 6.5vw, 26px);
         overflow-wrap: anywhere;
+    }
+
+    .cv-contact {
+        width: 100%;
+        justify-content: center;
     }
 
     .cv-chip {
@@ -565,15 +735,6 @@ a.cv-chip {
         white-space: normal;
         overflow-wrap: anywhere;
         word-break: break-word;
-    }
-
-    .cv-contact {
-        width: 100%;
-    }
-
-    /* Stack : 2 colonnes, pastilles autorisées à passer à la ligne */
-    .cv-tech-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .cv-pill {
@@ -584,16 +745,7 @@ a.cv-chip {
 
     .cv-columns {
         grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .cv-header {
-        flex-direction: column-reverse;
-        text-align: center;
-    }
-
-    .cv-contact {
-        justify-content: center;
+        gap: 18px;
     }
 
     .cv-exp-head {
@@ -605,14 +757,14 @@ a.cv-chip {
     }
 }
 
-/* Très petits écrans : stack en 1 colonne pour éviter tout dépassement */
-@media screen and (max-width: 480px) {
-    .cv-page {
-        padding: 8px 6px 24px;
+@media screen and (max-width: 520px) {
+    .cv-toolbar {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .cv-sheet {
-        padding: 12px 10px 10px;
+    .cv-toolbar-btn {
+        width: 100%;
     }
 
     .cv-tech-grid {
@@ -620,15 +772,16 @@ a.cv-chip {
     }
 }
 
-/* ── Impression : fond beige perdu (bord à bord, sans liseré blanc), 1 page A4 ── */
+/* ── Impression / PDF : rendu fidèle à l'écran, compacté pour 1 page A4 ── */
 @page {
     size: A4 portrait;
     margin: 0;
 }
 
 @media print {
-    body {
+    html, body {
         margin: 0 !important;
+        background: #ffffff !important;
     }
 
     .no-print {
@@ -645,41 +798,58 @@ a.cv-chip {
         max-width: none;
         margin: 0;
         box-shadow: none;
+        border: none;
+        border-top: 3px solid var(--cv-accent);
         border-radius: 0;
+        background: #faf8f4;
         padding: 5mm 8mm;
         min-height: 297mm;
-        box-sizing: border-box;
     }
 
-    /* Keep all experience on 1 A4 page with readable font sizes. */
-    .cv-header { padding: 9px 15px; gap: 14px; }
-    .cv-name { font-size: 26px; }
+    .cv-header {
+        background: #ece7dc;
+        border: none;
+        padding: 9px 15px;
+        gap: 14px;
+    }
+
+    .cv-name { font-size: 25px; }
+    .cv-age { margin-top: 2px; font-size: 11px; }
     .cv-contact { gap: 5px; margin-top: 7px; }
-    .cv-chip { padding: 3px 9px; font-size: 10.5px; }
-    .cv-photo { width: 88px; height: 88px; }
-    .cv-profile { font-size: 11.5px; line-height: 1.45; }
-    .cv-section-title { margin-bottom: 5px; font-size: 11.5px; }
+    .cv-chip { padding: 3px 8px; font-size: 10px; background: #ffffff; }
+    a.cv-chip { border-color: var(--cv-line); }
+    .cv-photo { width: 86px; height: 86px; border: 3px solid #ffffff; box-shadow: none; }
+    .cv-profile { font-size: 11px; line-height: 1.45; }
+    .cv-section-title { margin-bottom: 5px; font-size: 10.5px; }
     .cv-section { margin-bottom: 7px; }
     .cv-profile-section { margin-top: 8px; }
     .cv-tech-grid { gap: 4px 8px; }
-    .cv-tech-cat { padding: 4px 9px; gap: 8px; }
+    .cv-tech-cat { padding: 4px 9px; gap: 8px; border-radius: 7px; background: #f2efe7; }
     .cv-tech-label { margin-bottom: 1px; font-size: 10.5px; }
-    .cv-tech-tools { font-size: 9.5px; line-height: 1.35; }
-    .cv-level-legend { padding: 3px 9px; }
+    .cv-tech-tools { font-size: 9px; line-height: 1.35; }
+    .cv-level-value strong { font-size: 13px; }
+    .cv-level-legend { padding: 3px 9px; font-size: 9px; }
     .cv-pills { gap: 4px; }
+    .cv-pill { font-size: 9.5px; padding: 2px 7px; }
     .cv-columns { margin-top: 8px; gap: 15px; }
-    .cv-section-note { margin: -2px 0 6px; font-size: 10px; }
-    .cv-project-item { margin-bottom: 6px; }
-    .cv-project-title { font-size: 11.5px; }
-    .cv-project-meta { margin: 2px 0; font-size: 9.5px; }
-    .cv-project-summary { font-size: 10.8px; line-height: 1.4; }
-    .cv-card { padding: 8px 10px; }
-    .cv-exp-details { font-size: 11px; line-height: 1.45; margin-top: 4px; }
+    .cv-section-note { margin: -2px 0 6px; font-size: 9.5px; }
+    .cv-project-item { margin-bottom: 6px; padding-left: 9px; }
+    .cv-project-title { font-size: 11px; }
+    .cv-project-meta { margin: 2px 0; font-size: 9px; }
+    .cv-project-summary { font-size: 10.4px; line-height: 1.4; }
+    .cv-card { padding: 8px 10px; border-radius: 8px; background: #ffffff; }
+    .cv-exp-role { font-size: 12px; }
+    .cv-exp-company { font-size: 11px; }
+    .cv-exp-details { font-size: 10.5px; line-height: 1.42; margin-top: 4px; }
     .cv-edu-item { padding: 4px 0; }
-    .cv-edu-title { font-size: 11.5px; }
-    .cv-edu-school { font-size: 10.8px; }
+    .cv-edu-title { font-size: 11.2px; }
+    .cv-edu-school { font-size: 10.4px; }
+    .cv-period { font-size: 9.8px; }
+    .cv-highlight-pill { font-size: 9.5px; }
     .cv-skill { margin-bottom: 5px; }
-    .cv-skill-desc { font-size: 10.8px; line-height: 1.4; margin-top: 2px; }
+    .cv-skill-desc { font-size: 10.4px; line-height: 1.4; margin-top: 2px; }
+    .cv-lang { padding: 4px 0; font-size: 11px; }
+    .cv-activity-title { font-size: 11px; }
 
     .cv-card,
     .cv-edu-item,
@@ -690,7 +860,7 @@ a.cv-chip {
     }
 
     a {
-        text-decoration: none;
+        text-decoration: none !important;
     }
 
     * {

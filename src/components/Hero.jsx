@@ -44,19 +44,22 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
     return (
         <section className="hero" id="top">
             <div className="hero-content">
-                {/* Live Availability Status */}
-                <a
-                    href={isSeeking ? "#recruiter" : "#contact"}
-                    className={`hero-badge ${!isSeeking ? 'hero-badge-passive' : ''}`}
-                    title={isSeeking ? "En savoir plus sur mes recherches d'alternance" : "Collaborons ensemble"}
-                >
-                    <span className={`status-indicator ${!isSeeking ? 'status-passive' : ''}`}></span>
-                    <span>
-                        {isSeeking
-                            ? recruitment.badge
-                            : recruitment.passiveBadge}
-                    </span>
-                </a>
+                <div className="hero-top-row">
+                    {/* Live Availability Status */}
+                    <a
+                        href={isSeeking ? "#recruiter" : "#contact"}
+                        className={`hero-badge ${!isSeeking ? 'hero-badge-passive' : ''}`}
+                        title={isSeeking ? "En savoir plus sur mes recherches d'alternance" : "Collaborons ensemble"}
+                    >
+                        <span className={`status-indicator ${!isSeeking ? 'status-passive' : ''}`} aria-hidden="true"></span>
+                        <span>
+                            {isSeeking
+                                ? recruitment.badge
+                                : recruitment.passiveBadge}
+                        </span>
+                    </a>
+                    <span className="hero-location-tag">Nancy, France · BUT Informatique</span>
+                </div>
 
                 {/* Hero Title */}
                 <h1 className="hero-title">{developer.name}</h1>
@@ -74,93 +77,94 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                     Rigoureux, autonome et animé par la passion de créer.
                 </p>
 
-                {/* CTA Buttons */}
-                <div className="hero-cta-group">
-                    <a
-                        href="#projects"
-                        className="btn-primary"
-                    >
-                        <span>Voir mes réalisations</span>
-                        <ArrowRightIcon size={18} />
-                    </a>
-
-                    {isSeeking ? (
+                {/* CTA Buttons + Social links on same editorial row */}
+                <div className="hero-actions-bar">
+                    <div className="hero-cta-group">
                         <a
-                            href="#recruiter"
-                            className="btn-secondary btn-recruiter"
+                            href="#projects"
+                            className="btn-primary"
                         >
-                            <BriefcaseIcon size={18} />
-                            <span>Espace Recruteur</span>
+                            <span>Voir mes réalisations</span>
+                            <ArrowRightIcon size={18} />
                         </a>
-                    ) : (
+
+                        {isSeeking ? (
+                            <a
+                                href="#recruiter"
+                                className="btn-secondary btn-recruiter"
+                            >
+                                <BriefcaseIcon size={17} />
+                                <span>Espace Recruteur</span>
+                            </a>
+                        ) : (
+                            <a
+                                href="#contact"
+                                className="btn-secondary"
+                            >
+                                <MailIcon size={17} />
+                                <span>Me Contacter</span>
+                            </a>
+                        )}
+
                         <a
-                            href="#contact"
+                            href="cv/"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="btn-secondary"
+                            aria-label={`Mon CV — ${developer.name}`}
+                            title="Voir mon CV (nouvel onglet)"
                         >
-                            <MailIcon size={18} />
-                            <span>Me Contacter</span>
+                            <span>Mon CV</span>
                         </a>
-                    )}
+                    </div>
 
-                    <a
-                        href="cv/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary"
-                        aria-label={`Mon CV — ${developer.name}`}
-                        title="Voir mon CV (nouvel onglet)"
-                    >
-                        <span aria-hidden="true">📄</span>
-                        <span>Mon CV</span>
-                    </a>
+                    {/* Social Quick Circles */}
+                    <div className="hero-social-minimal">
+                        {githubUrl && (
+                            <a
+                                href={githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hero-social-circle github-circle"
+                                aria-label={`GitHub de ${developer.name}`}
+                                title="GitHub"
+                            >
+                                <GithubIcon size={18} />
+                            </a>
+                        )}
+
+                        {linkedinUrl && (
+                            <a
+                                href={linkedinUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hero-social-circle linkedin-circle"
+                                aria-label={`LinkedIn de ${developer.name}`}
+                                title="LinkedIn"
+                            >
+                                <LinkedinIcon size={18} />
+                            </a>
+                        )}
+
+                        {emailUrl && (
+                            <a
+                                href={emailUrl}
+                                className="hero-social-circle email-circle"
+                                aria-label={`Envoyer un email à ${developer.name}`}
+                                title="Email"
+                            >
+                                <MailIcon size={18} />
+                            </a>
+                        )}
+                    </div>
                 </div>
 
-                {/* Social Quick Circles */}
-                <div className="hero-social-minimal">
-                    {githubUrl && (
-                        <a
-                            href={githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hero-social-circle github-circle"
-                            aria-label={`GitHub de ${developer.name}`}
-                            title="GitHub"
-                        >
-                            <GithubIcon size={18} />
-                        </a>
-                    )}
-
-                    {linkedinUrl && (
-                        <a
-                            href={linkedinUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hero-social-circle linkedin-circle"
-                            aria-label={`LinkedIn de ${developer.name}`}
-                            title="LinkedIn"
-                        >
-                            <LinkedinIcon size={18} />
-                        </a>
-                    )}
-
-                    {emailUrl && (
-                        <a
-                            href={emailUrl}
-                            className="hero-social-circle email-circle"
-                            aria-label={`Envoyer un email à ${developer.name}`}
-                            title="Email"
-                        >
-                            <MailIcon size={18} />
-                        </a>
-                    )}
-                </div>
-
-                {/* Key Metrics Row */}
+                {/* Architectural Key Metrics Strip */}
                 <div className="hero-metrics-row">
                     {metrics.map((m, idx) => (
                         <div key={idx} className="hero-metric-item">
-                            <div className="metric-number">{m.value}</div>
                             <div className="metric-label">{m.label}</div>
+                            <div className="metric-number">{m.value}</div>
                             <div className="metric-sub">{m.sub}</div>
                         </div>
                     ))}
@@ -173,7 +177,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                 className="scroll-indicator"
                 aria-label="Faire défiler vers le contenu"
             >
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
             </a>

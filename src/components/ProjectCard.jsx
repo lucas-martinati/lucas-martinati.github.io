@@ -93,7 +93,8 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                                 if (onOpenModal) onOpenModal(project);
                             }}
                         >
-                            Fiche détaillée
+                            <span>Fiche détaillée</span>
+                            <span className="quick-arrow" aria-hidden="true">→</span>
                         </button>
 
                         {linkHref && (

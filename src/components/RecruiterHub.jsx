@@ -22,23 +22,34 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
             <div className="recruiter-container">
                 {/* Header */}
                 <div className="recruiter-header">
-                    <div className="recruiter-badge">
-                        <BriefcaseIcon size={15} />
-                        <span>{recruitment.badge}</span>
+                    <div className="recruiter-header-main">
+                        <div className="section-badge-center">
+                            <span className="section-index" aria-hidden="true">03</span>
+                            <span>Alternance &amp; Recrutement</span>
+                        </div>
+                        <h2 className="section-title">Pourquoi me recruter ?</h2>
                     </div>
-                    <h2 className="section-title">Pourquoi me recruter ?</h2>
-                    <p className="recruiter-subtitle">
-                        À la recherche d'un profil jeune, rigoureux et déjà capable de transformer des idées en solutions concrètes déployées ?
-                        Voici ce que j'apporte à vos projets dès le premier jour.
-                    </p>
+                    <div className="recruiter-header-side">
+                        <div className="recruiter-badge">
+                            <BriefcaseIcon size={14} />
+                            <span>{recruitment.badge}</span>
+                        </div>
+                        <p className="recruiter-subtitle">
+                            À la recherche d'un profil rigoureux, autonome et déjà capable de livrer des projets concrets ?
+                            Voici ce que j'apporte à vos équipes dès le premier jour.
+                        </p>
+                    </div>
                 </div>
 
                 {/* 4 Pillars of Value */}
                 <div className="recruiter-strengths-grid">
                     {strengths.map((item, idx) => (
                         <div key={idx} className="recruiter-strength-card">
-                            <div className="strength-icon-wrap" aria-hidden="true">
-                                <span className="strength-icon">{item.icon}</span>
+                            <div className="strength-card-top">
+                                <div className="strength-icon-wrap" aria-hidden="true">
+                                    <span className="strength-icon">{item.icon}</span>
+                                </div>
+                                <span className="strength-num" aria-hidden="true">0{idx + 1}</span>
                             </div>
                             <h3 className="strength-title">{item.title}</h3>
                             <p className="strength-desc">{item.desc}</p>

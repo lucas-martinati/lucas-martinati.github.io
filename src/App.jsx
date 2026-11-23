@@ -24,10 +24,36 @@ export default function App() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedProject, setSelectedProject] = useState(null);
     const [toast, setToast] = useState(null);
+    const [theme, setTheme] = useState('dark');
 
     const toastTimerRef = useRef(null);
     const searchInputRef = useRef(null);
     const urlSyncedRef = useRef(false);
+
+    // Sync saved theme after hydration (no SSR mismatch)
+    useEffect(() => {
+        const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+        setTheme(current);
+    }, []);
+
+    const toggleTheme = useCallback(() => {
+        setTheme((prev) => {
+            const next = prev === 'dark' ? 'light' : 'dark';
+            if (next === 'light') {
+                document.documentElement.dataset.theme = 'light';
+            } else {
+                delete document.documentElement.dataset.theme;
+            }
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', next === 'light' ? '#faf8f4' : '#0c0f13');
+            try {
+                localStorage.setItem('portfolio-theme', next);
+            } catch {
+                // Ignore storage errors in private browsing
+            }
+            return next;
+        });
+    }, []);
 
     // Toast helper with timer race-condition guard
     const showToast = useCallback((message, type = 'info') => {
@@ -176,6 +202,8 @@ export default function App() {
             <Navbar
                 developer={data.developer}
                 projectCount={data.projects.length}
+                theme={theme}
+                onToggleTheme={toggleTheme}
             />
 
             <main id="main-content" tabIndex={-1}>
@@ -188,76 +216,83 @@ export default function App() {
 
             {/* Section Projets */}
             <section className="projects" id="projects">
-                <div className="section-badge-center">
-                    <span>Portfolio Réalisations</span>
+                <div className="section-header">
+                    <div className="section-header-main">
+                        <div className="section-badge-center">
+                            <span className="section-index" aria-hidden="true">01</span>
+                            <span>Réalisations</span>
+                        </div>
+                        <h2 className="section-title">Mes Projets</h2>
+                    </div>
+                    <p className="projects-subtitle">
+                        Sélection de {data.projects.length} réalisations — projets personnels et SAÉ menées à l'IUT Nancy-Charlemagne (BUT Informatique).
+                    </p>
                 </div>
-                <h2 className="section-title">Mes Projets</h2>
-                <p className="projects-subtitle">
-                    Découvrez une sélection de {data.projects.length} réalisations — projets personnels et projets universitaires menés à l'IUT Nancy-Charlemagne (BUT Informatique).
-                </p>
 
                 {/* Search Bar, Origin Switcher & Category Filters Bar */}
                 <div className="projects-controls-wrap js-only">
-                    {/* Origin Switcher : Projets personnels vs Formation IUT Nancy-Charlemagne */}
-                    <div className="project-origin-tabs" role="group" aria-label="Filtrer par contexte de réalisation">
-                        <button
-                            type="button"
-                            className={`origin-btn ${activeOrigin === 'all' ? 'active' : ''}`}
-                            onClick={() => handleOriginClick('all')}
-                            aria-pressed={activeOrigin === 'all'}
-                        >
-                            <span>Tous les projets</span>
-                            <span className="origin-count">{originCounts.all}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`origin-btn origin-btn-personal ${activeOrigin === 'personal' ? 'active' : ''}`}
-                            onClick={() => handleOriginClick('personal')}
-                            aria-pressed={activeOrigin === 'personal'}
-                        >
-                            <UserIcon size={15} />
-                            <span>Projets personnels</span>
-                            <span className="origin-count">{originCounts.personal}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`origin-btn origin-btn-iut ${activeOrigin === 'iut' ? 'active' : ''}`}
-                            onClick={() => handleOriginClick('iut')}
-                            aria-pressed={activeOrigin === 'iut'}
-                        >
-                            <GraduationCapIcon size={16} />
-                            <span>IUT Nancy-Charlemagne</span>
-                            <span className="origin-count">{originCounts.iut}</span>
-                        </button>
-                    </div>
-
-                    {/* Live Search Input */}
-                    <div className="project-search-bar">
-                        <SearchIcon size={18} className="search-icon-svg" />
-                        <input
-                            ref={searchInputRef}
-                            type="search"
-                            placeholder="Un projet, une technologie…"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="project-search-input"
-                            aria-label="Rechercher un projet"
-                            aria-controls="project-results"
-                        />
-                        {searchQuery ? (
+                    <div className="projects-controls-top">
+                        {/* Origin Switcher : Projets personnels vs Formation IUT Nancy-Charlemagne */}
+                        <div className="project-origin-tabs" role="group" aria-label="Filtrer par contexte de réalisation">
                             <button
                                 type="button"
-                                className="search-clear-btn"
-                                onClick={() => {
-                                    setSearchQuery('');
-                                }}
-                                aria-label="Effacer la recherche"
+                                className={`origin-btn ${activeOrigin === 'all' ? 'active' : ''}`}
+                                onClick={() => handleOriginClick('all')}
+                                aria-pressed={activeOrigin === 'all'}
                             >
-                                &times;
+                                <span>Tous</span>
+                                <span className="origin-count">{originCounts.all}</span>
                             </button>
-                        ) : (
-                            <kbd className="search-shortcut-hint" aria-hidden="true" title="Appuyez sur / pour rechercher">/</kbd>
-                        )}
+                            <button
+                                type="button"
+                                className={`origin-btn origin-btn-personal ${activeOrigin === 'personal' ? 'active' : ''}`}
+                                onClick={() => handleOriginClick('personal')}
+                                aria-pressed={activeOrigin === 'personal'}
+                            >
+                                <UserIcon size={15} />
+                                <span>Personnels</span>
+                                <span className="origin-count">{originCounts.personal}</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`origin-btn origin-btn-iut ${activeOrigin === 'iut' ? 'active' : ''}`}
+                                onClick={() => handleOriginClick('iut')}
+                                aria-pressed={activeOrigin === 'iut'}
+                            >
+                                <GraduationCapIcon size={16} />
+                                <span>IUT Nancy-Charlemagne</span>
+                                <span className="origin-count">{originCounts.iut}</span>
+                            </button>
+                        </div>
+
+                        {/* Live Search Input */}
+                        <div className="project-search-bar">
+                            <SearchIcon size={17} className="search-icon-svg" />
+                            <input
+                                ref={searchInputRef}
+                                type="search"
+                                placeholder="Rechercher un projet, une techno…"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="project-search-input"
+                                aria-label="Rechercher un projet"
+                                aria-controls="project-results"
+                            />
+                            {searchQuery ? (
+                                <button
+                                    type="button"
+                                    className="search-clear-btn"
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                    }}
+                                    aria-label="Effacer la recherche"
+                                >
+                                    &times;
+                                </button>
+                            ) : (
+                                <kbd className="search-shortcut-hint" aria-hidden="true" title="Appuyez sur / pour rechercher">/</kbd>
+                            )}
+                        </div>
                     </div>
 
                     {/* Filtres de catégories */}
@@ -382,11 +417,18 @@ export default function App() {
 
             {/* Section À propos */}
             <section className="about" id="about">
-                <div className="section-badge-center">
-                    <SparklesIcon size={14} />
-                    <span>Profil &amp; Vision</span>
+                <div className="section-header">
+                    <div className="section-header-main">
+                        <div className="section-badge-center">
+                            <span className="section-index" aria-hidden="true">02</span>
+                            <span>Profil &amp; Compétences</span>
+                        </div>
+                        <h2 className="section-title">À propos de moi</h2>
+                    </div>
+                    <p className="section-lead">
+                        Double culture web et système Linux : j'aime comprendre ce qui tourne sous le capot et concevoir des outils rapides, propres et durables.
+                    </p>
                 </div>
-                <h2 className="section-title">À propos de moi</h2>
 
                 <ScrollReveal>
                     <CodeBio
@@ -399,7 +441,7 @@ export default function App() {
 
                 <div className="skills-container">
                     {data.skills.map((skill, i) => (
-                        <ScrollReveal key={skill.title} delay={i * 0.08}>
+                        <ScrollReveal key={skill.title} delay={i * 0.06}>
                             <SkillCard skill={skill} />
                         </ScrollReveal>
                     ))}
@@ -418,13 +460,18 @@ export default function App() {
 
             {/* Parcours */}
             <section className="education" id="education">
-                <div className="section-badge-center">
-                    <span>Diplômes &amp; Réussites</span>
+                <div className="section-header">
+                    <div className="section-header-main">
+                        <div className="section-badge-center">
+                            <span className="section-index" aria-hidden="true">{isSeeking ? '04' : '03'}</span>
+                            <span>Diplômes &amp; Certifications</span>
+                        </div>
+                        <h2 className="section-title">Mon Parcours</h2>
+                    </div>
                 </div>
-                <h2 className="section-title">Mon Parcours</h2>
                 <div className="education-timeline">
                     {data.education.map((item, i) => (
-                        <ScrollReveal key={item.title + i} delay={i * 0.08}>
+                        <ScrollReveal key={item.title + i} delay={i * 0.06}>
                             <EducationCard item={item} />
                         </ScrollReveal>
                     ))}
@@ -433,13 +480,18 @@ export default function App() {
 
             {/* Langues */}
             <section className="languages" id="languages">
-                <div className="section-badge-center">
-                    <span>Langues</span>
+                <div className="section-header">
+                    <div className="section-header-main">
+                        <div className="section-badge-center">
+                            <span className="section-index" aria-hidden="true">{isSeeking ? '05' : '04'}</span>
+                            <span>Langues</span>
+                        </div>
+                        <h2 className="section-title">Compétences Linguistiques</h2>
+                    </div>
                 </div>
-                <h2 className="section-title">Compétences Linguistiques</h2>
                 <div className="languages-container">
                     {data.languages.map((lang, i) => (
-                        <ScrollReveal key={lang.name} delay={i * 0.12}>
+                        <ScrollReveal key={lang.name} delay={i * 0.08}>
                             <LanguageCard language={lang} />
                         </ScrollReveal>
                     ))}

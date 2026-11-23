@@ -22,9 +22,13 @@ try {
             orphanAssets.add(cssPath);
             const assetBase = href.slice(0, href.lastIndexOf('/') + 1);
             const inlineCss = css.replace(/url\(\.\/([^)]*)\)/g, (_, asset) => `url(${assetBase}${asset})`);
-            const fontName = page === 'main' ? 'inter-latin' : 'lexend-latin';
-            const font = inlineCss.match(new RegExp(`url\\(([^)]*${fontName}[^)]*\\.woff2)\\)`))?.[1];
-            html = html.replace(match[0], () => `${font ? `<link rel="preload" href="${font}" as="font" type="font/woff2" crossorigin>\n` : ''}<style>${inlineCss}</style>`);
+            const fontNames = ['lexend-latin', 'inter-latin'];
+            const preloads = fontNames
+                .map((fontName) => inlineCss.match(new RegExp(`url\\(([^)]*${fontName}[^)]*\\.woff2)\\)`))?.[1])
+                .filter(Boolean)
+                .map((font) => `<link rel="preload" href="${font}" as="font" type="font/woff2" crossorigin>`)
+                .join('\n');
+            html = html.replace(match[0], () => `${preloads ? `${preloads}\n` : ''}<style>${inlineCss}</style>`);
         }
         // The CV has only native links; it needs no React runtime in production.
         // Development keeps its normal Vite entry and hot reload.
