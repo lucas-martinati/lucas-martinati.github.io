@@ -6,14 +6,17 @@ export default function useClipboard() {
     useEffect(() => () => clearTimeout(timer.current), []);
     const copy = async (text) => {
         clearTimeout(timer.current);
+        let ok = false;
         try {
             await navigator.clipboard.writeText(text);
             setStatus('copied');
+            ok = true;
         } catch {
             // Never claim success when the browser denied the operation.
             setStatus('error');
         }
         timer.current = setTimeout(() => setStatus('idle'), 2500);
+        return ok;
     };
     return { copied: status === 'copied', copyError: status === 'error', copy };
 }

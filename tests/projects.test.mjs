@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { getProjectCategory, getProjectOrigin, getProjectSlug, matchesSearch } from '../src/utils/projects.js';
+import { getComputedMetrics } from '../src/utils/metrics.js';
 
 test('la recherche accepte accents, casse, espaces, année, points forts et plusieurs mots', () => {
     const project = {
@@ -68,4 +69,17 @@ test('les origines projets (perso vs IUT Nancy-Charlemagne) sont détectées et 
     assert.equal(iutProjects.length, 6, 'Les 6 projets académiques IUT hors TDs doivent être présents');
     assert.equal(personalProjects.length, 15, 'Les 15 projets personnels doivent être présents');
     assert.equal(data.projects.every((p) => Boolean(p.imageUrl)), true, 'Tous les projets doivent avoir un aperçu');
+    assert.equal(iutProjects.every((p) => Number(p.year) >= 2025), true, 'Les projets IUT (BUT 2025-2028) doivent être datés de 2025 ou après');
+});
+
+test('les métriques calculées restent valides même sur des données partielles', async () => {
+    const data = JSON.parse(await readFile(new URL('../src/data/data.json', import.meta.url), 'utf8'));
+    const full = getComputedMetrics({ projects: data.projects, education: data.education });
+    assert.equal(full[0].value, String(data.projects.length));
+    assert.equal(full[1].value, '3');
+    assert.equal(full[2].value, '583');
+    assert.equal(full[3].value, 'Mention Bien');
+
+    const empty = getComputedMetrics({ projects: [], education: [] });
+    assert.equal(empty[2].value, '—');
 });

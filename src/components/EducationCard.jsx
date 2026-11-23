@@ -1,17 +1,17 @@
 export default function EducationCard({ item }) {
     const typeColors = {
-        education: { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.25)', text: '#3b82f6', label: 'Formation' },
-        work: { bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.25)', text: '#f97316', label: 'Expérience' },
-        certification: { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.25)', text: '#10b981', label: 'Certification' },
+        education: { bg: 'rgba(59, 130, 246, 0.14)', border: 'rgba(96, 165, 250, 0.3)', text: '#60a5fa', label: 'Formation' },
+        work: { bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.25)', text: '#fb923c', label: 'Expérience' },
+        certification: { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.25)', text: '#34d399', label: 'Certification' },
     };
 
-    const typeStyle = typeColors[item.type];
+    const typeStyle = typeColors[item.type] || typeColors.education;
 
     return (
-        <div className={`education-item education-type-${item.type}`}>
+        <div className={`education-item education-type-${item.type || 'education'}`}>
             <div className="education-card">
                 <div className="education-card-header">
-                    <div className="education-icon" style={{ background: typeStyle.bg, borderColor: typeStyle.border }}>
+                    <div className="education-icon" style={{ background: typeStyle.bg, borderColor: typeStyle.border }} aria-hidden="true">
                         {item.icon}
                     </div>
                     <div className="education-header-text">

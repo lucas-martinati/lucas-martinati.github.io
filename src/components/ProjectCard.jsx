@@ -50,7 +50,7 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                 {hasImage ? (
                     <ResponsiveImage variant="card" src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="project-cover" loading="lazy" sizes="(max-width: 574px) calc(100vw - 34px), (max-width: 860px) 538px, (max-width: 1100px) calc((100vw - 96px) / 2), (max-width: 1320px) calc((100vw - 126px) / 3), 398px" />
                 ) : (
-                    <span className="project-emoji">{project.emoji}</span>
+                    <span className="project-emoji" aria-hidden="true">{project.emoji}</span>
                 )}
             </div>
 

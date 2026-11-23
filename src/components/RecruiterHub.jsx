@@ -1,16 +1,17 @@
-import { BriefcaseIcon, MailIcon, LinkedinIcon, CopyIcon, SparklesIcon } from './Icons';
+import useClipboard from '../utils/useClipboard';
+import { BriefcaseIcon, MailIcon, LinkedinIcon, CopyIcon, CheckIcon, SparklesIcon } from './Icons';
 
 export default function RecruiterHub({ developer = {}, onShowToast }) {
     const recruitment = developer.recruitment || {};
     const strengths = recruitment.strengths || [];
+    const { copied, copy } = useClipboard();
 
     const handleCopyEmail = async () => {
         const email = developer.email;
-        try {
-            await navigator.clipboard.writeText(email);
-            if (onShowToast) onShowToast('Email copié dans le presse-papier !', 'success');
-        } catch {
-            if (onShowToast) onShowToast(`Email : ${email}`, 'info');
+        if (!email) return;
+        const ok = await copy(email);
+        if (onShowToast) {
+            onShowToast(ok ? 'Email copié dans le presse-papiers !' : `Email : ${email}`, ok ? 'success' : 'info');
         }
     };
 
@@ -36,7 +37,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                 <div className="recruiter-strengths-grid">
                     {strengths.map((item, idx) => (
                         <div key={idx} className="recruiter-strength-card">
-                            <div className="strength-icon-wrap">
+                            <div className="strength-icon-wrap" aria-hidden="true">
                                 <span className="strength-icon">{item.icon}</span>
                             </div>
                             <h3 className="strength-title">{item.title}</h3>
@@ -76,6 +77,12 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                     <span className="spec-label">Localisation :</span>
                                     <span className="spec-value">{recruitment.location}</span>
                                 </div>
+                                {recruitment.rhythm && (
+                                    <div className="spec-row">
+                                        <span className="spec-label">Rythme :</span>
+                                        <span className="spec-value">{recruitment.rhythm}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -86,7 +93,7 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                     <SparklesIcon size={14} />
                                     <span>Échangeons sur vos besoins</span>
                                 </div>
-                                <h4 className="panel-title">Un projet ou une opportunité ?</h4>
+                                <h3 className="panel-title">Un projet ou une opportunité ?</h3>
                                 <p className="panel-text">
                                     Je suis prêt à vous présenter mes réalisations, mon code source et discuter de la valeur que je peux apporter à votre équipe.
                                 </p>
@@ -94,8 +101,6 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                 <div className="panel-cta-stack">
                                     <a
                                         href={`mailto:${developer.email}?subject=${encodeURIComponent(`Opportunité Alternance BUT Informatique - ${developer.name}`)}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
                                         className="btn-primary panel-btn"
                                     >
                                         <MailIcon size={18} />
@@ -105,12 +110,12 @@ export default function RecruiterHub({ developer = {}, onShowToast }) {
                                     <div className="panel-sub-buttons">
                                         <button
                                             type="button"
-                                            className="btn-secondary panel-btn-half"
+                                            className="btn-secondary panel-btn-half js-only"
                                             onClick={handleCopyEmail}
                                             title="Copier l'adresse email"
                                         >
-                                            <CopyIcon size={16} />
-                                            <span>Copier l'email</span>
+                                            {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                                            <span>{copied ? 'Copié !' : "Copier l'email"}</span>
                                         </button>
 
                                         <a

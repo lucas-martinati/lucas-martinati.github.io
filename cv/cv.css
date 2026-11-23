@@ -646,33 +646,45 @@ a.cv-chip {
         margin: 0;
         box-shadow: none;
         border-radius: 0;
-        padding: 4mm 8mm;
-        min-height: 277mm;
+        padding: 5mm 8mm;
+        min-height: 297mm;
+        box-sizing: border-box;
     }
 
-    /* Keep all experience on A4 with the same readable font sizes. */
-    .cv-header { padding: 8px 16px; gap: 16px; }
-    .cv-contact { gap: 6px; margin-top: 8px; }
-    .cv-photo { width: 92px; height: 92px; }
-    .cv-profile { line-height: 1.5; }
-    .cv-section-title { margin-bottom: 4px; }
-    .cv-section { margin-bottom: 6px; }
-    .cv-profile-section { margin-top: 9px; }
-    .cv-tech-grid { gap: 4px 10px; }
-    .cv-tech-cat { padding: 3px 9px; gap: 9px; }
-    .cv-tech-label { margin-bottom: 2px; }
+    /* Keep all experience on 1 A4 page with readable font sizes. */
+    .cv-header { padding: 9px 15px; gap: 14px; }
+    .cv-name { font-size: 26px; }
+    .cv-contact { gap: 5px; margin-top: 7px; }
+    .cv-chip { padding: 3px 9px; font-size: 10.5px; }
+    .cv-photo { width: 88px; height: 88px; }
+    .cv-profile { font-size: 11.5px; line-height: 1.45; }
+    .cv-section-title { margin-bottom: 5px; font-size: 11.5px; }
+    .cv-section { margin-bottom: 7px; }
+    .cv-profile-section { margin-top: 8px; }
+    .cv-tech-grid { gap: 4px 8px; }
+    .cv-tech-cat { padding: 4px 9px; gap: 8px; }
+    .cv-tech-label { margin-bottom: 1px; font-size: 10.5px; }
+    .cv-tech-tools { font-size: 9.5px; line-height: 1.35; }
     .cv-level-legend { padding: 3px 9px; }
     .cv-pills { gap: 4px; }
-    .cv-columns { margin-top: 9px; gap: 16px; }
-    .cv-project-item { margin-bottom: 5px; }
-    .cv-project-meta { margin: 2px 0; }
-    .cv-project-summary { line-height: 1.45; }
-    .cv-edu-item { padding: 5px 0; }
+    .cv-columns { margin-top: 8px; gap: 15px; }
+    .cv-section-note { margin: -2px 0 6px; font-size: 10px; }
+    .cv-project-item { margin-bottom: 6px; }
+    .cv-project-title { font-size: 11.5px; }
+    .cv-project-meta { margin: 2px 0; font-size: 9.5px; }
+    .cv-project-summary { font-size: 10.8px; line-height: 1.4; }
+    .cv-card { padding: 8px 10px; }
+    .cv-exp-details { font-size: 11px; line-height: 1.45; margin-top: 4px; }
+    .cv-edu-item { padding: 4px 0; }
+    .cv-edu-title { font-size: 11.5px; }
+    .cv-edu-school { font-size: 10.8px; }
+    .cv-skill { margin-bottom: 5px; }
+    .cv-skill-desc { font-size: 10.8px; line-height: 1.4; margin-top: 2px; }
 
     .cv-card,
-    .cv-section,
     .cv-edu-item,
     .cv-exp-item,
+    .cv-project-item,
     .cv-header {
         break-inside: avoid;
     }

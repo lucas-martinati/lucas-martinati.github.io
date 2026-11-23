@@ -3,13 +3,13 @@ import { readFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { preview } from 'vite';
-import puppeteer from 'puppeteer';
 import { AxePuppeteer } from '@axe-core/puppeteer';
+import { launchBrowser } from './browser.mjs';
 
 const data = JSON.parse(await readFile('src/data/data.json', 'utf8'));
 const server = await preview({ preview: { host: '127.0.0.1', port: 0, open: false } });
 const url = `http://127.0.0.1:${server.httpServer.address().port}`;
-const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+const browser = await launchBrowser();
 const screenshots = join(tmpdir(), 'portfolio-checks');
 await mkdir(screenshots, { recursive: true });
 const errors = [];
@@ -21,6 +21,8 @@ page.on('response', (response) => { if (response.status() >= 400) errors.push(`$
 async function audit(label) {
     const result = await new AxePuppeteer(page).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
     assert.deepEqual(result.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => ({ target: n.target, reason: n.failureSummary })) })), [], label);
+    const headingOrder = await new AxePuppeteer(page).withRules(['heading-order']).analyze();
+    assert.deepEqual(headingOrder.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => ({ target: n.target, reason: n.failureSummary })) })), [], `${label} (heading-order)`);
 }
 
 try {
@@ -153,6 +155,8 @@ try {
     assert.equal(await page.evaluate(() => performance.getEntriesByType('resource').some((entry) => entry.initiatorType === 'script')), false, 'Le CV statique charge du JavaScript');
     assert.equal(await page.$eval('.cv-photo', (image) => image.complete && image.naturalWidth > 0), true);
     assert.equal(await page.$eval('.cv-back', (link) => link.getAttribute('href')), '../');
+    const pdfStatus = await page.evaluate(async () => (await fetch('../cv.pdf', { method: 'HEAD' })).status);
+    assert.equal(pdfStatus, 200, 'Le fichier cv.pdf doit être disponible dans dist/');
     await page.screenshot({ path: join(screenshots, 'cv.png'), fullPage: true });
     await page.setJavaScriptEnabled(false);
     await page.goto(url, { waitUntil: 'networkidle0' });

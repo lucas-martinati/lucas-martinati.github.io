@@ -5,16 +5,16 @@
 // Usage : npm run cv:pdf
 //   1. rebuild le site (dist/)
 //   2. sert dist/ en local, imprime /cv/ en PDF
-//   3. écrit public/cv.pdf (+ copie dist/cv.pdf pour un déploiement immédiat)
+//   3. vérifie que le PDF tient bien sur 1 seule page A4
+//   4. écrit public/cv.pdf (+ copie dist/cv.pdf pour un déploiement immédiat)
 //
 // À relancer après chaque modification du CV ou de ses données.
-// Requiert Chrome (téléchargé auto via le paquet `puppeteer`).
 import { spawnSync } from 'node:child_process';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import puppeteer from 'puppeteer';
+import { launchBrowser } from './browser.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const OUT_PUBLIC = path.join(root, 'public', 'cv.pdf');
@@ -37,23 +37,42 @@ const MIME = {
 };
 
 function serve(dir) {
+    const resolvedDir = path.resolve(dir);
     const server = http.createServer((req, res) => {
-        const urlPath = decodeURIComponent(req.url.split('?')[0]);
-        const file =
-            urlPath === '/' || urlPath.endsWith('/')
-                ? path.join(dir, urlPath, 'index.html')
-                : path.join(dir, urlPath);
-        fs.readFile(file, (err, data) => {
+        let urlPath;
+        try {
+            urlPath = decodeURIComponent(req.url.split('?')[0]);
+        } catch {
+            res.writeHead(400);
+            res.end('bad request');
+            return;
+        }
+        const candidate = path.resolve(
+            resolvedDir,
+            `.${urlPath === '/' || urlPath.endsWith('/') ? `${urlPath}index.html` : urlPath}`
+        );
+        if (!candidate.startsWith(`${resolvedDir}${path.sep}`) && candidate !== resolvedDir) {
+            res.writeHead(403);
+            res.end('forbidden');
+            return;
+        }
+        fs.readFile(candidate, (err, data) => {
             if (err) {
                 res.writeHead(404);
                 res.end('not found');
                 return;
             }
-            res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
+            res.writeHead(200, { 'Content-Type': MIME[path.extname(candidate)] || 'application/octet-stream' });
             res.end(data);
         });
     });
     return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
+}
+
+function countPdfPages(pdfBuffer) {
+    const text = pdfBuffer.toString('latin1');
+    const matches = text.match(/\/Type\s*\/Page\b(?!s)/g);
+    return matches ? matches.length : 0;
 }
 
 // Le build exécute aussi l'optimisation des images (prebuild) et le prerender.
@@ -66,19 +85,19 @@ if (build.error || build.status !== 0) {
 
 const server = await serve(path.join(root, 'dist'));
 const port = server.address().port;
-const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+const browser = await launchBrowser();
 try {
     const page = await browser.newPage();
     await page.goto(`http://127.0.0.1:${port}/cv/`, { waitUntil: 'networkidle0', timeout: 60000 });
     await page.evaluate(() => document.fonts?.ready);
     await new Promise((r) => setTimeout(r, 800));
-    // Laisse les règles @media print déterminer dimensions et mise en page. Une
-    // mesure en mode écran suivie d'un transform scale réduit aussi la largeur
-    // imprimée et crée de grandes marges blanches sur la feuille A4.
-    // preferCSSPageSize : respecte le `@page { size: A4; margin: 0 }` de cv/cv.css.
     await page.pdf({ path: OUT_PUBLIC, format: 'A4', printBackground: true, preferCSSPageSize: true });
+    const pageCount = countPdfPages(fs.readFileSync(OUT_PUBLIC));
+    if (pageCount !== 1) {
+        throw new Error(`Le CV PDF déborde sur ${pageCount} pages (1 page A4 attendue). Ajuster @media print dans cv/cv.css.`);
+    }
     fs.copyFileSync(OUT_PUBLIC, OUT_DIST);
-    console.log(`✓ public/cv.pdf + dist/cv.pdf (${(fs.statSync(OUT_PUBLIC).size / 1024).toFixed(0)} Ko)`);
+    console.log(`✓ public/cv.pdf + dist/cv.pdf (${(fs.statSync(OUT_PUBLIC).size / 1024).toFixed(0)} Ko, ${pageCount} page A4)`);
 } finally {
     await browser.close();
     server.close();

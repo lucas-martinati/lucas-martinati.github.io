@@ -1,9 +1,9 @@
 import lighthouse from 'lighthouse';
 import desktopConfig from 'lighthouse/core/config/desktop-config.js';
-import puppeteer from 'puppeteer';
 import { preview } from 'vite';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { launchBrowser } from './browser.mjs';
 
 // Fresh Chrome process/profile per route, with Lighthouse's standard throttling.
 const [target = 'local', output = 'reports/lighthouse', preset = 'mobile'] = process.argv.slice(2);
@@ -16,7 +16,7 @@ try {
     const base = server ? `http://127.0.0.1:${server.httpServer.address().port}` : target;
     const routes = server ? ['/', '/#projects', '/cv/'] : [''];
     for (const route of routes) {
-        const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-extensions'] });
+        const browser = await launchBrowser(['--disable-extensions']);
         try {
             const url = `${base}${route}`;
             const result = await lighthouse(url, {

@@ -32,12 +32,14 @@ export const SITE_URL = GITHUB_PAGES_BASE;
 // Dans data.json, un lien marqué `"org": true` est construit
 // sur ce compte au lieu du compte perso.
 export const GITHUB_ORG_USERNAME = 'lucas-martinati-pro';
+export const GITHUB_ORG_URL = `https://github.com/${GITHUB_ORG_USERNAME}`;
 
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/lucas-martinati-7452bb3b0/';
 
-// Textes SEO / partage social (utilisés par vite.config.js dans index.html)
+// Textes SEO / partage social (utilisés par vite.config.js dans index.html et cv/index.html)
 export const SITE_TITLE = `${DEVELOPER_NAME} — Développeur Full-Stack | Portfolio`;
 export const SITE_DESCRIPTION = `Portfolio de ${DEVELOPER_NAME} — Développeur Full-Stack, concepteur d'extensions Chrome/VS Code et étudiant en BUT Informatique à Nancy. À la recherche d'une alternance.`;
+export const CV_DESCRIPTION = `CV de ${DEVELOPER_NAME} — Étudiant en BUT Informatique (IUT Nancy-Charlemagne), développeur Full-Stack et système Linux, à la recherche d'une alternance.`;
 
 export default {
     DEVELOPER_NAME,
@@ -49,7 +51,9 @@ export default {
     GITHUB_PAGES_BASE,
     SITE_URL,
     GITHUB_ORG_USERNAME,
+    GITHUB_ORG_URL,
     LINKEDIN_URL,
     SITE_TITLE,
     SITE_DESCRIPTION,
+    CV_DESCRIPTION,
 };

@@ -4,7 +4,7 @@
     "age": "19 ans",
     "phone": "06 32 10 52 16",
     "location": "Nancy / Piennes (Grand Est)",
-    "profile": "Étudiant en B.U.T. Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en bases de données, je maîtrise également les outils d'IA générative pour assister le développement. Organisé et adaptable, je m'investis dans des projets techniques concrets.",
+    "profile": "Étudiant en BUT Informatique passionné par la conception de solutions logicielles. Fort de solides bases en développement (Java, technologies Web) et en bases de données, je maîtrise également les outils d'IA générative pour assister le développement. Organisé et adaptable, je m'investis dans des projets techniques concrets.",
     "permit": "Permis B",
     "technicalLevels": {
         "Développement Web": 3,
@@ -37,14 +37,14 @@
         {
             "role": "Ripeur",
             "company": "SICOM, Piennes",
-            "period": "du 25 Juin au 22 Août 2026",
-                "details": [
-                    "Collecte de déchets (horaires décalés).",
-                    "Travail en équipe.",
-                    "Respect des normes de sécurité."
-                ]
-            }
-        ],
+            "period": "du 25 juin au 22 août 2026",
+            "details": [
+                "Collecte de déchets (horaires décalés).",
+                "Travail en équipe.",
+                "Respect des normes de sécurité."
+            ]
+        }
+    ],
     "languages": [
         "Français — natif",
         "Anglais — B2"

@@ -39,7 +39,7 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
 
     const githubUrl = developer.github;
     const linkedinUrl = developer.linkedin;
-    const emailUrl = `mailto:${developer.email}`;
+    const emailUrl = developer.email ? `mailto:${developer.email}` : null;
 
     return (
         <section className="hero" id="top">
@@ -146,8 +146,6 @@ export default function Hero({ developer = {}, projects = [], education = [] }) 
                     {emailUrl && (
                         <a
                             href={emailUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             className="hero-social-circle email-circle"
                             aria-label={`Envoyer un email à ${developer.name}`}
                             title="Email"

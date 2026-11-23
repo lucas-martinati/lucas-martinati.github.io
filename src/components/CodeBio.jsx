@@ -24,8 +24,10 @@ export default function CodeBio({ developer = {}, projects = [], education = [],
         ? 'Disponible pour Alternance'
         : 'En poste';
 
-    const githubSlug = developer.github.replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '');
-    const linkedinSlug = developer.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '');
+    const githubSlug = (developer.github || '').replace(/https?:\/\/github\.com\/?/, '').replace(/\/$/, '');
+    const linkedinSlug = (developer.linkedin || '').replace(/https?:\/\/(www\.)?linkedin\.com\/in\/?/, '').replace(/\/$/, '');
+    const jsFileName = `${String(developer.name || 'profile').trim().split(/\s+/)[0].normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() || 'profile'}.js`;
+    const quoteJs = (value) => `'${String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
     // Aperçu volontairement court : les 6 premières de data.json.
     // (Réordonner developer.skills dans data.json pour choisir lesquelles.)
@@ -83,16 +85,16 @@ export default function CodeBio({ developer = {}, projects = [], education = [],
     const getRawContent = () => {
         if (activeTab === 'js' || (!isSeeking && activeTab === 'sh')) {
             return `const developer = {
-  name: '${developer.name}',
-  status: '${developer.status}',
-  passion: '${developer.passion}',
-  skills: [${topSkills.map((s) => `'${s}'`).join(', ')}],
-  mindset: '${developer.mindset}',
-  currentFocus: '${developer.currentFocus}',
-  availability: ${developer.availability},
-  email: '${developer.email}',
-  github: '${githubSlug}',
-  linkedin: '${linkedinSlug}'
+  name: ${quoteJs(developer.name)},
+  status: ${quoteJs(developer.status)},
+  passion: ${quoteJs(developer.passion)},
+  skills: [${topSkills.map((s) => quoteJs(s)).join(', ')}],
+  mindset: ${quoteJs(developer.mindset)},
+  currentFocus: ${quoteJs(developer.currentFocus)},
+  availability: ${Boolean(developer.availability)},
+  email: ${quoteJs(developer.email)},
+  github: ${quoteJs(githubSlug)},
+  linkedin: ${quoteJs(linkedinSlug)}
 };
 
 // ${developer.comment}`;
@@ -103,22 +105,16 @@ export default function CodeBio({ developer = {}, projects = [], education = [],
         }
 
         return `#!/usr/bin/env bash
-# Script d'embauche de ${developer.name}
 set -e
-
 echo "Initialisation du profil candidat..."
 CANDIDATE="${developer.name}"
+STATUS="${statusText}"
 TARGET="${targetText}"
-STATUS="${developer.availability ? 'Disponible pour Alternance' : 'En poste'}"
-
 echo "Vérification des atouts..."
 # [✓] ${extensionsCount} extensions publiées sur stores officiels (Chrome & VS Code)
 # [✓] ${projectsCount} projets conçus et déployés
 # [✓] ${bacMention} & ${pixScore} Score PIX
-
-echo "Contact direct :"
-echo "mailto:${developer.email}"
-echo "Statut : Prêt à intégrer votre équipe !"`;
+echo "mailto:${developer.email} — Prêt à intégrer votre équipe !"`;
     };
 
     const pad = (n) => String(n).padStart(2, '0');
@@ -127,48 +123,57 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
         <div className="code-bio">
             {/* Header with Mac dots + File Tabs */}
             <div className="code-header">
-                <div className="code-dots">
+                <div className="code-dots" aria-hidden="true">
                     <div className="dot red"></div>
                     <div className="dot yellow"></div>
                     <div className="dot green"></div>
                 </div>
 
                 {/* File Tabs */}
-                <div className="code-tabs js-only">
+                <div className="code-tabs js-only" role="tablist" aria-label="Fichiers de présentation">
                     <button
                         type="button"
+                        role="tab"
+                        id="code-tab-js"
+                        aria-controls="code-panel-js"
+                        aria-selected={activeTab === 'js'}
                         className={`code-tab ${activeTab === 'js' ? 'active' : ''}`}
-                        aria-pressed={activeTab === 'js'}
                         onClick={() => {
                             setActiveTab('js');
                         }}
                     >
-                        <span className="tab-dot js-dot"></span>
-                        <span>lucas.js</span>
+                        <span className="tab-dot js-dot" aria-hidden="true"></span>
+                        <span>{jsFileName}</span>
                     </button>
 
                     <button
                         type="button"
+                        role="tab"
+                        id="code-tab-json"
+                        aria-controls="code-panel-json"
+                        aria-selected={activeTab === 'json'}
                         className={`code-tab ${activeTab === 'json' ? 'active' : ''}`}
-                        aria-pressed={activeTab === 'json'}
                         onClick={() => {
                             setActiveTab('json');
                         }}
                     >
-                        <span className="tab-dot json-dot"></span>
+                        <span className="tab-dot json-dot" aria-hidden="true"></span>
                         <span>stack.json</span>
                     </button>
 
                     {isSeeking && (
                         <button
                             type="button"
+                            role="tab"
+                            id="code-tab-sh"
+                            aria-controls="code-panel-sh"
+                            aria-selected={activeTab === 'sh'}
                             className={`code-tab ${activeTab === 'sh' ? 'active' : ''}`}
-                        aria-pressed={activeTab === 'sh'}
                             onClick={() => {
                                 setActiveTab('sh');
                             }}
                         >
-                            <span className="tab-dot sh-dot"></span>
+                            <span className="tab-dot sh-dot" aria-hidden="true"></span>
                             <span>hire-me.sh</span>
                         </button>
                     )}
@@ -190,20 +195,20 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
             {/* Code Content */}
             <div className="code-content">
                 {activeTab === 'js' && (
-                    <div className="code-lines">
+                    <div className="code-lines" role="tabpanel" id="code-panel-js" aria-labelledby="code-tab-js">
                         <div className="code-line"><span className="line-number">{pad(1)}</span><span className="keyword">const</span>{' '}<span className="property">developer</span>{' '}= &#123;</div>
-                        <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">name</span>: <span className="string">'{developer.name}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">status</span>: <span className="string">'{developer.status}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">passion</span>: <span className="string">'{developer.passion}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(2)}</span>&nbsp;&nbsp;<span className="property">name</span>: <span className="string">{quoteJs(developer.name)}</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(3)}</span>&nbsp;&nbsp;<span className="property">status</span>: <span className="string">{quoteJs(developer.status)}</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(4)}</span>&nbsp;&nbsp;<span className="property">passion</span>: <span className="string">{quoteJs(developer.passion)}</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(5)}</span>&nbsp;&nbsp;<span className="property">skills</span>: [{topSkills.map((s, j) => (
-                            <span key={s}><span className="string">'{s}'</span>{j < topSkills.length - 1 ? ', ' : ''}</span>
+                            <span key={s}><span className="string">{quoteJs(s)}</span>{j < topSkills.length - 1 ? ', ' : ''}</span>
                         ))}],</div>
-                        <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">'{developer.mindset}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">'{developer.currentFocus}'</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(6)}</span>&nbsp;&nbsp;<span className="property">mindset</span>: <span className="string">{quoteJs(developer.mindset)}</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(7)}</span>&nbsp;&nbsp;<span className="property">currentFocus</span>: <span className="string">{quoteJs(developer.currentFocus)}</span>,</div>
                         <div className="code-line"><span className="line-number">{pad(8)}</span>&nbsp;&nbsp;<span className="property">availability</span>: <span className="value">{String(Boolean(developer.availability))}</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(9)}</span>&nbsp;&nbsp;<span className="property">email</span>: <span className="string">'{developer.email}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(10)}</span>&nbsp;&nbsp;<span className="property">github</span>: <span className="string">'{githubSlug}'</span>,</div>
-                        <div className="code-line"><span className="line-number">{pad(11)}</span>&nbsp;&nbsp;<span className="property">linkedin</span>: <span className="string">'{linkedinSlug}'</span></div>
+                        <div className="code-line"><span className="line-number">{pad(9)}</span>&nbsp;&nbsp;<span className="property">email</span>: <span className="string">{quoteJs(developer.email)}</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(10)}</span>&nbsp;&nbsp;<span className="property">github</span>: <span className="string">{quoteJs(githubSlug)}</span>,</div>
+                        <div className="code-line"><span className="line-number">{pad(11)}</span>&nbsp;&nbsp;<span className="property">linkedin</span>: <span className="string">{quoteJs(linkedinSlug)}</span></div>
                         <div className="code-line"><span className="line-number">{pad(12)}</span>&#125;;</div>
                         <div className="code-line"><span className="line-number">{pad(13)}</span></div>
                         <div className="code-line"><span className="line-number">{pad(14)}</span><span className="comment">// {developer.comment}</span></div>
@@ -211,7 +216,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 )}
 
                 {activeTab === 'json' && (
-                    <div className="code-lines">
+                    <div className="code-lines" role="tabpanel" id="code-panel-json" aria-labelledby="code-tab-json">
                         <div className="code-line"><span className="line-number">{pad(1)}</span>&#123;</div>
                         {Object.entries(stackJsonObj).map(([key, value], i, entries) => (
                             <div key={key} className="code-line">
@@ -223,7 +228,7 @@ echo "Statut : Prêt à intégrer votre équipe !"`;
                 )}
 
                 {isSeeking && activeTab === 'sh' && (
-                    <div className="code-lines">
+                    <div className="code-lines" role="tabpanel" id="code-panel-sh" aria-labelledby="code-tab-sh">
                         <div className="code-line"><span className="line-number">{pad(1)}</span><span className="comment">#!/usr/bin/env bash</span></div>
                         <div className="code-line"><span className="line-number">{pad(2)}</span><span className="keyword">set</span> -e</div>
                         <div className="code-line"><span className="line-number">{pad(3)}</span><span className="keyword">echo</span> <span className="string">"Initialisation du profil candidat..."</span></div>

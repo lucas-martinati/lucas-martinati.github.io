@@ -7,7 +7,7 @@ export default function useDialog(open) {
         if (!open || !dialog) return;
         const previousFocus = document.activeElement;
         const previousOverflow = document.body.style.overflow;
-        dialog.showModal();
+        if (!dialog.open) dialog.showModal();
         document.body.style.overflow = 'hidden';
         dialog.querySelector('button, a[href]')?.focus({ preventScroll: true });
         const keepFocusInside = (event) => {
@@ -27,7 +27,7 @@ export default function useDialog(open) {
         dialog.addEventListener('keydown', keepFocusInside);
         return () => {
             dialog.removeEventListener('keydown', keepFocusInside);
-            dialog.close();
+            if (dialog.open) dialog.close();
             document.body.style.overflow = previousOverflow;
             if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
         };

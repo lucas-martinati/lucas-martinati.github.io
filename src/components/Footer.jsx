@@ -44,7 +44,7 @@ export default function Footer({ developer = {} }) {
                                 Explorez mes dépôts, mes outils open-source et l'historique de mes commits.
                             </p>
                             <span className="card-link-text">
-                                {developer.github.replace(/^https?:\/\//, '')}
+                                {(developer.github || '').replace(/^https?:\/\//, '')}
                             </span>
                         </div>
                     </a>
@@ -84,7 +84,7 @@ export default function Footer({ developer = {} }) {
                                 type="button"
                                 className={`copy-btn js-only ${copied ? 'copied' : ''}`}
                                 onClick={() => copy(developer.email)}
-                                title={copied ? 'Email copié dans le presse-papier !' : "Copier l'adresse email"}
+                                title={copied ? 'Email copié dans le presse-papiers !' : "Copier l'adresse email"}
                                 aria-label="Copier l'adresse email"
                             >
                                 {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
@@ -99,8 +99,6 @@ export default function Footer({ developer = {} }) {
                             </p>
                             <a
                                 href={`mailto:${developer.email}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="card-link-text email-action-link"
                             >
                                 {developer.email}

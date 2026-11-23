@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import ResponsiveImage from '../src/components/ResponsiveImage';
+import { getProjectOrigin } from '../src/utils/projects';
 // Page CV — imprimable (voir cv/cv.css pour les règles @media print).
 // Le bouton télécharge public/cv.pdf, généré par `npm run cv:pdf`
 // (impression headless Chrome : rendu identique au Ctrl+P).
@@ -40,9 +41,9 @@ function splitLevel(label) {
 export default function Cv({ developer = {}, education = [], skills = [], projects = [], cv = {} }) {
     const photoSrc = cv.photo && !cv.photo.startsWith('http') ? `../${cv.photo}` : cv.photo;
     const phoneHref = cv.phone ? `tel:+33${cv.phone.replace(/\D/g, '').replace(/^0/, '')}` : null;
-    const pdfFile = `CV-${developer.name.replace(/\s+/g, '-')}.pdf`;
+    const pdfFile = `CV-${(developer.name || 'Candidat').replace(/\s+/g, '-')}.pdf`;
     // Les "coup de cœur" du CV : les 3 projets featured les plus récents, les plus récents d'abord.
-    const personalProjects = useMemo(() => {
+    const featuredProjects = useMemo(() => {
         const featured = [...(projects || [])]
             .filter((project) => project.featured)
             .sort((a, b) => Number(b.year || 0) - Number(a.year || 0));
@@ -53,6 +54,12 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
             summary: project.highlights || project.description,
         }));
     }, [projects]);
+    const projectsNote = useMemo(() => {
+        const origins = new Set(featuredProjects.map((project) => getProjectOrigin(project)));
+        if (origins.has('iut') && origins.has('personal')) return 'Projets personnels et universitaires — conception et développement';
+        if (origins.has('iut')) return 'Projets universitaires — conception et développement';
+        return 'Projets personnels — conception et développement';
+    }, [featuredProjects]);
 
     return (
         <div className="cv-page">
@@ -127,18 +134,26 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
                                 <SkillLevel title={cat.title} level={cv.technicalLevels?.[cat.title]} />
                             </div>
                         ))}
+                        <div className="cv-level-legend" aria-label="Échelle de maîtrise technique">
+                            <p>Échelle de maîtrise (sur {SKILL_LEVELS.length})</p>
+                            <div className="cv-level-key">
+                                {SKILL_LEVELS.map((label, index) => (
+                                    <span key={label}><b>{index + 1}</b> {label}</span>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </section>
 
                 <div className="cv-columns">
                     {/* Colonne principale */}
                     <div className="cv-col cv-col-main">
-                        {personalProjects.length > 0 && (
+                        {featuredProjects.length > 0 && (
                             <section className="cv-section cv-projects-section" aria-labelledby="cv-projects-heading">
                                 <h2 className="cv-section-title" id="cv-projects-heading">Expérience informatique</h2>
-                                <p className="cv-section-note">Projets personnels — conception et développement</p>
-                                {personalProjects.map((project) => {
-                                    const linkHref = project.link?.href || (project.link?.github ? `https://github.com/${project.link.github}` : null);
+                                <p className="cv-section-note">{projectsNote}</p>
+                                {featuredProjects.map((project) => {
+                                    const linkHref = project.link?.href || null;
                                     return (
                                         <article key={project.title} className="cv-project-item">
                                             <h3 className="cv-project-title">
@@ -229,7 +244,7 @@ export default function Cv({ developer = {}, education = [], skills = [], projec
                         </section>
 
                         <section className="cv-section">
-                            <h2 className="cv-section-title">Centres d'intérêts</h2>
+                            <h2 className="cv-section-title">Centres d'intérêt</h2>
                             <div className="cv-pills">
                                 {(cv.interests || []).map((interest) => (
                                     <span key={interest} className="cv-pill">{interest}</span>

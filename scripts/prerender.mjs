@@ -1,9 +1,10 @@
 import { createServer } from 'vite';
-import { readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { readFile, writeFile, readdir, unlink } from 'node:fs/promises';
+import { dirname, resolve, basename } from 'node:path';
 
 // Runs only during the build: the deployed site needs no Node server.
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
+const orphanAssets = new Set();
 try {
     const { render } = await vite.ssrLoadModule('/src/entry-server.jsx');
     const pages = render();
@@ -16,7 +17,9 @@ try {
         // Inlining avoids a blocking round trip without a flash of unstyled HTML.
         for (const match of [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*>/g)]) {
             const href = match[0].match(/href="([^"]+)"/)[1];
-            const css = await readFile(resolve(dirname(file), href), 'utf8');
+            const cssPath = resolve(dirname(file), href);
+            const css = await readFile(cssPath, 'utf8');
+            orphanAssets.add(cssPath);
             const assetBase = href.slice(0, href.lastIndexOf('/') + 1);
             const inlineCss = css.replace(/url\(\.\/([^)]*)\)/g, (_, asset) => `url(${assetBase}${asset})`);
             const fontName = page === 'main' ? 'inter-latin' : 'lexend-latin';
@@ -26,6 +29,9 @@ try {
         // The CV has only native links; it needs no React runtime in production.
         // Development keeps its normal Vite entry and hot reload.
         if (page === 'cv') {
+            for (const match of html.matchAll(/<script\b[^>]*type="module"[^>]*src="([^"]+)"[^>]*><\/script>/g)) {
+                orphanAssets.add(resolve(dirname(file), match[1]));
+            }
             html = html.replace(/<script\b[^>]*type="module"[^>]*><\/script>/g, '')
                 .replace(/<link\b[^>]*rel="modulepreload"[^>]*>/g, '');
         } else {
@@ -38,6 +44,20 @@ try {
         }
         await writeFile(file, html);
         console.log(`HTML statique généré : ${file}`);
+    }
+
+    // Remove CSS/JS assets that were fully inlined or stripped from static HTML.
+    for (const assetPath of orphanAssets) {
+        await unlink(assetPath).catch(() => {});
+    }
+
+    // Keep public/img/ originals as source files, but avoid deploying unused raw PNGs to dist/img/.
+    const keepRawPngs = new Set(['og-preview.png', 'photo.png']);
+    const distImgDir = resolve('dist/img');
+    for (const entry of await readdir(distImgDir, { withFileTypes: true })) {
+        if (entry.isFile() && /\.(png|jpe?g)$/i.test(entry.name) && !keepRawPngs.has(basename(entry.name))) {
+            await unlink(resolve(distImgDir, entry.name));
+        }
     }
 } finally {
     await vite.close();

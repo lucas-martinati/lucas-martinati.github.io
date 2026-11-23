@@ -2,17 +2,21 @@ import { useEffect, useRef } from 'react';
 
 // One observer for the entire page; content is always visible without JavaScript.
 let observer;
-const delays = new WeakMap();
+const meta = new WeakMap();
 function getObserver() {
     observer ??= new IntersectionObserver((entries) => {
+        const now = performance.now();
         for (const entry of entries) {
             if (!entry.isIntersecting) continue;
             observer.unobserve(entry.target);
+            const info = meta.get(entry.target);
+            // Skip re-animating elements already visible in the initial viewport without forced reflow.
+            if (!info || now - info.observedAt < 120) continue;
             if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 entry.target.animate([
                     { opacity: 0.6, transform: 'translateY(12px)' },
                     { opacity: 1, transform: 'translateY(0)' },
-                ], { duration: 350, delay: delays.get(entry.target) * 1000, easing: 'ease-out' });
+                ], { duration: 350, delay: info.delay * 1000, easing: 'ease-out' });
             }
         }
     }, { threshold: 0.01 });
@@ -24,10 +28,7 @@ export default function ScrollReveal({ children, delay = 0 }) {
     useEffect(() => {
         const element = ref.current;
         if (!('IntersectionObserver' in window) || !element?.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        // Skip re-animating elements already painted in the initial viewport by static HTML.
-        const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) return;
-        delays.set(element, delay);
+        meta.set(element, { delay, observedAt: performance.now() });
         const sharedObserver = getObserver();
         sharedObserver.observe(element);
         return () => sharedObserver.unobserve(element);

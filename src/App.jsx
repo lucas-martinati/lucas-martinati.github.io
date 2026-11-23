@@ -15,7 +15,7 @@ import ScrollReveal from './components/ScrollReveal';
 import Toast from './components/Toast';
 import { SearchIcon, SparklesIcon, GraduationCapIcon, UserIcon, GithubIcon } from './components/Icons';
 
-import { GITHUB_ORG_USERNAME } from './config/site';
+import { GITHUB_ORG_URL } from './config/site';
 import { getProjectCategory, getProjectOrigin, getProjectSlug, matchesSearch } from './utils/projects';
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
 
     const toastTimerRef = useRef(null);
     const searchInputRef = useRef(null);
-    const hasHydratedUrlRef = useRef(false);
+    const urlSyncedRef = useRef(false);
 
     // Toast helper with timer race-condition guard
     const showToast = useCallback((message, type = 'info') => {
@@ -57,23 +57,20 @@ export default function App() {
                 return;
             }
             const found = data.projects.find((p) => getProjectSlug(p) === slug);
-            if (found) setSelectedProject(found);
+            setSelectedProject(found || null);
         };
         syncFromUrl();
+        urlSyncedRef.current = true;
         window.addEventListener('popstate', syncFromUrl);
         return () => window.removeEventListener('popstate', syncFromUrl);
     }, []);
 
     // Reflect open project modal in URL query string without polluting history stack
-    useEffect(() => {
-        if (!hasHydratedUrlRef.current) {
-            hasHydratedUrlRef.current = true;
-            return;
-        }
+    const handleSelectProject = useCallback((proj) => {
+        setSelectedProject(proj);
+        if (!urlSyncedRef.current || typeof window === 'undefined') return;
         const params = new URLSearchParams(window.location.search);
-        const currentSlug = params.get('project');
-        const nextSlug = selectedProject ? getProjectSlug(selectedProject) : null;
-        if (currentSlug === nextSlug || (!currentSlug && !nextSlug)) return;
+        const nextSlug = proj ? getProjectSlug(proj) : null;
         if (nextSlug) {
             params.set('project', nextSlug);
         } else {
@@ -81,8 +78,14 @@ export default function App() {
         }
         const query = params.toString();
         const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
-        window.history.replaceState(null, '', nextUrl);
-    }, [selectedProject]);
+        if (nextUrl !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+            window.history.replaceState(null, '', nextUrl);
+        }
+    }, []);
+
+    const handleCloseModal = useCallback(() => {
+        handleSelectProject(null);
+    }, [handleSelectProject]);
 
     // Quick keyboard shortcut ('/' or Ctrl/Cmd+K) to focus project search
     useEffect(() => {
@@ -147,7 +150,7 @@ export default function App() {
     };
 
     const handleTagSelect = useCallback((tag) => {
-        setSelectedProject(null);
+        handleSelectProject(null);
         setActiveOrigin('all');
         setActiveCategory('all');
         setSearchQuery(tag);
@@ -160,7 +163,7 @@ export default function App() {
                 input.focus({ preventScroll: true });
             }
         });
-    }, [showToast]);
+    }, [handleSelectProject, showToast]);
 
     const hasActiveFilters = Boolean(searchQuery.trim() || activeCategory !== 'all' || activeOrigin !== 'all');
 
@@ -320,7 +323,7 @@ export default function App() {
                             </p>
                         </div>
                         <a
-                            href={`https://github.com/${GITHUB_ORG_USERNAME}`}
+                            href={GITHUB_ORG_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="iut-org-link"
@@ -351,14 +354,14 @@ export default function App() {
                                 <ProjectCard
                                     project={project}
                                     index={i}
-                                    onOpenModal={(proj) => setSelectedProject(proj)}
+                                    onOpenModal={handleSelectProject}
                                 />
                             </ScrollReveal>
                         ))}
                     </div>
                 ) : (
                     <div className="projects-empty-state">
-                        <div className="empty-emoji">🔍</div>
+                        <div className="empty-emoji" aria-hidden="true">🔍</div>
                         <h3>Aucun projet ne correspond à votre recherche</h3>
                         <p>Essayez avec d'autres termes comme "React", "Java", "PHP" ou réinitialisez les filtres.</p>
                         <button
@@ -454,9 +457,9 @@ export default function App() {
             <ProjectModal
                 project={selectedProject}
                 allProjects={filteredProjects.length > 0 ? filteredProjects : data.projects}
-                onSelectProject={(proj) => setSelectedProject(proj)}
+                onSelectProject={handleSelectProject}
                 onTagSelect={handleTagSelect}
-                onClose={() => setSelectedProject(null)}
+                onClose={handleCloseModal}
             />
 
             {/* Notification Toast */}

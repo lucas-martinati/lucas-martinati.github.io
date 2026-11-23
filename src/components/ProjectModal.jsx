@@ -53,7 +53,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [project, onClose, goToNext, goToPrev]);
+    }, [project, goToNext, goToPrev]);
 
     if (!project) return null;
 
@@ -88,7 +88,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     {hasImage ? (
                         <ResponsiveImage src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="modal-cover-img" sizes="(max-width: 760px) 100vw, 760px" />
                     ) : (
-                        <span className="modal-emoji">{project.emoji}</span>
+                        <span className="modal-emoji" aria-hidden="true">{project.emoji}</span>
                     )}
 
                     {project.featured && (
@@ -123,7 +123,7 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                         <div className="modal-section-box highlight-box">
                             <div className="modal-box-header">
                                 <SparklesIcon size={16} />
-                                <h4>Points Forts &amp; Valeur Ajoutée</h4>
+                                <h3>Points Forts &amp; Valeur Ajoutée</h3>
                             </div>
                             <p>{project.highlights}</p>
                         </div>
@@ -133,8 +133,8 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                     {project.challenges && (
                         <div className="modal-section-box challenge-box">
                             <div className="modal-box-header">
-                                <span className="box-icon">⚡</span>
-                                <h4>Défis Techniques Relevés</h4>
+                                <span className="box-icon" aria-hidden="true">⚡</span>
+                                <h3>Défis Techniques Relevés</h3>
                             </div>
                             <p>{project.challenges}</p>
                         </div>
@@ -203,9 +203,11 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
                                 <ArrowLeftIcon size={16} />
                                 <span>Précédent</span>
                             </button>
-                            <span className="modal-counter">
-                                {currentIndex + 1} / {allProjects.length}
-                            </span>
+                            {currentIndex >= 0 && (
+                                <span className="modal-counter">
+                                    {currentIndex + 1} / {allProjects.length}
+                                </span>
+                            )}
                             <button
                                 type="button"
                                 className="modal-nav-btn"

@@ -5,7 +5,7 @@ import { GithubIcon, LinkedinIcon, MailIcon, CvIcon } from './Icons';
 const NAV_ITEMS = [
     { id: 'projects', label: 'Projets' },
     { id: 'about', label: 'À propos' },
-    { id: 'recruiter', label: 'Recrutement', mobileLabel: '🎯 Espace Recruteur', isRecruiter: true, requireSeeking: true },
+    { id: 'recruiter', label: 'Recrutement', mobileEmoji: '🎯', mobileLabel: 'Espace Recruteur', isRecruiter: true, requireSeeking: true },
     { id: 'education', label: 'Parcours', mobileLabel: 'Parcours & Diplômes' },
     { id: 'contact', label: 'Contact', mobileLabel: 'Contact & Réseaux' }
 ];
@@ -55,7 +55,7 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
             if (!frame) frame = requestAnimationFrame(() => { frame = 0; handleScroll(); });
         };
         window.addEventListener('scroll', scheduleScroll, { passive: true });
-        handleScroll();
+        scheduleScroll();
         return () => {
             window.removeEventListener('scroll', scheduleScroll);
             cancelAnimationFrame(frame);
@@ -73,7 +73,7 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
 
     const githubUrl = developer.github;
     const linkedinUrl = developer.linkedin;
-    const emailUrl = `mailto:${developer.email}`;
+    const emailUrl = developer.email ? `mailto:${developer.email}` : null;
 
     return (
         <>
@@ -82,9 +82,9 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                 <a
                     href="#top"
                     className="logo"
-
+                    aria-label={`${developer.name || 'Portfolio'} — Retour en haut`}
                 >
-                    <span className="logo-accent">{developer.initials}</span>{developer.brandSuffix}
+                    <span className="logo-accent" aria-hidden="true">{developer.initials}</span><span aria-hidden="true">{developer.brandSuffix}</span>
                 </a>
 
                 {/* Desktop Nav Links */}
@@ -133,8 +133,6 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                     {emailUrl && (
                         <a
                             href={emailUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             className="nav-icon-link"
                             aria-label={`Envoyer un email à ${developer.name}`}
                             title="Email"
@@ -191,11 +189,14 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                                 onClick={handleClick}
                                 aria-current={activeSection === item.id ? 'location' : undefined}
                             >
-                                <span>{item.mobileLabel || item.label}</span>
+                                <span>
+                                    {item.mobileEmoji && <span aria-hidden="true">{item.mobileEmoji} </span>}
+                                    {item.mobileLabel || item.label}
+                                </span>
                                 {item.id === 'projects' ? (
                                     <span className="mobile-link-pill">{projectCount}</span>
                                 ) : (
-                                    <span className="mobile-link-arrow">→</span>
+                                    <span className="mobile-link-arrow" aria-hidden="true">→</span>
                                 )}
                             </a>
                         ))}
@@ -208,10 +209,11 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mobile-nav-link recruiter"
+                        onClick={handleClick}
                         aria-label={`Mon CV — ${developer.name}`}
                     >
-                        <span>📄 Mon CV</span>
-                        <span className="mobile-link-arrow">→</span>
+                        <span><span aria-hidden="true">📄 </span>Mon CV</span>
+                        <span className="mobile-link-arrow" aria-hidden="true">→</span>
                     </a>
 
                     <div className="mobile-nav-divider" />
@@ -243,8 +245,6 @@ export default function Navbar({ developer = {}, projectCount = 0 }) {
                         {emailUrl && (
                             <a
                                 href={emailUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="mobile-social-tile"
                             >
                                 <MailIcon size={20} />

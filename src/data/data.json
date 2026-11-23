@@ -36,8 +36,8 @@
             "strengths": [
                 {
                     "icon": "⚡",
-                    "title": "Autonomie & Expédition de Produits",
-                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (3 extensions sur des stores officiels, 20+ réalisations déployées)."
+                    "title": "Autonomie & Livraison de Produits",
+                    "desc": "Capacité prouvée à concevoir, développer et publier des projets complets (3 extensions sur des stores officiels, plus de 20 réalisations conçues et publiées)."
                 },
                 {
                     "icon": "🔄",
@@ -52,7 +52,7 @@
                 {
                     "icon": "🚀",
                     "title": "Curiosité & Proactivité Continue",
-                    "desc": "Veille constante, auto-formation permanente, soucis du détail dans l'expérience utilisateur et code maintenable."
+                    "desc": "Veille constante, autoformation permanente, souci du détail dans l'expérience utilisateur et code maintenable."
                 }
             ]
         }
@@ -89,13 +89,13 @@
             "tags": [
                 "Capacitor",
                 "Chrome Extensions",
-                "VSCode"
+                "VS Code"
             ]
         },
         {
             "icon": "🗄️",
             "title": "Bases de Données & Cloud",
-            "description": "Bases de données relationnelles (SQL/PLSQL), backend serverless et intégration d'API.",
+            "description": "Bases de données relationnelles (SQL, PL/SQL), backend serverless et intégration d'API.",
             "tags": [
                 "SQL",
                 "PL/SQL",
@@ -159,7 +159,7 @@
             "link": {
                 "github": "SAE-S3.01-Touiteur",
                 "org": true,
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "web",
             "origin": "iut",
@@ -188,7 +188,7 @@
             ],
             "link": {
                 "github": "rcloneDash",
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "personal",
@@ -205,7 +205,7 @@
                 "className": "status-completed"
             },
             "title": "G502 Hub — édition Rust",
-            "description": "Fork natif de G502 Hub : un service Rust pilote la souris Logitech G502 HERO en arrière-plan, tandis qu’une interface dédiée permet de gérer profils, DPI, macros, boutons et éclairage. L’application Python d’origine reste disponible pour comparaison et retour arrière.",
+            "description": "Fork natif de G502 Hub : un service Rust pilote la souris Logitech G502 HERO en arrière-plan, tandis qu'une interface dédiée permet de gérer profils, DPI, macros, boutons et éclairage. L'application Python d'origine reste disponible pour comparaison et retour arrière.",
             "tags": [
                 "Rust",
                 "Linux",
@@ -221,7 +221,7 @@
             "category": "system",
             "origin": "personal",
             "featured": true,
-            "highlights": "Service matériel indépendant de l’interface, profils embarqués vérifiés par relecture, macros, règles contextuelles, réglages DPI et effets lumineux.",
+            "highlights": "Service matériel indépendant de l'interface, profils embarqués vérifiés par relecture, macros, règles contextuelles, réglages DPI et effets lumineux.",
             "challenges": "Conserver les données inconnues des profils matériels, sécuriser les écritures HID++ et garder macros et éclairage actifs quand la fenêtre de réglages est fermée."
         },
         {
@@ -244,7 +244,7 @@
             "link": {
                 "github": "Deefy",
                 "org": true,
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "web",
             "origin": "iut",
@@ -302,11 +302,11 @@
             "link": {
                 "github": "SAE_S2.01_Zeldiablo-LucasM_JeanLM_PierreGSV",
                 "org": true,
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "iut",
-            "featured": false,
+            "featured": true,
             "highlights": "Conception orientée objet itérative sur 4 versions documentées en PlantUML (classes et séquences), rendu Java Swing en pixel art avec mode classique et éclairage dynamique, monstres autonomes et suite de tests unitaires.",
             "challenges": "Architecture modulaire des entités et cases à effets, gestion de monstres multi-cases destructibles par segment (Blob), synchronisation de la boucle de jeu et développement collaboratif en trinôme."
         },
@@ -318,7 +318,7 @@
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "SAÉ S2.02 — Réseau STAN (Graphes)",
+            "title": "Réseau STAN (Graphes) — SAÉ S2.02",
             "description": "Exploration algorithmique sur graphes (SAÉ S2.02 — IUT Nancy-Charlemagne) : implémentation et benchmark comparatif de Dijkstra et Bellman-Ford en Java sur le réseau réel de transports en commun STAN de Nancy (GTFS), avec visualisation cartographique interactive.",
             "tags": [
                 "Java",
@@ -331,7 +331,7 @@
             "link": {
                 "github": "SAE_S2.02-MARTINATI_Lucas",
                 "org": true,
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "iut",
@@ -406,7 +406,7 @@
             ],
             "link": {
                 "github": "nautilus-taildrop",
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "personal",
@@ -447,10 +447,10 @@
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "Pseudo-Code Language Support (VSCode)",
+            "title": "Pseudo-Code Language Support (VS Code)",
             "description": "Extension Visual Studio Code transformant l'éditeur en IDE complet pour l'écriture et l'exécution de pseudo-code algorithmique en français.",
             "tags": [
-                "VSCode Extension",
+                "VS Code Extension",
                 "TypeScript"
             ],
             "link": {
@@ -571,7 +571,7 @@
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "SAE-S1-3 (Administration Système)",
+            "title": "Administration Système — SAÉ S1.03",
             "description": "Dépôt des scripts d'administration système, configurations Systemd/Logrotate et notice technique pour Ubuntu 22.04.",
             "tags": [
                 "Bash",
@@ -581,7 +581,7 @@
             "link": {
                 "github": "SAE_S1.03-Martinati_Lucas-Charles_Samuel",
                 "org": true,
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "iut",
@@ -619,12 +619,12 @@
         {
             "emoji": "🌍",
             "imageUrl": "img/can-vert.png",
-            "year": "2024",
+            "year": "2025",
             "status": {
                 "label": "Terminé",
                 "className": "status-completed"
             },
-            "title": "Can-Vert",
+            "title": "Can'Vert — SAÉ S1.05",
             "description": "Site vitrine réalisé dans le cadre de la SAÉ S1.05 (Recueil de besoins) présentant Can'Vert, concept de marque de mode écoresponsable du Grand Est axée sur le recyclage textile et le circuit court.",
             "tags": [
                 "HTML",
@@ -658,7 +658,7 @@
             ],
             "link": {
                 "github": "Applications_Automatical_Installer",
-                "text": "Voir le Repository"
+                "text": "Voir le dépôt"
             },
             "category": "system",
             "origin": "personal",
@@ -704,9 +704,9 @@
             "icon": "📜",
             "type": "education",
             "period": "2025",
-            "title": "BAC Général Mention Bien",
+            "title": "Baccalauréat Général — Mention Bien",
             "highlight": "1473,10 points",
-            "school": "Lycée Jean Zay — Maths/Physique chimie/Math expert"
+            "school": "Lycée Jean Zay — Maths, Physique-Chimie, Maths Expertes"
         },
         {
             "icon": "📜",
@@ -723,7 +723,7 @@
             "period": "26/03/2025",
             "title": "Certification PIX",
             "highlight": "583 PIX",
-            "school": "Score de 583 PIX en Terminale"
+            "school": "Certification obtenue en Terminale — Lycée Jean Zay"
         }
     ],
     "languages": [
@@ -734,7 +734,7 @@
         },
         {
             "name": "Anglais",
-            "level": "Compétence professionnelle",
+            "level": "B2 — Compétence professionnelle",
             "icon": "🇬🇧"
         }
     ]
