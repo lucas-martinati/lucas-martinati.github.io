@@ -1,10 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#030712"/>
-  <text x="32" y="32" text-anchor="middle" dominant-baseline="central" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="28" fill="url(#g)">LM</text>
+  <rect width="64" height="64" rx="14" fill="#0c0f13"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#38cfc1" stroke-opacity="0.35" stroke-width="2"/>
+  <text x="32" y="33" text-anchor="middle" dominant-baseline="central" font-family="Lexend, Inter, system-ui, sans-serif" font-weight="800" font-size="26" letter-spacing="-1">
+    <tspan fill="#38cfc1">L</tspan><tspan fill="#f3efe6">M</tspan>
+  </text>
 </svg>
