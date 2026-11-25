@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function useClipboard() {
     const [status, setStatus] = useState('idle');
     const timer = useRef(null);
     useEffect(() => () => clearTimeout(timer.current), []);
-    const copy = async (text) => {
+    const reset = useCallback(() => {
+        clearTimeout(timer.current);
+        setStatus('idle');
+    }, []);
+    const copy = useCallback(async (text) => {
         clearTimeout(timer.current);
         let ok = false;
         try {
@@ -17,6 +21,6 @@ export default function useClipboard() {
         }
         timer.current = setTimeout(() => setStatus('idle'), 2500);
         return ok;
-    };
-    return { copied: status === 'copied', copyError: status === 'error', copy };
+    }, []);
+    return { copied: status === 'copied', copyError: status === 'error', copy, reset };
 }

@@ -114,16 +114,20 @@ try {
     assert.ok(await page.$$eval('.project-card', (cards) => cards.length) > 0);
     await page.click('.reset-filters');
 
-    // Lien direct vers une fiche projet (?project=rclonedash) et copie du lien
+    // Lien direct vers une fiche projet (?project=rclonedash), copie de l'URL du projet et zoom aperçu
     await page.goto(`${url}/?project=rclonedash`, { waitUntil: 'networkidle0' });
     await page.waitForSelector('dialog[open]');
     assert.equal(await page.$eval('.modal-title', (node) => node.textContent), 'rcloneDash');
     await page.evaluate(() => {
-        navigator.clipboard.writeText = async (text) => { window.lastSharedUrl = text; };
+        navigator.clipboard.writeText = async (text) => { window.lastCopiedProjectUrl = text; };
     });
-    await page.click('.modal-share-btn');
-    await page.waitForFunction(() => document.querySelector('.modal-share-btn').textContent.includes('Lien copié'));
-    assert.ok((await page.evaluate(() => window.lastSharedUrl)).endsWith('?project=rclonedash'));
+    await page.click('.modal-copy-url-btn');
+    await page.waitForFunction(() => document.querySelector('.modal-copy-url-btn').textContent.includes('URL copiée'));
+    assert.ok((await page.evaluate(() => window.lastCopiedProjectUrl)).endsWith('/rcloneDash'));
+    await page.click('.modal-preview-stage');
+    await page.waitForSelector('.modal-lightbox');
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('.modal-lightbox') && Boolean(document.querySelector('dialog[open]')));
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !location.search.includes('project='));
 

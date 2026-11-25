@@ -1,8 +1,22 @@
-import { useEffect, useCallback } from 'react';
-import { CloseIcon, ExternalLinkIcon, GithubIcon, ArrowLeftIcon, ArrowRightIcon, SparklesIcon, LinkIcon, CheckIcon, GraduationCapIcon } from './Icons';
+import { useEffect, useCallback, useState, useRef } from 'react';
+import {
+    CloseIcon,
+    ExternalLinkIcon,
+    GithubIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    SparklesIcon,
+    CopyIcon,
+    CheckIcon,
+    GraduationCapIcon,
+    UserIcon,
+    ZapIcon,
+    MaximizeIcon,
+    FilterIcon
+} from './Icons';
 import useDialog from '../utils/useDialog';
 import useClipboard from '../utils/useClipboard';
-import { getProjectCategory, getProjectOrigin, getProjectSlug } from '../utils/projects';
+import { getProjectCategory, getProjectOrigin } from '../utils/projects';
 import ResponsiveImage from './ResponsiveImage';
 
 const CATEGORY_LABELS = {
@@ -11,18 +25,58 @@ const CATEGORY_LABELS = {
     web: 'Web & Full-Stack'
 };
 
+function formatDisplayUrl(href) {
+    if (!href) return '';
+    try {
+        const parsed = new URL(href);
+        const cleanPath = parsed.pathname.replace(/\/$/, '');
+        if (parsed.hostname === 'github.com') {
+            return `github.com${cleanPath}`;
+        }
+        return cleanPath && cleanPath.length <= 26
+            ? `${parsed.hostname}${cleanPath}`
+            : parsed.hostname;
+    } catch {
+        return href;
+    }
+}
+
 export default function ProjectModal({ project, allProjects = [], onSelectProject, onTagSelect, onClose }) {
     const dialogRef = useDialog(Boolean(project));
-    const { copied, copyError, copy } = useClipboard();
+    const { copied, copyError, copy, reset } = useClipboard();
+    const [zoomOpen, setZoomOpen] = useState(false);
+
+    const scrollAreaRef = useRef(null);
+    const previewTriggerRef = useRef(null);
+    const lightboxCloseRef = useRef(null);
+    const wasZoomOpenRef = useRef(false);
+    const touchStartRef = useRef(null);
+
     useEffect(() => {
-        const card = dialogRef.current?.querySelector('.modal-card');
-        if (card) card.scrollTop = 0;
-    }, [project, dialogRef]);
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = 0;
+        }
+        reset();
+        setZoomOpen(false);
+    }, [project, reset]);
+
+    useEffect(() => {
+        if (zoomOpen) {
+            wasZoomOpenRef.current = true;
+            lightboxCloseRef.current?.focus({ preventScroll: true });
+        } else if (wasZoomOpenRef.current) {
+            wasZoomOpenRef.current = false;
+            previewTriggerRef.current?.focus({ preventScroll: true });
+        }
+    }, [zoomOpen]);
+
     const currentIndex = project
         ? allProjects.findIndex((p) => p.title === project.title)
         : -1;
     const hasPrev = currentIndex > 0;
     const hasNext = currentIndex !== -1 && currentIndex < allProjects.length - 1;
+    const prevProject = hasPrev ? allProjects[currentIndex - 1] : null;
+    const nextProject = hasNext ? allProjects[currentIndex + 1] : null;
 
     const goToPrev = useCallback(() => {
         if (hasPrev) {
@@ -36,11 +90,12 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
         }
     }, [hasNext, currentIndex, allProjects, onSelectProject]);
 
-    // Keyboard navigation (Escape, Left, Right)
+    // Keyboard navigation (Left / Right)
     useEffect(() => {
         if (!project) return;
 
         const handleKeyDown = (e) => {
+            if (zoomOpen) return;
             if (e.altKey || e.ctrlKey || e.metaKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
@@ -53,13 +108,37 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [project, goToNext, goToPrev]);
+    }, [project, zoomOpen, goToNext, goToPrev]);
 
     if (!project) return null;
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
-            onClose();
+            if (zoomOpen) {
+                setZoomOpen(false);
+            } else {
+                onClose();
+            }
+        }
+    };
+
+    const handleTouchStart = (e) => {
+        if (zoomOpen || e.touches.length !== 1) return;
+        touchStartRef.current = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!touchStartRef.current || zoomOpen) return;
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - touchStartRef.current.x;
+        const dy = touch.clientY - touchStartRef.current.y;
+        touchStartRef.current = null;
+        if (Math.abs(dx) > 68 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+            if (dx < 0) goToNext();
+            else goToPrev();
         }
     };
 
@@ -67,161 +146,282 @@ export default function ProjectModal({ project, allProjects = [], onSelectProjec
     const categoryLabel = CATEGORY_LABELS[getProjectCategory(project)];
     const isIut = getProjectOrigin(project) === 'iut';
     const linkHref = project.link?.href;
+    const displayUrl = formatDisplayUrl(linkHref);
 
     return (
-        <dialog ref={dialogRef} className="modal-overlay" onClick={handleOverlayClick} aria-labelledby="project-modal-title"
-            onCancel={(event) => { event.preventDefault(); onClose(); }}>
+        <dialog
+            ref={dialogRef}
+            className="modal-overlay"
+            onClick={handleOverlayClick}
+            aria-labelledby="project-modal-title"
+            onCancel={(event) => {
+                event.preventDefault();
+                if (zoomOpen) {
+                    setZoomOpen(false);
+                } else {
+                    onClose();
+                }
+            }}
+        >
             <div className="modal-card">
-                {/* Close Button */}
-                <button
-                    type="button"
-                    className="modal-close-btn"
-                    autoFocus
-                    onClick={onClose}
-                    aria-label="Fermer la fenêtre de détails"
-                >
-                    <CloseIcon size={20} />
-                </button>
+                {/* Sticky Top Bar — always accessible */}
+                <div className="modal-topbar">
+                    <div className="modal-topbar-info">
+                        {currentIndex >= 0 && (
+                            <span className="modal-counter">
+                                {currentIndex + 1} / {allProjects.length}
+                            </span>
+                        )}
+                        <span className="modal-topbar-sep" aria-hidden="true">·</span>
+                        <span className="modal-category-tag">{categoryLabel}</span>
+                        {project.featured && (
+                            <span className="modal-featured-badge">
+                                <SparklesIcon size={13} />
+                                <span>Coup de cœur</span>
+                            </span>
+                        )}
+                    </div>
 
-                {/* Banner / Cover */}
-                <div className={`modal-banner ${hasImage ? 'has-cover' : 'gradient-banner'}`}>
-                    {hasImage ? (
-                        <ResponsiveImage src={project.imageUrl} alt={`Aperçu de ${project.title}`} className="modal-cover-img" sizes="(max-width: 760px) 100vw, 760px" />
-                    ) : (
-                        <span className="modal-emoji" aria-hidden="true">{project.emoji}</span>
-                    )}
-
-                    {project.featured && (
-                        <div className="modal-featured-badge">
-                            <SparklesIcon size={14} />
-                            <span>Projet Coup de Cœur</span>
-                        </div>
-                    )}
+                    <div className="modal-topbar-actions">
+                        <span className="modal-kbd-hints" aria-hidden="true">
+                            <kbd>←</kbd>
+                            <kbd>→</kbd>
+                            <span>naviguer</span>
+                        </span>
+                        <button
+                            type="button"
+                            className="modal-close-btn"
+                            autoFocus
+                            onClick={onClose}
+                            aria-label="Fermer la fenêtre de détails"
+                            title="Fermer (Échap)"
+                        >
+                            <CloseIcon size={18} />
+                        </button>
+                    </div>
                 </div>
 
-                {/* Modal Body */}
-                <div className="modal-body">
-                    <div className="modal-header">
-                        <div className="modal-meta">
-                            <span className="modal-year">{project.year}</span>
-                            <span className={`project-status ${project.status?.className}`}>
-                                {project.status?.label}
-                            </span>
-                            <span className="modal-category-tag">{categoryLabel}</span>
-                            <span className={`modal-origin-tag ${isIut ? 'is-iut' : 'is-personal'}`}>
-                                {isIut && <GraduationCapIcon size={13} />}
-                                <span>{isIut ? 'IUT Nancy-Charlemagne' : 'Projet personnel'}</span>
-                            </span>
-                        </div>
-                        <h2 className="modal-title" id="project-modal-title" aria-live="polite">{project.title}</h2>
-                    </div>
+                {/* Scrollable Body (2-column showcase on desktop, natural vertical stack on mobile) */}
+                <div
+                    ref={scrollAreaRef}
+                    className="modal-scroll-area"
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                >
+                    <div className="modal-body-layout">
+                        {/* Details Column (first in DOM for screen readers & heading hierarchy; right column on desktop) */}
+                        <div className="modal-col-details">
+                            <div className="modal-header-block">
+                                <div className="modal-meta">
+                                    <span className="modal-year">{project.year}</span>
+                                    <span className={`project-status ${project.status?.className}`}>
+                                        {project.status?.label}
+                                    </span>
+                                    <span className={`modal-origin-tag ${isIut ? 'is-iut' : 'is-personal'}`}>
+                                        {isIut ? <GraduationCapIcon size={13} /> : <UserIcon size={13} />}
+                                        <span>{isIut ? 'IUT Nancy-Charlemagne' : 'Projet personnel'}</span>
+                                    </span>
+                                </div>
 
-                    <p className="modal-description">{project.description}</p>
-
-                    {/* Highlights & Impact */}
-                    {project.highlights && (
-                        <div className="modal-section-box highlight-box">
-                            <div className="modal-box-header">
-                                <SparklesIcon size={16} />
-                                <h3>Points Forts &amp; Valeur Ajoutée</h3>
+                                <h2 className="modal-title" id="project-modal-title" aria-live="polite">
+                                    {project.title}
+                                </h2>
+                                <p className="modal-description">{project.description}</p>
                             </div>
-                            <p>{project.highlights}</p>
-                        </div>
-                    )}
 
-                    {/* Challenges & Solutions */}
-                    {project.challenges && (
-                        <div className="modal-section-box challenge-box">
-                            <div className="modal-box-header">
-                                <span className="box-icon" aria-hidden="true">⚡</span>
-                                <h3>Défis Techniques Relevés</h3>
+                            <div className="modal-insights-block">
+                                {project.highlights && (
+                                    <div className="modal-section-box highlight-box">
+                                        <div className="modal-box-header">
+                                            <span className="modal-box-icon" aria-hidden="true">
+                                                <SparklesIcon size={15} />
+                                            </span>
+                                            <h3>Points forts &amp; valeur ajoutée</h3>
+                                        </div>
+                                        <p>{project.highlights}</p>
+                                    </div>
+                                )}
+
+                                {project.challenges && (
+                                    <div className="modal-section-box challenge-box">
+                                        <div className="modal-box-header">
+                                            <span className="modal-box-icon" aria-hidden="true">
+                                                <ZapIcon size={15} />
+                                            </span>
+                                            <h3>Défis techniques relevés</h3>
+                                        </div>
+                                        <p>{project.challenges}</p>
+                                    </div>
+                                )}
                             </div>
-                            <p>{project.challenges}</p>
                         </div>
-                    )}
 
-                    {/* Tech Tags */}
-                    <div className="modal-tags-wrap">
-                        <span className="tags-label">Technologies utilisées (cliquer pour filtrer) :</span>
-                        <div className="modal-tags">
-                            {project.tags?.map((tag) => (
-                                <button
-                                    key={tag}
-                                    type="button"
-                                    className="tag tag-interactive"
-                                    onClick={() => onTagSelect?.(tag)}
-                                    title={`Filtrer les projets utilisant ${tag}`}
-                                >
-                                    {tag}
-                                </button>
-                            ))}
+                        {/* Visual & Tech Stack Column (left column on desktop) */}
+                        <div className="modal-col-media">
+                            <div className="modal-visual-block">
+                                {hasImage ? (
+                                    <button
+                                        ref={previewTriggerRef}
+                                        type="button"
+                                        className="modal-preview-stage"
+                                        onClick={() => setZoomOpen(true)}
+                                        aria-label={`Agrandir l'aperçu de ${project.title}`}
+                                        title="Cliquer pour agrandir l'aperçu"
+                                    >
+                                        <ResponsiveImage
+                                            src={project.imageUrl}
+                                            alt={`Aperçu de ${project.title}`}
+                                            className="modal-cover-img"
+                                            sizes="(max-width: 900px) 100vw, 520px"
+                                        />
+                                        <span className="modal-zoom-pill" aria-hidden="true">
+                                            <MaximizeIcon size={13} />
+                                            <span>Agrandir</span>
+                                        </span>
+                                    </button>
+                                ) : (
+                                    <div className="modal-preview-stage is-placeholder">
+                                        <span className="modal-emoji" aria-hidden="true">{project.emoji}</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {project.tags?.length > 0 && (
+                                <div className="modal-stack-block">
+                                    <div className="modal-stack-header">
+                                        <h3 className="modal-stack-title">Stack technique</h3>
+                                        <span className="modal-stack-hint">
+                                            <FilterIcon size={12} />
+                                            <span>Cliquer pour filtrer</span>
+                                        </span>
+                                    </div>
+                                    <div className="modal-tags">
+                                        {project.tags.map((tag) => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                className="tag tag-interactive"
+                                                onClick={() => onTagSelect?.(tag)}
+                                                title={`Filtrer les projets utilisant ${tag}`}
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
+                </div>
 
-                    {/* Actions & Navigation */}
-                    <div className="modal-footer">
-                        <div className="modal-links">
-                            {linkHref && (
+                {/* Sticky Footer — Primary CTA, Copy Project URL, and Contextual Prev/Next Navigation */}
+                <div className="modal-footer">
+                    <div className="modal-links">
+                        {linkHref && (
+                            <>
                                 <a
                                     href={linkHref}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-primary modal-action-btn"
+                                    title={displayUrl}
                                 >
                                     {linkHref.includes('github.com') ? (
-                                        <GithubIcon size={18} />
+                                        <GithubIcon size={17} />
                                     ) : (
-                                        <ExternalLinkIcon size={18} />
+                                        <ExternalLinkIcon size={17} />
                                     )}
                                     <span>{project.link.text}</span>
                                 </a>
-                            )}
-                            <button
-                                type="button"
-                                className={`btn-secondary modal-share-btn ${copied ? 'copied' : ''}`}
-                                onClick={() => {
-                                    const shareUrl = `${window.location.origin}${window.location.pathname}?project=${getProjectSlug(project)}`;
-                                    copy(shareUrl);
-                                }}
-                                title="Copier le lien direct vers cette fiche"
-                                aria-label={`Copier le lien direct vers ${project.title}`}
-                            >
-                                {copied ? <CheckIcon size={16} /> : <LinkIcon size={16} />}
-                                <span aria-live="polite">{copied ? 'Lien copié !' : copyError ? 'Copie impossible' : 'Copier le lien'}</span>
-                            </button>
-                        </div>
 
-                        {/* Prev / Next controls */}
-                        <div className="modal-nav-controls">
-                            <button
-                                type="button"
-                                className="modal-nav-btn"
-                                disabled={!hasPrev}
-                                onClick={goToPrev}
-                                title="Projet précédent (Flèche Gauche)"
-                            >
-                                <ArrowLeftIcon size={16} />
-                                <span>Précédent</span>
-                            </button>
-                            {currentIndex >= 0 && (
-                                <span className="modal-counter">
-                                    {currentIndex + 1} / {allProjects.length}
-                                </span>
-                            )}
-                            <button
-                                type="button"
-                                className="modal-nav-btn"
-                                disabled={!hasNext}
-                                onClick={goToNext}
-                                title="Projet suivant (Flèche Droite)"
-                            >
-                                <span>Suivant</span>
-                                <ArrowRightIcon size={16} />
-                            </button>
-                        </div>
+                                <button
+                                    type="button"
+                                    className={`btn-secondary modal-copy-url-btn ${copied ? 'copied' : ''}`}
+                                    onClick={() => copy(linkHref)}
+                                    title={`Copier l'URL : ${linkHref}`}
+                                    aria-label={`Copier l'URL de ${project.title}`}
+                                >
+                                    {copied ? <CheckIcon size={15} /> : <CopyIcon size={15} />}
+                                    <span aria-live="polite">
+                                        {copied ? 'URL copiée !' : copyError ? 'Copie impossible' : "Copier l'URL"}
+                                    </span>
+                                </button>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="modal-nav-controls">
+                        <button
+                            type="button"
+                            className="modal-nav-btn modal-nav-prev"
+                            disabled={!hasPrev}
+                            onClick={goToPrev}
+                            title={prevProject ? `Précédent : ${prevProject.title} (Flèche Gauche)` : 'Premier projet'}
+                            aria-label={prevProject ? `Projet précédent : ${prevProject.title}` : 'Projet précédent indisponible'}
+                        >
+                            <ArrowLeftIcon size={16} />
+                            <span className="modal-nav-text">
+                                <span className="modal-nav-dir">Précédent</span>
+                                {prevProject && <span className="modal-nav-name">{prevProject.title}</span>}
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="modal-nav-btn modal-nav-next"
+                            disabled={!hasNext}
+                            onClick={goToNext}
+                            title={nextProject ? `Suivant : ${nextProject.title} (Flèche Droite)` : 'Dernier projet'}
+                            aria-label={nextProject ? `Projet suivant : ${nextProject.title}` : 'Projet suivant indisponible'}
+                        >
+                            <span className="modal-nav-text">
+                                <span className="modal-nav-dir">Suivant</span>
+                                {nextProject && <span className="modal-nav-name">{nextProject.title}</span>}
+                            </span>
+                            <ArrowRightIcon size={16} />
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Full-viewport Image Lightbox Overlay */}
+            {zoomOpen && hasImage && (
+                <div
+                    className="modal-lightbox"
+                    role="region"
+                    aria-label={`Aperçu agrandi de ${project.title}`}
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setZoomOpen(false);
+                    }}
+                >
+                    <div className="modal-lightbox-bar">
+                        <span className="modal-lightbox-caption">{project.title}</span>
+                        <button
+                            ref={lightboxCloseRef}
+                            type="button"
+                            className="modal-lightbox-close"
+                            onClick={() => setZoomOpen(false)}
+                            aria-label="Fermer l'aperçu agrandi"
+                        >
+                            <CloseIcon size={18} />
+                            <span>Fermer</span>
+                        </button>
+                    </div>
+                    <div
+                        className="modal-lightbox-stage"
+                        onClick={(e) => {
+                            if (e.target === e.currentTarget) setZoomOpen(false);
+                        }}
+                    >
+                        <ResponsiveImage
+                            src={project.imageUrl}
+                            alt={`Aperçu agrandi de ${project.title}`}
+                            className="modal-lightbox-img"
+                            sizes="94vw"
+                        />
+                    </div>
+                </div>
+            )}
         </dialog>
     );
 }
