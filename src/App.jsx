@@ -18,10 +18,13 @@ import { SearchIcon, SparklesIcon, GraduationCapIcon, UserIcon, GithubIcon } fro
 import { GITHUB_ORG_URL } from './config/site';
 import { getProjectCategory, getProjectOrigin, getProjectSlug, matchesSearch } from './utils/projects';
 
+const INITIAL_VISIBLE_PROJECTS = 9;
+
 export default function App() {
     const [activeOrigin, setActiveOrigin] = useState('all'); // 'all' | 'personal' | 'iut'
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [showAllProjects, setShowAllProjects] = useState(true); // SSR prerenders all cards for SEO & no-JS
     const [selectedProject, setSelectedProject] = useState(null);
     const [toast, setToast] = useState(null);
     const [theme, setTheme] = useState('dark');
@@ -30,10 +33,11 @@ export default function App() {
     const searchInputRef = useRef(null);
     const urlSyncedRef = useRef(false);
 
-    // Sync saved theme after hydration (no SSR mismatch)
+    // Sync saved theme & collapse default project grid after hydration (no SSR mismatch)
     useEffect(() => {
         const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
         setTheme(current);
+        setShowAllProjects(false);
     }, []);
 
     const toggleTheme = useCallback(() => {
@@ -192,6 +196,11 @@ export default function App() {
     }, [handleSelectProject, showToast]);
 
     const hasActiveFilters = Boolean(searchQuery.trim() || activeCategory !== 'all' || activeOrigin !== 'all');
+    const isCollapsed = !hasActiveFilters && !showAllProjects && filteredProjects.length > INITIAL_VISIBLE_PROJECTS;
+    const visibleProjects = isCollapsed
+        ? filteredProjects.slice(0, INITIAL_VISIBLE_PROJECTS)
+        : filteredProjects;
+    const remainingProjectsCount = filteredProjects.length - visibleProjects.length;
 
     return (
         <>
@@ -240,7 +249,7 @@ export default function App() {
                                 onClick={() => handleOriginClick('all')}
                                 aria-pressed={activeOrigin === 'all'}
                             >
-                                <span>Tous</span>
+                                <span>Tout voir</span>
                                 <span className="origin-count">{originCounts.all}</span>
                             </button>
                             <button
@@ -296,53 +305,56 @@ export default function App() {
                     </div>
 
                     {/* Filtres de catégories */}
-                    <div className="project-filters" role="group" aria-label="Filtrer les projets par catégorie">
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('all')}
-                            aria-pressed={activeCategory === 'all'}
-                        >
-                            <span>Tous</span>
-                            <span className="filter-count">{counts.all}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn filter-btn-featured ${activeCategory === 'featured' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('featured')}
-                            aria-pressed={activeCategory === 'featured'}
-                        >
-                            <SparklesIcon size={14} />
-                            <span>Coups de cœur</span>
-                            <span className="filter-count">{counts.featured}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'web' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('web')}
-                            aria-pressed={activeCategory === 'web'}
-                        >
-                            <span>Web &amp; Full-Stack</span>
-                            <span className="filter-count">{counts.web}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'extension' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('extension')}
-                            aria-pressed={activeCategory === 'extension'}
-                        >
-                            <span>Extensions</span>
-                            <span className="filter-count">{counts.extension}</span>
-                        </button>
-                        <button
-                            type="button"
-                            className={`filter-btn ${activeCategory === 'system' ? 'active' : ''}`}
-                            onClick={() => handleCategoryClick('system')}
-                            aria-pressed={activeCategory === 'system'}
-                        >
-                            <span>Système &amp; Logiciel</span>
-                            <span className="filter-count">{counts.system}</span>
-                        </button>
+                    <div className="project-filters-row">
+                        <span className="filter-axis-label" aria-hidden="true">Catégorie</span>
+                        <div className="project-filters" role="group" aria-label="Filtrer les projets par catégorie">
+                            <button
+                                type="button"
+                                className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
+                                onClick={() => handleCategoryClick('all')}
+                                aria-pressed={activeCategory === 'all'}
+                            >
+                                <span>Toutes</span>
+                                <span className="filter-count">{counts.all}</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`filter-btn filter-btn-featured ${activeCategory === 'featured' ? 'active' : ''}`}
+                                onClick={() => handleCategoryClick('featured')}
+                                aria-pressed={activeCategory === 'featured'}
+                            >
+                                <SparklesIcon size={14} />
+                                <span>Coups de cœur</span>
+                                <span className="filter-count">{counts.featured}</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`filter-btn ${activeCategory === 'web' ? 'active' : ''}`}
+                                onClick={() => handleCategoryClick('web')}
+                                aria-pressed={activeCategory === 'web'}
+                            >
+                                <span>Web &amp; Full-Stack</span>
+                                <span className="filter-count">{counts.web}</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`filter-btn ${activeCategory === 'extension' ? 'active' : ''}`}
+                                onClick={() => handleCategoryClick('extension')}
+                                aria-pressed={activeCategory === 'extension'}
+                            >
+                                <span>Extensions</span>
+                                <span className="filter-count">{counts.extension}</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={`filter-btn ${activeCategory === 'system' ? 'active' : ''}`}
+                                onClick={() => handleCategoryClick('system')}
+                                aria-pressed={activeCategory === 'system'}
+                            >
+                                <span>Système &amp; Logiciel</span>
+                                <span className="filter-count">{counts.system}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -371,29 +383,70 @@ export default function App() {
 
                 <div className="project-results-summary js-only">
                     <p role="status" aria-live="polite" aria-atomic="true">
-                        {filteredProjects.length} projet{filteredProjects.length > 1 ? 's' : ''}
-                        {hasActiveFilters ? ` sur ${data.projects.length}` : ' à explorer'}
+                        {isCollapsed
+                            ? `${visibleProjects.length} projets récents affichés sur ${filteredProjects.length}`
+                            : `${filteredProjects.length} projet${filteredProjects.length > 1 ? 's' : ''}${hasActiveFilters ? ` sur ${data.projects.length}` : ' à explorer'}`
+                        }
                     </p>
-                    {hasActiveFilters && (
+                    {hasActiveFilters ? (
                         <button type="button" className="reset-filters" onClick={() => { setSearchQuery(''); setActiveOrigin('all'); setActiveCategory('all'); }}>
-                            Tout afficher
+                            Réinitialiser les filtres
                         </button>
-                    )}
+                    ) : isCollapsed ? (
+                        <button type="button" className="reset-filters" onClick={() => setShowAllProjects(true)}>
+                            Tout afficher ({filteredProjects.length})
+                        </button>
+                    ) : filteredProjects.length > INITIAL_VISIBLE_PROJECTS ? (
+                        <button type="button" className="reset-filters" onClick={() => setShowAllProjects(false)}>
+                            Réduire à {INITIAL_VISIBLE_PROJECTS}
+                        </button>
+                    ) : null}
                 </div>
                 <div id="project-results">
                 {/* Projects Grid or Empty State */}
-                {filteredProjects.length > 0 ? (
-                    <div className="projects-grid">
-                        {filteredProjects.map((project, i) => (
-                            <ScrollReveal key={project.title} delay={(i % 3) * 0.08}>
-                                <ProjectCard
-                                    project={project}
-                                    index={i}
-                                    onOpenModal={handleSelectProject}
-                                />
-                            </ScrollReveal>
-                        ))}
-                    </div>
+                {visibleProjects.length > 0 ? (
+                    <>
+                        <div className="projects-grid">
+                            {visibleProjects.map((project, i) => (
+                                <ScrollReveal key={project.title} delay={(i % 3) * 0.08}>
+                                    <ProjectCard
+                                        project={project}
+                                        index={i}
+                                        onOpenModal={handleSelectProject}
+                                    />
+                                </ScrollReveal>
+                            ))}
+                        </div>
+                        {!hasActiveFilters && filteredProjects.length > INITIAL_VISIBLE_PROJECTS && (
+                            <div className="projects-expand-wrap js-only">
+                                {isCollapsed ? (
+                                    <button
+                                        type="button"
+                                        className="btn-secondary projects-expand-btn"
+                                        onClick={() => setShowAllProjects(true)}
+                                    >
+                                        <span>Voir les {remainingProjectsCount} autres projets</span>
+                                        <span className="projects-expand-count">{filteredProjects.length} au total</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="btn-secondary projects-expand-btn"
+                                        onClick={() => {
+                                            setShowAllProjects(false);
+                                            const section = document.getElementById('projects');
+                                            if (section) {
+                                                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                                                section.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+                                            }
+                                        }}
+                                    >
+                                        <span>Réduire aux {INITIAL_VISIBLE_PROJECTS} projets récents</span>
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="projects-empty-state">
                         <div className="empty-emoji" aria-hidden="true">🔍</div>

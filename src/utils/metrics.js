@@ -1,8 +1,14 @@
 // Dynamic metrics generator from raw portfolio data
+import { getProjectOrigin } from './projects.js';
 
-export function getComputedMetrics({ projects = [], education = [] } = {}) {
-    // 1. Total projects count
+export function getComputedMetrics({ developer = {}, projects = [], education = [] } = {}) {
+    // 1. Total projects count & breakdown (personal vs IUT)
     const totalProjects = projects.length;
+    const iutCount = projects.filter((p) => getProjectOrigin(p) === 'iut').length;
+    const personalCount = totalProjects - iutCount;
+    const projectsSub = totalProjects > 0 && iutCount > 0
+        ? `${personalCount} perso · ${iutCount} SAÉ IUT`
+        : 'Web, Mobile & CLI';
 
     // 2. Published extensions on Chrome Web Store & VS Code Marketplace
     const extensionsCount = projects.filter((p) => {
@@ -14,33 +20,20 @@ export function getComputedMetrics({ projects = [], education = [] } = {}) {
         return isExtensionCat || hasStoreLink;
     }).length;
 
-    // 3. PIX certification score
-    const pixItem = education.find((e) =>
-        (e.title && e.title.toLowerCase().includes('pix')) ||
-        (e.highlight && e.highlight.toLowerCase().includes('pix'))
-    );
-    const pixScore = pixItem?.highlight?.replace(/[^\d]/g, '') || '—';
+    // 3. Recruitment horizon or current degree fallback
+    const recruitment = developer?.recruitment || {};
+    const isSeeking = recruitment.enabled ?? recruitment.seeking ?? false;
+    const periodMatch = String(recruitment.period || '').match(/20\d{2}\s*[-–]\s*20\d{2}/);
+    const targetPeriod = periodMatch ? periodMatch[0].replace(/\s*[-–]\s*/, '–') : '2027–2028';
 
-    // 4. Baccalauréat mention
-    const bacItem = education.find((e) =>
-        e.title && e.title.toLowerCase().includes('bac')
-    );
-    let bacMention = 'Mention Bien';
-    if (bacItem?.title) {
-        if (/très bien/i.test(bacItem.title)) {
-            bacMention = 'Mention TB';
-        } else if (/bien/i.test(bacItem.title)) {
-            bacMention = 'Mention Bien';
-        } else if (/assez bien/i.test(bacItem.title)) {
-            bacMention = 'Mention AB';
-        }
-    }
+    const currentEducation = education.find((e) => e.type === 'education');
+    const fallbackEducationValue = currentEducation?.period || 'Bac+3';
 
     return [
         {
             value: `${totalProjects}`,
             label: 'Projets Conçus',
-            sub: 'Web, Mobile & CLI'
+            sub: projectsSub
         },
         {
             value: `${extensionsCount}`,
@@ -48,14 +41,20 @@ export function getComputedMetrics({ projects = [], education = [] } = {}) {
             sub: 'Chrome & VS Code Stores'
         },
         {
-            value: `${pixScore}`,
-            label: 'Score PIX',
-            sub: 'Maîtrise Numérique'
+            value: 'Web & Linux',
+            label: 'Double Culture',
+            sub: 'PHP, JS, Java, Rust & Bash'
         },
-        {
-            value: bacMention,
-            label: 'Baccalauréat',
-            sub: 'Maths Expertes'
-        }
+        isSeeking
+            ? {
+                value: targetPeriod,
+                label: 'Alternance BUT 3',
+                sub: 'Nancy · Grand Est · Remote'
+            }
+            : {
+                value: fallbackEducationValue,
+                label: 'BUT Informatique',
+                sub: 'IUT Nancy-Charlemagne'
+            }
     ];
 }

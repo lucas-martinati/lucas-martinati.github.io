@@ -1,11 +1,19 @@
 import ResponsiveImage from './ResponsiveImage';
 import { SparklesIcon, ExternalLinkIcon, GithubIcon, GraduationCapIcon } from './Icons';
-import { getProjectOrigin } from '../utils/projects';
+import { getProjectCategory, getProjectOrigin } from '../utils/projects';
+
+const CATEGORY_SHORT_LABELS = {
+    web: 'Web & Full-Stack',
+    extension: 'Extension',
+    system: 'Système & Logiciel'
+};
 
 export default function ProjectCard({ project, index, onOpenModal }) {
     const hasImage = !!project.imageUrl;
     const linkHref = project.link?.href;
     const isIut = getProjectOrigin(project) === 'iut';
+    const categoryLabel = CATEGORY_SHORT_LABELS[getProjectCategory(project)];
+    const showStatusBadge = Boolean(project.status?.label) && project.status?.className !== 'status-completed';
 
     // Vibrant gradients cycle
     const gradients = [
@@ -61,12 +69,17 @@ export default function ProjectCard({ project, index, onOpenModal }) {
                     {isIut && (
                         <span className="project-origin-badge">
                             <GraduationCapIcon size={12} />
-                            <span>IUT Nancy-Charlemagne</span>
+                            <span>IUT Nancy</span>
                         </span>
                     )}
-                    <span className={`project-status ${project.status?.className}`}>
-                        {project.status?.label}
-                    </span>
+                    {showStatusBadge && (
+                        <span className={`project-status ${project.status?.className}`}>
+                            {project.status?.label}
+                        </span>
+                    )}
+                    {categoryLabel && (
+                        <span className="project-category-label">{categoryLabel}</span>
+                    )}
                 </div>
 
                 <h3 className="project-title">{project.title}</h3>

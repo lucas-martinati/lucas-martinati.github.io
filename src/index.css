@@ -974,6 +974,23 @@ nav {
 }
 
 /* Category Pills */
+.project-filters-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.filter-axis-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+}
+
 .project-filters {
     display: flex;
     align-items: center;
@@ -1132,6 +1149,27 @@ nav {
     display: flex;
 }
 
+.projects-expand-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.25rem;
+}
+
+.projects-expand-btn {
+    padding: 0.72rem 1.4rem;
+    gap: 0.65rem;
+}
+
+.projects-expand-count {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+    padding: 0.14rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(243, 239, 230, 0.06);
+    border: 1px solid var(--border-hairline);
+}
+
 .projects-empty-state {
     padding: 3.5rem 2rem;
     background: var(--bg-surface);
@@ -1281,6 +1319,14 @@ nav {
     font-size: 0.7rem;
     font-weight: 600;
     line-height: 1.2;
+}
+
+.project-category-label {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
 }
 
 .project-status {
@@ -3758,6 +3804,7 @@ dialog::backdrop {
 [data-theme="light"] .nav-cv-link,
 [data-theme="light"] .mobile-nav-toggle,
 [data-theme="light"] .origin-count,
+[data-theme="light"] .projects-expand-count,
 [data-theme="light"] .search-shortcut-hint,
 [data-theme="light"] .project-year,
 [data-theme="light"] .project-tags .tag,

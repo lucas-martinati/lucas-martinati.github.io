@@ -131,7 +131,7 @@ await writeFile('src/data/images.json', `${JSON.stringify(manifest)}\n`);
 await sharp('public/favicon.svg').resize(180, 180).png({ compressionLevel: 9 }).toFile('public/apple-touch-icon.png');
 
 // Generate up-to-date Open Graph preview (1200x630) from live portfolio metrics
-const metrics = getComputedMetrics({ projects: data.projects, education: data.education });
+const metrics = getComputedMetrics({ developer: data.developer, projects: data.projects, education: data.education });
 const isSeeking = data.developer?.recruitment?.enabled ?? data.developer?.recruitment?.seeking;
 const badge = isSeeking ? data.developer?.recruitment?.badge : data.developer?.recruitment?.passiveBadge;
 const ogSvg = buildOgSvg({ developer: data.developer, metrics, badge });

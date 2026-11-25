@@ -29,7 +29,11 @@ try {
     await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
     await page.setViewport({ width: 1440, height: 1000 });
     await page.goto(url, { waitUntil: 'networkidle0' });
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), 9);
+    await page.click('.projects-expand-btn');
     assert.equal(await page.$$eval('.project-card', (cards) => cards.length), data.projects.length);
+    await page.click('.projects-expand-btn');
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), 9);
     assert.equal(await page.$$eval('main', (elements) => elements.length), 1);
     await audit('Accessibilité de la page');
     await page.screenshot({ path: join(screenshots, 'desktop.png') });
@@ -62,7 +66,7 @@ try {
     await page.type('.project-search-input', 'aucun-projet-xyz');
     await page.waitForSelector('.projects-empty-state');
     await page.click('.projects-empty-state button');
-    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), data.projects.length);
+    assert.equal(await page.$$eval('.project-card', (cards) => cards.length), 9);
     await page.click('.filter-btn:nth-child(3)');
     assert.equal(await page.$eval('.filter-btn:nth-child(3)', (button) => button.getAttribute('aria-pressed')), 'true');
     const titles = await page.$$eval('.project-title', (nodes) => nodes.map((node) => node.textContent));

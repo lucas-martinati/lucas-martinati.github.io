@@ -74,12 +74,15 @@ test('les origines projets (perso vs IUT Nancy-Charlemagne) sont détectées et 
 
 test('les métriques calculées restent valides même sur des données partielles', async () => {
     const data = JSON.parse(await readFile(new URL('../src/data/data.json', import.meta.url), 'utf8'));
-    const full = getComputedMetrics({ projects: data.projects, education: data.education });
+    const full = getComputedMetrics({ developer: data.developer, projects: data.projects, education: data.education });
     assert.equal(full[0].value, String(data.projects.length));
+    assert.equal(full[0].sub, '15 perso · 7 SAÉ IUT');
     assert.equal(full[1].value, '3');
-    assert.equal(full[2].value, '583');
-    assert.equal(full[3].value, 'Mention Bien');
+    assert.equal(full[2].value, 'Web & Linux');
+    assert.equal(full[3].value, '2027–2028');
 
     const empty = getComputedMetrics({ projects: [], education: [] });
-    assert.equal(empty[2].value, '—');
+    assert.equal(empty[0].value, '0');
+    assert.equal(empty[1].value, '0');
+    assert.equal(empty[3].value, 'Bac+3');
 });
