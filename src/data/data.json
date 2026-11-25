@@ -300,7 +300,7 @@
                 "JUnit"
             ],
             "link": {
-                "github": "SAE_S2.01_Zeldiablo-LucasM_JeanLM_PierreGSV",
+                "github": "SAE_S2.01-Zeldiablo",
                 "org": true,
                 "text": "Voir le dépôt"
             },
@@ -309,6 +309,36 @@
             "featured": true,
             "highlights": "Conception orientée objet itérative sur 4 versions documentées en PlantUML (classes et séquences), rendu Java Swing en pixel art avec mode classique et éclairage dynamique, monstres autonomes et suite de tests unitaires.",
             "challenges": "Architecture modulaire des entités et cases à effets, gestion de monstres multi-cases destructibles par segment (Blob), synchronisation de la boucle de jeu et développement collaboratif en trinôme."
+        },
+        {
+            "emoji": "📡",
+            "imageUrl": "img/sae-s2-03-serveur-web.png",
+            "year": "2026",
+            "status": {
+                "label": "Terminé",
+                "className": "status-completed"
+            },
+            "title": "Serveur Web Java (QwackServer) — SAÉ S2.03",
+            "description": "Serveur web HTTP/1.1 multi-sites et multi-ports développé de zéro en Java (SAÉ S2.03 — IUT Nancy-Charlemagne) : configuration XML, exécution de scripts côté serveur (SSI Bash/Python), exploration de répertoires, compression Gzip, cache ETag, route /status Linux, paquet Debian (.deb) et service Systemd.",
+            "tags": [
+                "Java",
+                "HTTP/1.1",
+                "Linux",
+                "Systemd",
+                "Debian",
+                "Bash",
+                "XML"
+            ],
+            "link": {
+                "github": "SAE_S2.03-Serveur-Web",
+                "org": true,
+                "text": "Voir le dépôt"
+            },
+            "category": "system",
+            "origin": "iut",
+            "featured": true,
+            "highlights": "Serveur HTTP/1.1 multi-thread complet sans framework externe : parsing XML dans conf.d/, compression Gzip à la volée, empreintes ETag SHA-256 et réponses 304 Not Modified, SSI multi-interpréteurs, monitoring temps réel via /proc/meminfo et packaging .deb clé en main avec unité serverWeb.service.",
+            "challenges": "Gestion manuelle du protocole HTTP/1.1 sur sockets TCP (headers RFC 1123, types MIME, codes 200/304/403/404), protection contre le path traversal, journalisation horodatée par site et intégration propre au cycle de vie Systemd via fichier PID."
         },
         {
             "emoji": "🗺️",
@@ -329,7 +359,7 @@
                 "JUnit"
             ],
             "link": {
-                "github": "SAE_S2.02-MARTINATI_Lucas",
+                "github": "SAE_S2.02",
                 "org": true,
                 "text": "Voir le dépôt"
             },
@@ -579,7 +609,7 @@
                 "Systemd"
             ],
             "link": {
-                "github": "SAE_S1.03-Martinati_Lucas-Charles_Samuel",
+                "github": "SAE_S1.03",
                 "org": true,
                 "text": "Voir le dépôt"
             },

@@ -66,7 +66,7 @@ test('les origines projets (perso vs IUT Nancy-Charlemagne) sont détectées et 
     const data = JSON.parse(await readFile(new URL('../src/data/data.json', import.meta.url), 'utf8'));
     const iutProjects = data.projects.filter((p) => getProjectOrigin(p) === 'iut');
     const personalProjects = data.projects.filter((p) => getProjectOrigin(p) === 'personal');
-    assert.equal(iutProjects.length, 6, 'Les 6 projets académiques IUT hors TDs doivent être présents');
+    assert.equal(iutProjects.length, 7, 'Les 7 projets académiques IUT hors TDs doivent être présents');
     assert.equal(personalProjects.length, 15, 'Les 15 projets personnels doivent être présents');
     assert.equal(data.projects.every((p) => Boolean(p.imageUrl)), true, 'Tous les projets doivent avoir un aperçu');
     assert.equal(iutProjects.every((p) => Number(p.year) >= 2025), true, 'Les projets IUT (BUT 2025-2028) doivent être datés de 2025 ou après');
